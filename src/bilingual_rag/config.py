@@ -60,6 +60,17 @@ class Profile(BaseModel):
         slug = self.embedding_model.split("/")[-1].replace("-", "_").replace(".", "_").lower()
         return f"chunks__{slug}_{self.dense_dims}"
 
+    @property
+    def raw_collection_name(self) -> str:
+        """Collection built from un-normalized text.
+
+        Exists only so the ablation's "no normalization" row measures what it
+        claims. Without a separately built index that row silently reports the
+        normalized pipeline twice, which is how an ablation table ends up
+        showing that a component is worth nothing.
+        """
+        return self.collection_name + "__raw"
+
 
 # The reranker is identical across every profile. See the module docstring.
 RERANKER = "BAAI/bge-reranker-v2-m3"

@@ -31,6 +31,7 @@ from bilingual_rag.ingest.extract import extract
 log = structlog.get_logger(__name__)
 
 BM25_DIR = Path("data/bm25_index")
+BM25_RAW_DIR = Path("data/bm25_index_raw")
 
 
 @dataclass
@@ -82,6 +83,38 @@ def build_bm25(chunks: list[Chunk], directory: Path = BM25_DIR) -> BM25Index:
     return index
 
 
+def build_raw_indexes(
+    chunks: list[Chunk],
+    embedder: Embedder,
+    profile: Profile,
+    qdrant_settings: QdrantSettings | None,
+    recreate: bool,
+) -> int:
+    """Build the un-normalized sibling indexes used by the ablation baseline.
+
+    Without these, the ablation's "no normalization" row silently queries the
+    normalized index and reports that normalization is worth nothing -- which
+    is a wrong number, not a missing one.
+
+    Not built by default: it doubles ingestion cost and is only needed to
+    produce one row of one table.
+    """
+    raw_vectors = embedder.embed_passages([c.embedding_text() for c in chunks], normalize=False)
+    raw_store = VectorStore(profile=profile, settings=qdrant_settings)
+    raw_store.collection_override = profile.raw_collection_name
+    raw_store.ensure_collection(recreate=recreate)
+    written = raw_store.upsert(chunks, raw_vectors)
+
+    # BM25 over raw text, unstemmed and unnormalized, so the row is a true
+    # baseline rather than a half-normalized hybrid.
+    raw_bm25 = BM25Index(stem=False)
+    raw_bm25.build([c.id for c in chunks], [c.text for c in chunks])
+    raw_bm25.save(BM25_RAW_DIR)
+
+    log.info("ingest.raw_indexes_built", points=written, collection=raw_store.collection)
+    return written
+
+
 def ingest(
     source: str | Path,
     doc_id: str,
@@ -90,6 +123,7 @@ def ingest(
     qdrant_settings: QdrantSettings | None = None,
     recreate: bool = False,
     check_quality: bool = True,
+    build_raw: bool = False,
 ) -> IngestReport:
     """Run the whole pipeline and return what it produced."""
     profile = profile or active_profile()
@@ -118,6 +152,13 @@ def ingest(
     written = store.upsert(chunks, vectors)
 
     bm25 = build_bm25(chunks)
+
+    if build_raw:
+        # Re-load the embedder: it was unloaded above to free VRAM.
+        raw_embedder = Embedder(profile=profile)
+        build_raw_indexes(chunks, raw_embedder, profile, qdrant_settings, recreate)
+        raw_embedder.save_cache()
+        raw_embedder.unload()
 
     report = IngestReport(
         doc_id=doc_id,

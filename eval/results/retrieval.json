@@ -1,0 +1,1863 @@
+{
+  "config": "full",
+  "provenance": {
+    "human_verified": 0,
+    "total": 67
+  },
+  "overall": {
+    "n": 67,
+    "recall@1": 0.791,
+    "recall@5": 0.9552,
+    "recall@10": 0.9925,
+    "hit@10": 1.0,
+    "mrr@10": 0.9358,
+    "ndcg@10": 0.9301,
+    "p50_latency_ms": 964.2,
+    "p95_latency_ms": 1102.1
+  },
+  "groups": {
+    "category:annual_leave": {
+      "n": 11,
+      "recall@1": 0.9091,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 1.0,
+      "ndcg@10": 1.0,
+      "p50_latency_ms": 909.5,
+      "p95_latency_ms": 1012.6
+    },
+    "category:contracts": {
+      "n": 8,
+      "recall@1": 0.875,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 1.0,
+      "ndcg@10": 1.0,
+      "p50_latency_ms": 1019.6,
+      "p95_latency_ms": 1117.9
+    },
+    "category:definitions": {
+      "n": 2,
+      "recall@1": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 1.0,
+      "ndcg@10": 1.0,
+      "p50_latency_ms": 921.2,
+      "p95_latency_ms": 1046.6
+    },
+    "category:end_of_service": {
+      "n": 4,
+      "recall@1": 0.75,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.875,
+      "ndcg@10": 0.9077,
+      "p50_latency_ms": 1035.4,
+      "p95_latency_ms": 1094.5
+    },
+    "category:leave": {
+      "n": 3,
+      "recall@1": 0.6667,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 1.0,
+      "ndcg@10": 0.9323,
+      "p50_latency_ms": 885.7,
+      "p95_latency_ms": 885.8
+    },
+    "category:maternity": {
+      "n": 5,
+      "recall@1": 0.9,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 1.0,
+      "ndcg@10": 1.0,
+      "p50_latency_ms": 910.7,
+      "p95_latency_ms": 964.2
+    },
+    "category:notice_period": {
+      "n": 8,
+      "recall@1": 0.75,
+      "recall@5": 0.875,
+      "recall@10": 0.9375,
+      "hit@10": 1.0,
+      "mrr@10": 0.9062,
+      "ndcg@10": 0.8594,
+      "p50_latency_ms": 1008.9,
+      "p95_latency_ms": 23201.3
+    },
+    "category:rest_days": {
+      "n": 3,
+      "recall@1": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 1.0,
+      "ndcg@10": 1.0,
+      "p50_latency_ms": 938.4,
+      "p95_latency_ms": 961.8
+    },
+    "category:sick_leave": {
+      "n": 3,
+      "recall@1": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 1.0,
+      "ndcg@10": 1.0,
+      "p50_latency_ms": 886.5,
+      "p95_latency_ms": 1008.1
+    },
+    "category:termination": {
+      "n": 12,
+      "recall@1": 0.75,
+      "recall@5": 0.875,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.9583,
+      "ndcg@10": 0.9123,
+      "p50_latency_ms": 1065.0,
+      "p95_latency_ms": 1116.7
+    },
+    "category:working_hours": {
+      "n": 8,
+      "recall@1": 0.4375,
+      "recall@5": 0.9375,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.6813,
+      "ndcg@10": 0.7585,
+      "p50_latency_ms": 901.8,
+      "p95_latency_ms": 946.4
+    },
+    "difficulty:easy": {
+      "n": 20,
+      "recall@1": 0.9,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.95,
+      "ndcg@10": 0.9631,
+      "p50_latency_ms": 961.8,
+      "p95_latency_ms": 1101.2
+    },
+    "difficulty:hard": {
+      "n": 7,
+      "recall@1": 0.4286,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.6429,
+      "ndcg@10": 0.7319,
+      "p50_latency_ms": 1000.9,
+      "p95_latency_ms": 1116.7
+    },
+    "difficulty:medium": {
+      "n": 25,
+      "recall@1": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 1.0,
+      "ndcg@10": 1.0,
+      "p50_latency_ms": 953.1,
+      "p95_latency_ms": 1091.0
+    },
+    "difficulty:multi_hop": {
+      "n": 15,
+      "recall@1": 0.4667,
+      "recall@5": 0.8,
+      "recall@10": 0.9667,
+      "hit@10": 1.0,
+      "mrr@10": 0.9467,
+      "ndcg@10": 0.8622,
+      "p50_latency_ms": 964.4,
+      "p95_latency_ms": 1102.1
+    },
+    "lang:ar": {
+      "n": 47,
+      "recall@1": 0.7872,
+      "recall@5": 0.9574,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.9468,
+      "ndcg@10": 0.9359,
+      "p50_latency_ms": 997.2,
+      "p95_latency_ms": 1116.7
+    },
+    "lang:en": {
+      "n": 20,
+      "recall@1": 0.8,
+      "recall@5": 0.95,
+      "recall@10": 0.975,
+      "hit@10": 1.0,
+      "mrr@10": 0.91,
+      "ndcg@10": 0.9165,
+      "p50_latency_ms": 937.3,
+      "p95_latency_ms": 1061.5
+    },
+    "multi_hop": {
+      "n": 15,
+      "recall@1": 0.4667,
+      "recall@5": 0.8,
+      "recall@10": 0.9667,
+      "hit@10": 1.0,
+      "mrr@10": 0.9467,
+      "ndcg@10": 0.8622,
+      "p50_latency_ms": 964.4,
+      "p95_latency_ms": 1102.1
+    },
+    "tag:colloquial": {
+      "n": 5,
+      "recall@1": 0.4,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.6,
+      "ndcg@10": 0.6985,
+      "p50_latency_ms": 1000.9,
+      "p95_latency_ms": 1094.5
+    },
+    "tag:cross_lingual": {
+      "n": 20,
+      "recall@1": 0.8,
+      "recall@5": 0.95,
+      "recall@10": 0.975,
+      "hit@10": 1.0,
+      "mrr@10": 0.91,
+      "ndcg@10": 0.9165,
+      "p50_latency_ms": 937.3,
+      "p95_latency_ms": 1061.5
+    },
+    "tag:misspelled": {
+      "n": 2,
+      "recall@1": 0.5,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.75,
+      "ndcg@10": 0.8155,
+      "p50_latency_ms": 828.2,
+      "p95_latency_ms": 1094.5
+    }
+  },
+  "per_question": [
+    {
+      "id": "q001",
+      "query": "ما هي مدة الإشعار المطلوبة قبل إنهاء عقد العمل غير محدد المدة؟",
+      "expected": [
+        "75"
+      ],
+      "retrieved": [
+        "75",
+        "76",
+        "55",
+        "74",
+        "77",
+        "53",
+        "48",
+        "78"
+      ],
+      "tags": [],
+      "category": "notice_period",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 23201.3
+    },
+    {
+      "id": "q002",
+      "query": "كم يوماً يجب الإشعار قبل الإنهاء إذا كان أجر العامل يدفع شهرياً؟",
+      "expected": [
+        "75"
+      ],
+      "retrieved": [
+        "75",
+        "77",
+        "78",
+        "109",
+        "88",
+        "76",
+        "2",
+        "90",
+        "53"
+      ],
+      "tags": [],
+      "category": "notice_period",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 1101.2
+    },
+    {
+      "id": "q003",
+      "query": "ماذا يلزم الطرف الذي أنهى العقد دون مراعاة مهلة الإشعار؟",
+      "expected": [
+        "76"
+      ],
+      "retrieved": [
+        "76",
+        "81",
+        "75",
+        "77",
+        "182",
+        "80",
+        "183",
+        "78",
+        "88"
+      ],
+      "tags": [],
+      "category": "notice_period",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1017.1
+    },
+    {
+      "id": "q004",
+      "query": "ما هو التعويض المستحق عند إنهاء عقد غير محدد المدة لسبب غير مشروع؟",
+      "expected": [
+        "77"
+      ],
+      "retrieved": [
+        "77",
+        "76",
+        "75",
+        "80",
+        "87",
+        "55",
+        "94",
+        "85"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1091.0
+    },
+    {
+      "id": "q005",
+      "query": "كيف تحسب مكافأة نهاية الخدمة؟",
+      "expected": [
+        "84"
+      ],
+      "retrieved": [
+        "84",
+        "86",
+        "18",
+        "85",
+        "54",
+        "172",
+        "96",
+        "2",
+        "77",
+        "10"
+      ],
+      "tags": [],
+      "category": "end_of_service",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 1035.4
+    },
+    {
+      "id": "q006",
+      "query": "ما مقدار مكافأة نهاية الخدمة عن السنوات الخمس الأولى؟",
+      "expected": [
+        "84"
+      ],
+      "retrieved": [
+        "84",
+        "85",
+        "54",
+        "77",
+        "18",
+        "86",
+        "109",
+        "2",
+        "172",
+        "88"
+      ],
+      "tags": [],
+      "category": "end_of_service",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 1056.1
+    },
+    {
+      "id": "q007",
+      "query": "ما هو الحد الأقصى لساعات العمل الفعلية في اليوم الواحد؟",
+      "expected": [
+        "98"
+      ],
+      "retrieved": [
+        "164",
+        "98",
+        "188",
+        "106",
+        "99",
+        "101",
+        "100",
+        "154",
+        "6",
+        "49"
+      ],
+      "tags": [],
+      "category": "working_hours",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 946.4
+    },
+    {
+      "id": "q008",
+      "query": "كم ساعة عمل في الأسبوع إذا اعتمد صاحب العمل المعيار الأسبوعي؟",
+      "expected": [
+        "98"
+      ],
+      "retrieved": [
+        "98",
+        "100",
+        "107",
+        "106",
+        "105",
+        "104",
+        "78",
+        "99",
+        "2",
+        "164"
+      ],
+      "tags": [],
+      "category": "working_hours",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 858.4
+    },
+    {
+      "id": "q009",
+      "query": "كم تخفض ساعات العمل خلال شهر رمضان للمسلمين؟",
+      "expected": [
+        "98"
+      ],
+      "retrieved": [
+        "98",
+        "164",
+        "2",
+        "101",
+        "99",
+        "102",
+        "188",
+        "104",
+        "106",
+        "25"
+      ],
+      "tags": [],
+      "category": "working_hours",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 889.8
+    },
+    {
+      "id": "q010",
+      "query": "ما هو يوم الراحة الأسبوعية للعمال؟",
+      "expected": [
+        "104"
+      ],
+      "retrieved": [
+        "104",
+        "105",
+        "164",
+        "17",
+        "6",
+        "100",
+        "49",
+        "109",
+        "78",
+        "98"
+      ],
+      "tags": [],
+      "category": "rest_days",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 938.4
+    },
+    {
+      "id": "q011",
+      "query": "هل يجوز تعويض يوم الراحة الأسبوعية بمقابل نقدي؟",
+      "expected": [
+        "104"
+      ],
+      "retrieved": [
+        "104",
+        "105",
+        "109",
+        "6",
+        "90",
+        "100",
+        "164",
+        "17",
+        "2",
+        "111"
+      ],
+      "tags": [],
+      "category": "rest_days",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 928.0
+    },
+    {
+      "id": "q012",
+      "query": "ما الحد الأدنى لمدة الإجازة السنوية للعامل؟",
+      "expected": [
+        "109"
+      ],
+      "retrieved": [
+        "109",
+        "114",
+        "110",
+        "117",
+        "116",
+        "113",
+        "152",
+        "115",
+        "53"
+      ],
+      "tags": [],
+      "category": "annual_leave",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 939.4
+    },
+    {
+      "id": "q013",
+      "query": "متى تزاد الإجازة السنوية إلى ثلاثين يوماً؟",
+      "expected": [
+        "109"
+      ],
+      "retrieved": [
+        "109",
+        "117",
+        "2",
+        "113",
+        "110",
+        "152",
+        "53",
+        "114",
+        "151"
+      ],
+      "tags": [],
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 905.0
+    },
+    {
+      "id": "q014",
+      "query": "هل يجوز للعامل أن يتقاضى بدلاً نقدياً عن إجازته السنوية أثناء خدمته؟",
+      "expected": [
+        "109"
+      ],
+      "retrieved": [
+        "109",
+        "116",
+        "111",
+        "104",
+        "82",
+        "114",
+        "152",
+        "115",
+        "107",
+        "118"
+      ],
+      "tags": [],
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1012.6
+    },
+    {
+      "id": "q015",
+      "query": "كم المدة التي يجوز لصاحب العمل تأجيل إجازة العامل بعدها؟",
+      "expected": [
+        "110"
+      ],
+      "retrieved": [
+        "110",
+        "109",
+        "116",
+        "82",
+        "114",
+        "155",
+        "105",
+        "115",
+        "53"
+      ],
+      "tags": [],
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 882.4
+    },
+    {
+      "id": "q016",
+      "query": "ما حق العامل في الإجازة المرضية عن الثلاثين يوماً الأولى؟",
+      "expected": [
+        "117"
+      ],
+      "retrieved": [
+        "117",
+        "109",
+        "53",
+        "82",
+        "113",
+        "111",
+        "114",
+        "155"
+      ],
+      "tags": [],
+      "category": "sick_leave",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 874.2
+    },
+    {
+      "id": "q017",
+      "query": "كم نسبة الأجر في الإجازة المرضية عن الستين يوماً التالية؟",
+      "expected": [
+        "117"
+      ],
+      "retrieved": [
+        "117",
+        "137",
+        "111",
+        "152",
+        "151",
+        "160",
+        "114",
+        "107",
+        "113"
+      ],
+      "tags": [],
+      "category": "sick_leave",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1008.1
+    },
+    {
+      "id": "q018",
+      "query": "ما مدة إجازة الوضع للمرأة العاملة؟",
+      "expected": [
+        "151"
+      ],
+      "retrieved": [
+        "151",
+        "152",
+        "155",
+        "160",
+        "154",
+        "156",
+        "113",
+        "87"
+      ],
+      "tags": [],
+      "category": "maternity",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 964.2
+    },
+    {
+      "id": "q019",
+      "query": "هل يجوز فصل العاملة أثناء حملها أو إجازة الوضع؟",
+      "expected": [
+        "155"
+      ],
+      "retrieved": [
+        "155",
+        "156",
+        "152",
+        "151",
+        "160",
+        "154",
+        "157",
+        "113"
+      ],
+      "tags": [],
+      "category": "maternity",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 910.7
+    },
+    {
+      "id": "q020",
+      "query": "ما شروط عقد عمل غير السعودي من حيث الكتابة والمدة؟",
+      "expected": [
+        "37"
+      ],
+      "retrieved": [
+        "37",
+        "33",
+        "55",
+        "40",
+        "2",
+        "25",
+        "42",
+        "31",
+        "52",
+        "51"
+      ],
+      "tags": [],
+      "category": "contracts",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 995.6
+    },
+    {
+      "id": "q021",
+      "query": "إذا خلا عقد غير السعودي من بيان مدته، فما المدة التي يعد عليها؟",
+      "expected": [
+        "37"
+      ],
+      "retrieved": [
+        "37",
+        "55",
+        "75",
+        "76",
+        "40",
+        "53",
+        "116",
+        "33",
+        "74"
+      ],
+      "tags": [],
+      "category": "contracts",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1117.9
+    },
+    {
+      "id": "q022",
+      "query": "هل يعد عقد العمل قائماً إذا لم يكن مكتوباً؟",
+      "expected": [
+        "51"
+      ],
+      "retrieved": [
+        "51",
+        "37",
+        "46",
+        "2",
+        "79",
+        "74",
+        "95",
+        "171",
+        "75"
+      ],
+      "tags": [],
+      "category": "contracts",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 997.2
+    },
+    {
+      "id": "q023",
+      "query": "من عدد النسخ التي يجب أن يكتب بها عقد العمل؟",
+      "expected": [
+        "51"
+      ],
+      "retrieved": [
+        "51",
+        "171",
+        "37",
+        "52",
+        "50",
+        "46",
+        "170",
+        "2",
+        "73"
+      ],
+      "tags": [],
+      "category": "contracts",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 1047.3
+    },
+    {
+      "id": "q024",
+      "query": "في أي الحالات ينتهي عقد العمل؟",
+      "expected": [
+        "74"
+      ],
+      "retrieved": [
+        "74",
+        "79",
+        "55",
+        "57",
+        "81",
+        "80",
+        "182",
+        "183"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1066.6
+    },
+    {
+      "id": "q025",
+      "query": "هل يشترط أن تكون موافقة العامل على إنهاء العقد كتابية؟",
+      "expected": [
+        "74"
+      ],
+      "retrieved": [
+        "74",
+        "75",
+        "2",
+        "80",
+        "53",
+        "182"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1047.5
+    },
+    {
+      "id": "q026",
+      "query": "متى يجوز لصاحب العمل فسخ العقد دون مكافأة أو إشعار أو تعويض؟",
+      "expected": [
+        "80"
+      ],
+      "retrieved": [
+        "80",
+        "182",
+        "81",
+        "75",
+        "87",
+        "183",
+        "77",
+        "48"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "hard",
+      "verified_by": "drafted",
+      "latency_ms": 1116.7
+    },
+    {
+      "id": "q027",
+      "query": "هل يجب إتاحة الفرصة للعامل لإبداء أسباب معارضته للفسخ؟",
+      "expected": [
+        "80"
+      ],
+      "retrieved": [
+        "80",
+        "94",
+        "75",
+        "81",
+        "78",
+        "72",
+        "83",
+        "92"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 983.3
+    },
+    {
+      "id": "q028",
+      "query": "ما تعريف العامل في نظام العمل؟",
+      "expected": [
+        "2"
+      ],
+      "retrieved": [
+        "2",
+        "65",
+        "12",
+        "81",
+        "52",
+        "5",
+        "61"
+      ],
+      "tags": [],
+      "category": "definitions",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 1046.6
+    },
+    {
+      "id": "q029",
+      "query": "ما اسم هذا النظام؟",
+      "expected": [
+        "1"
+      ],
+      "retrieved": [
+        "1",
+        "244",
+        "245",
+        "16",
+        "52",
+        "2",
+        "5",
+        "10",
+        "74"
+      ],
+      "tags": [],
+      "category": "definitions",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 921.2
+    },
+    {
+      "id": "q030",
+      "query": "هل للعامل حق في إجازة بأجر كامل في الأعياد؟",
+      "expected": [
+        "112"
+      ],
+      "retrieved": [
+        "112",
+        "114",
+        "113",
+        "115",
+        "107",
+        "152",
+        "53",
+        "111"
+      ],
+      "tags": [],
+      "category": "leave",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 885.7
+    },
+    {
+      "id": "q031",
+      "query": "ابغى اعرف كم مدة الانذار قبل الفصل من الشغل",
+      "expected": [
+        "75"
+      ],
+      "retrieved": [
+        "80",
+        "78",
+        "155",
+        "75",
+        "66",
+        "71",
+        "203",
+        "81"
+      ],
+      "tags": [
+        "colloquial"
+      ],
+      "category": "notice_period",
+      "difficulty": "hard",
+      "verified_by": "drafted",
+      "latency_ms": 1008.9
+    },
+    {
+      "id": "q032",
+      "query": "كم اجازتي السنويه لو خدمت اكثر من خمس سنوات",
+      "expected": [
+        "109"
+      ],
+      "retrieved": [
+        "109",
+        "152",
+        "85",
+        "114",
+        "84",
+        "110",
+        "77",
+        "53",
+        "117",
+        "49"
+      ],
+      "tags": [
+        "colloquial",
+        "misspelled"
+      ],
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "verified_by": "drafted",
+      "latency_ms": 828.2
+    },
+    {
+      "id": "q033",
+      "query": "مكافاه نهايه الخدمه كم تطلع",
+      "expected": [
+        "84"
+      ],
+      "retrieved": [
+        "85",
+        "84",
+        "86",
+        "54",
+        "18",
+        "88",
+        "172",
+        "87",
+        "77",
+        "109"
+      ],
+      "tags": [
+        "colloquial",
+        "misspelled"
+      ],
+      "category": "end_of_service",
+      "difficulty": "hard",
+      "verified_by": "drafted",
+      "latency_ms": 1094.5
+    },
+    {
+      "id": "q034",
+      "query": "كم ساعه اشتغل في اليوم حسب النظام",
+      "expected": [
+        "98"
+      ],
+      "retrieved": [
+        "99",
+        "164",
+        "106",
+        "98",
+        "188",
+        "100",
+        "101",
+        "2",
+        "78",
+        "107"
+      ],
+      "tags": [
+        "colloquial"
+      ],
+      "category": "working_hours",
+      "difficulty": "hard",
+      "verified_by": "drafted",
+      "latency_ms": 938.1
+    },
+    {
+      "id": "q035",
+      "query": "هل ينفع اخذ فلوس بدل الاجازه",
+      "expected": [
+        "109"
+      ],
+      "retrieved": [
+        "109",
+        "154",
+        "111",
+        "107",
+        "157",
+        "116",
+        "118",
+        "115",
+        "105"
+      ],
+      "tags": [
+        "colloquial"
+      ],
+      "category": "annual_leave",
+      "difficulty": "hard",
+      "verified_by": "drafted",
+      "latency_ms": 1000.9
+    },
+    {
+      "id": "q036",
+      "query": "ما مدة الإشعار المطلوبة، وماذا يترتب على من لم يراعها؟",
+      "expected": [
+        "75",
+        "76"
+      ],
+      "retrieved": [
+        "76",
+        "78",
+        "80",
+        "2",
+        "81",
+        "75",
+        "69",
+        "68"
+      ],
+      "tags": [],
+      "category": "notice_period",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 964.4
+    },
+    {
+      "id": "q037",
+      "query": "إذا انتهى العقد باتفاق الطرفين، فما المكافأة المستحقة للعامل؟",
+      "expected": [
+        "74",
+        "84"
+      ],
+      "retrieved": [
+        "84",
+        "77",
+        "87",
+        "85",
+        "76",
+        "2",
+        "88",
+        "18",
+        "80",
+        "74"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 1095.2
+    },
+    {
+      "id": "q038",
+      "query": "ما مدة الإجازة السنوية، وإلى متى يجوز تأجيلها؟",
+      "expected": [
+        "109",
+        "110"
+      ],
+      "retrieved": [
+        "110",
+        "109",
+        "152",
+        "114",
+        "116",
+        "117",
+        "82",
+        "164",
+        "151"
+      ],
+      "tags": [],
+      "category": "annual_leave",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 935.5
+    },
+    {
+      "id": "q039",
+      "query": "ما مدة إجازة الوضع، وهل تحمي العاملة من الفصل؟",
+      "expected": [
+        "151",
+        "155"
+      ],
+      "retrieved": [
+        "155",
+        "151",
+        "156",
+        "152",
+        "160",
+        "154",
+        "157",
+        "109",
+        "87"
+      ],
+      "tags": [],
+      "category": "maternity",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 896.5
+    },
+    {
+      "id": "q040",
+      "query": "كم ساعات العمل اليومية، وما هو يوم الراحة الأسبوعية؟",
+      "expected": [
+        "98",
+        "104"
+      ],
+      "retrieved": [
+        "104",
+        "164",
+        "98",
+        "100",
+        "49",
+        "106",
+        "101",
+        "6",
+        "105",
+        "2"
+      ],
+      "tags": [],
+      "category": "working_hours",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 901.8
+    },
+    {
+      "id": "q041",
+      "query": "إذا فسخ صاحب العمل العقد لسبب مشروع، هل يستحق العامل تعويضاً أو مكافأة؟",
+      "expected": [
+        "80",
+        "84"
+      ],
+      "retrieved": [
+        "80",
+        "77",
+        "87",
+        "54",
+        "85",
+        "75",
+        "84",
+        "2",
+        "94"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 1094.4
+    },
+    {
+      "id": "q042",
+      "query": "ما شكل عقد غير السعودي، وهل يعد العقد قائماً إن لم يكتب؟",
+      "expected": [
+        "37",
+        "51"
+      ],
+      "retrieved": [
+        "37",
+        "51",
+        "55",
+        "33",
+        "2",
+        "40",
+        "75",
+        "74"
+      ],
+      "tags": [],
+      "category": "contracts",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 1043.3
+    },
+    {
+      "id": "q043",
+      "query": "ما التعويض عن الإنهاء غير المشروع، وما مكافأة نهاية الخدمة؟",
+      "expected": [
+        "77",
+        "84"
+      ],
+      "retrieved": [
+        "77",
+        "54",
+        "18",
+        "85",
+        "172",
+        "84",
+        "80",
+        "86",
+        "87"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 1060.1
+    },
+    {
+      "id": "q044",
+      "query": "ما حقوق العامل في الإجازة المرضية والإجازة السنوية؟",
+      "expected": [
+        "109",
+        "117"
+      ],
+      "retrieved": [
+        "117",
+        "82",
+        "109",
+        "110",
+        "53",
+        "114",
+        "152",
+        "111",
+        "157"
+      ],
+      "tags": [],
+      "category": "leave",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 854.1
+    },
+    {
+      "id": "q045",
+      "query": "في أي حالات ينتهي العقد، ومتى يجوز الفسخ دون إشعار؟",
+      "expected": [
+        "74",
+        "80"
+      ],
+      "retrieved": [
+        "80",
+        "182",
+        "81",
+        "74",
+        "75",
+        "57",
+        "76"
+      ],
+      "tags": [],
+      "category": "termination",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 1076.2
+    },
+    {
+      "id": "q045a",
+      "query": "ما مدة الإجازة المرضية بأجر كامل، وهل تحسب ضمن الإجازة السنوية؟",
+      "expected": [
+        "109",
+        "117"
+      ],
+      "retrieved": [
+        "117",
+        "152",
+        "151",
+        "109",
+        "82",
+        "113",
+        "114",
+        "115",
+        "160"
+      ],
+      "tags": [],
+      "category": "leave",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 885.8
+    },
+    {
+      "id": "q045b",
+      "query": "إذا لم يكتب عقد غير السعودي، فما مدته وكيف يثبت العامل حقوقه؟",
+      "expected": [
+        "37",
+        "51"
+      ],
+      "retrieved": [
+        "37",
+        "51",
+        "55",
+        "33",
+        "40",
+        "52",
+        "75",
+        "88",
+        "7"
+      ],
+      "tags": [],
+      "category": "contracts",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 1102.1
+    },
+    {
+      "id": "q046",
+      "query": "What notice period is required before terminating an open-ended contract?",
+      "expected": [
+        "75"
+      ],
+      "retrieved": [
+        "75",
+        "76",
+        "53",
+        "48",
+        "182",
+        "80",
+        "77",
+        "183"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "notice_period",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 995.2
+    },
+    {
+      "id": "q047",
+      "query": "How many days notice is required if the worker is paid monthly?",
+      "expected": [
+        "75"
+      ],
+      "retrieved": [
+        "75",
+        "2",
+        "109",
+        "90",
+        "97",
+        "91",
+        "76",
+        "117",
+        "166",
+        "72"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "notice_period",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 939.1
+    },
+    {
+      "id": "q048",
+      "query": "How is the end-of-service award calculated?",
+      "expected": [
+        "84"
+      ],
+      "retrieved": [
+        "84",
+        "86",
+        "85",
+        "18",
+        "96",
+        "77",
+        "88",
+        "64",
+        "76",
+        "2"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "end_of_service",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 1030.5
+    },
+    {
+      "id": "q049",
+      "query": "What is the maximum number of working hours per day?",
+      "expected": [
+        "98"
+      ],
+      "retrieved": [
+        "99",
+        "98",
+        "188",
+        "164",
+        "101",
+        "100",
+        "106",
+        "179",
+        "163",
+        "2"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "working_hours",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 902.7
+    },
+    {
+      "id": "q050",
+      "query": "How are working hours reduced during Ramadan for Muslim workers?",
+      "expected": [
+        "98"
+      ],
+      "retrieved": [
+        "98",
+        "164",
+        "105",
+        "102",
+        "101",
+        "104",
+        "160",
+        "99",
+        "114",
+        "100"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "working_hours",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 918.4
+    },
+    {
+      "id": "q051",
+      "query": "What is the weekly rest day for workers?",
+      "expected": [
+        "104"
+      ],
+      "retrieved": [
+        "104",
+        "105",
+        "17",
+        "100",
+        "78",
+        "98",
+        "109",
+        "101",
+        "113",
+        "114"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "rest_days",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 961.8
+    },
+    {
+      "id": "q052",
+      "query": "What is the minimum annual leave entitlement?",
+      "expected": [
+        "109"
+      ],
+      "retrieved": [
+        "109",
+        "114",
+        "110",
+        "117",
+        "111",
+        "113",
+        "105",
+        "85",
+        "116",
+        "104"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "annual_leave",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 995.0
+    },
+    {
+      "id": "q053",
+      "query": "When does annual leave increase to thirty days?",
+      "expected": [
+        "109"
+      ],
+      "retrieved": [
+        "109",
+        "113",
+        "117",
+        "110",
+        "53",
+        "114",
+        "151",
+        "23"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 841.0
+    },
+    {
+      "id": "q054",
+      "query": "What sick leave pay is a worker entitled to in the first thirty days?",
+      "expected": [
+        "117"
+      ],
+      "retrieved": [
+        "117",
+        "137",
+        "113",
+        "109",
+        "111",
+        "114",
+        "151",
+        "105",
+        "138"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "sick_leave",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 886.5
+    },
+    {
+      "id": "q055",
+      "query": "How long is maternity leave?",
+      "expected": [
+        "151"
+      ],
+      "retrieved": [
+        "151",
+        "113",
+        "155",
+        "160",
+        "156",
+        "117",
+        "154",
+        "105"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "maternity",
+      "difficulty": "easy",
+      "verified_by": "drafted",
+      "latency_ms": 809.1
+    },
+    {
+      "id": "q056",
+      "query": "Can an employer dismiss a female worker during pregnancy?",
+      "expected": [
+        "155"
+      ],
+      "retrieved": [
+        "155",
+        "156",
+        "153",
+        "151",
+        "154",
+        "160",
+        "113",
+        "78",
+        "12"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "maternity",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 940.4
+    },
+    {
+      "id": "q057",
+      "query": "Must a non-Saudi worker's contract be in writing?",
+      "expected": [
+        "37"
+      ],
+      "retrieved": [
+        "37",
+        "40",
+        "33",
+        "51",
+        "31",
+        "170",
+        "43",
+        "26",
+        "30"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "contracts",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 917.3
+    },
+    {
+      "id": "q058",
+      "query": "Is an employment contract valid if it was never written down?",
+      "expected": [
+        "51"
+      ],
+      "retrieved": [
+        "51",
+        "37",
+        "2",
+        "74",
+        "75",
+        "79",
+        "18",
+        "80",
+        "50"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "contracts",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1019.6
+    },
+    {
+      "id": "q059",
+      "query": "In what circumstances does an employment contract end?",
+      "expected": [
+        "74"
+      ],
+      "retrieved": [
+        "74",
+        "57",
+        "55",
+        "182",
+        "79",
+        "81",
+        "84",
+        "183",
+        "80"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "termination",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 953.1
+    },
+    {
+      "id": "q060",
+      "query": "When may an employer terminate without award, notice or compensation?",
+      "expected": [
+        "80"
+      ],
+      "retrieved": [
+        "182",
+        "80",
+        "81",
+        "75",
+        "155",
+        "78",
+        "66",
+        "116",
+        "77"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "termination",
+      "difficulty": "hard",
+      "verified_by": "drafted",
+      "latency_ms": 937.3
+    },
+    {
+      "id": "q061",
+      "query": "What compensation is due for unlawful termination of an open-ended contract?",
+      "expected": [
+        "77"
+      ],
+      "retrieved": [
+        "77",
+        "87",
+        "76",
+        "80",
+        "182",
+        "138",
+        "238",
+        "237",
+        "235",
+        "231"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "termination",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 1065.0
+    },
+    {
+      "id": "q062",
+      "query": "Can a worker take cash instead of annual leave while still employed?",
+      "expected": [
+        "109"
+      ],
+      "retrieved": [
+        "109",
+        "111",
+        "110",
+        "116",
+        "114",
+        "118",
+        "105",
+        "81",
+        "2",
+        "80"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "annual_leave",
+      "difficulty": "medium",
+      "verified_by": "drafted",
+      "latency_ms": 883.8
+    },
+    {
+      "id": "q063",
+      "query": "What notice is required, and what happens if it is not observed?",
+      "expected": [
+        "75",
+        "76"
+      ],
+      "retrieved": [
+        "76",
+        "71",
+        "231",
+        "232",
+        "11",
+        "237",
+        "236",
+        "238",
+        "233",
+        "234"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "notice_period",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 1061.5
+    },
+    {
+      "id": "q064",
+      "query": "How long is annual leave, and how long may it be deferred?",
+      "expected": [
+        "109",
+        "110"
+      ],
+      "retrieved": [
+        "110",
+        "109",
+        "105",
+        "114",
+        "117",
+        "151",
+        "53",
+        "113",
+        "155"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "annual_leave",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 909.5
+    },
+    {
+      "id": "q065",
+      "query": "What are the daily working hours and the weekly rest entitlement?",
+      "expected": [
+        "98",
+        "104"
+      ],
+      "retrieved": [
+        "6",
+        "49",
+        "100",
+        "164",
+        "104",
+        "98",
+        "101",
+        "17",
+        "105",
+        "2"
+      ],
+      "tags": [
+        "cross_lingual"
+      ],
+      "category": "working_hours",
+      "difficulty": "multi_hop",
+      "verified_by": "drafted",
+      "latency_ms": 898.7
+    }
+  ]
+}

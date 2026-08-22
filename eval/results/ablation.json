@@ -1,0 +1,55 @@
+{
+  "repeats": 3,
+  "questions": 67,
+  "provenance": {
+    "human_verified": 0,
+    "total": 67
+  },
+  "noise_threshold": 0.02,
+  "rows": [
+    {
+      "config": "dense only, no normalization",
+      "recall@10": 0.9850746268656717,
+      "recall@10_sd": 0.0,
+      "mrr@10": 0.8953980099502488,
+      "mrr@10_sd": 0.0,
+      "ndcg@10": 0.8931075217707692,
+      "ndcg@10_sd": 0.0,
+      "p95_latency_ms": 33.052800000101946,
+      "p95_latency_ms_sd": 9.849379666440653
+    },
+    {
+      "config": "+ Arabic normalization",
+      "recall@10": 0.9925373134328358,
+      "recall@10_sd": 0.0,
+      "mrr@10": 0.88544776119403,
+      "mrr@10_sd": 0.0,
+      "ndcg@10": 0.8894532642931878,
+      "ndcg@10_sd": 0.0,
+      "p95_latency_ms": 33.290533333153384,
+      "p95_latency_ms_sd": 9.879111150043656
+    },
+    {
+      "config": "+ BM25 hybrid with RRF",
+      "recall@10": 0.9552238805970149,
+      "recall@10_sd": 0.0,
+      "mrr@10": 0.707089552238806,
+      "mrr@10_sd": 0.0,
+      "ndcg@10": 0.7602142447485872,
+      "ndcg@10_sd": 0.0,
+      "p95_latency_ms": 29.910399999304598,
+      "p95_latency_ms_sd": 0.39137159671383326
+    },
+    {
+      "config": "+ cross-encoder reranking",
+      "recall@10": 0.9925373134328358,
+      "recall@10_sd": 0.0,
+      "mrr@10": 0.9258706467661691,
+      "mrr@10_sd": 0.0,
+      "ndcg@10": 0.9255544539469548,
+      "ndcg@10_sd": 0.0,
+      "p95_latency_ms": 359.5584333337077,
+      "p95_latency_ms_sd": 466.51523764096896
+    }
+  ]
+}

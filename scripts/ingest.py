@@ -20,6 +20,11 @@ def main() -> int:
     parser.add_argument("--recreate", action="store_true", help="drop and rebuild the collection")
     parser.add_argument("--source", default=None, help="override the corpus path")
     parser.add_argument("--skip-quality-check", action="store_true")
+    parser.add_argument(
+        "--build-raw",
+        action="store_true",
+        help="also build un-normalized indexes, needed by the ablation baseline",
+    )
     args = parser.parse_args()
 
     settings = load_settings()
@@ -30,6 +35,7 @@ def main() -> int:
         qdrant_settings=QdrantSettings(**settings.qdrant.model_dump()),
         recreate=args.recreate,
         check_quality=not args.skip_quality_check,
+        build_raw=args.build_raw,
     )
 
     print()

@@ -98,6 +98,8 @@ class Retriever:
         bm25: BM25Index | None = None,
         store: VectorStore | None = None,
         reranker: Reranker | None = None,
+        raw_store: VectorStore | None = None,
+        raw_bm25: BM25Index | None = None,
     ) -> None:
         self.profile = profile or active_profile()
         self.settings = settings or RetrievalSettings()
@@ -105,12 +107,27 @@ class Retriever:
         self.store = store or VectorStore(profile=self.profile, settings=qdrant_settings)
         self.bm25 = bm25
         self.reranker = reranker or Reranker(profile=self.profile)
+        # The un-normalized index, used only by the ablation's baseline row.
+        # Absent in normal operation, where normalization is always on.
+        self.raw_store = raw_store
+        self.raw_bm25 = raw_bm25
         self._payloads: dict[str, dict[str, Any]] = {}
 
     # ---- setup ----------------------------------------------------------
 
     def load_bm25(self, directory: str = "data/bm25_index") -> None:
         self.bm25 = BM25Index.load(directory)
+
+    def load_raw_indexes(self, directory: str = "data/bm25_index_raw") -> None:
+        """Load the un-normalized indexes the ablation baseline needs."""
+        from bilingual_rag.config import QdrantSettings
+
+        raw_profile = self.profile.model_copy()
+        self.raw_store = VectorStore(profile=self.profile, settings=QdrantSettings())
+        # Point the store at the raw sibling collection.
+        self.raw_store.collection_override = self.profile.raw_collection_name
+        self.raw_bm25 = BM25Index.load(directory)
+        _ = raw_profile
 
     def _payload(self, chunk_id: str) -> dict[str, Any]:
         """Chunk metadata, cached in memory after the first lookup."""
@@ -135,21 +152,35 @@ class Retriever:
 
         rankings: list[list[str]] = []
 
+        # When normalization is off, both retrievers must use indexes built
+        # from raw text AND skip normalizing the query. Doing only one of the
+        # two would measure a mismatch rather than the absence of a component.
+        normalized = config.use_normalization
+        store = self.store if normalized else (self.raw_store or self.store)
+
         if config.use_dense:
             started = time.perf_counter()
             # The embedder normalizes the query with the same function used on
             # the indexed text -- that is the property the whole design turns on.
-            vector = self.embedder.embed_query(query)
-            dense_ids = self.store.search_ids(vector, top_k=self.settings.dense_top_k)
+            vector = self.embedder.embed_query(query, normalize=normalized)
+            dense_ids = store.search_ids(vector, top_k=self.settings.dense_top_k)
             rankings.append(dense_ids)
             stage_latencies["dense_ms"] = (time.perf_counter() - started) * 1000
 
         if config.use_bm25:
-            if self.bm25 is None:
-                self.load_bm25()
+            index = self.bm25 if normalized else self.raw_bm25
+            if index is None:
+                if normalized:
+                    self.load_bm25()
+                    index = self.bm25
+                else:
+                    raise RuntimeError(
+                        "the no-normalization config needs the raw indexes: "
+                        "run scripts/ingest.py --build-raw first"
+                    )
             started = time.perf_counter()
-            assert self.bm25 is not None
-            rankings.append(self.bm25.search_ids(query, top_k=self.settings.bm25_top_k))
+            assert index is not None
+            rankings.append(index.search_ids(query, top_k=self.settings.bm25_top_k))
             stage_latencies["bm25_ms"] = (time.perf_counter() - started) * 1000
 
         if not rankings:

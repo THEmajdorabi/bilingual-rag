@@ -23,6 +23,7 @@ from pathlib import Path
 import numpy as np
 import structlog
 
+from bilingual_rag.arabic.normalize import normalize_ar
 from bilingual_rag.config import Profile, active_profile
 
 log = structlog.get_logger(__name__)
@@ -118,9 +119,23 @@ class Embedder:
 
     # ---- embedding ------------------------------------------------------
 
-    def _embed(self, texts: list[str], prefix: str, use_cache: bool) -> np.ndarray:
+    def _embed(
+        self, texts: list[str], prefix: str, use_cache: bool, normalize: bool = True
+    ) -> np.ndarray:
+        """Embed text, normalizing it first unless explicitly told not to.
+
+        Normalization happens HERE, on both the passage and the query path,
+        so a single function governs both. Normalizing the index while
+        querying with raw text is the most common silent failure in Arabic
+        retrieval: nothing errors, recall just quietly drops.
+
+        `normalize=False` exists only for the ablation's baseline row.
+        """
         if not texts:
             return np.zeros((0, self.profile.dense_dims), dtype=np.float32)
+
+        if normalize:
+            texts = [normalize_ar(t) for t in texts]
 
         keys = [_cache_key(self.profile.embedding_model, prefix, t) for t in texts]
         missing = [i for i, key in enumerate(keys) if not use_cache or key not in self._cache]
@@ -139,16 +154,20 @@ class Embedder:
 
         return np.vstack([self._cache[key] for key in keys])
 
-    def embed_passages(self, texts: list[str], use_cache: bool = True) -> np.ndarray:
+    def embed_passages(
+        self, texts: list[str], use_cache: bool = True, normalize: bool = True
+    ) -> np.ndarray:
         """Embed documents for indexing. Applies the profile's passage prefix."""
-        return self._embed(texts, self.profile.passage_prefix, use_cache)
+        return self._embed(texts, self.profile.passage_prefix, use_cache, normalize)
 
-    def embed_queries(self, texts: list[str], use_cache: bool = True) -> np.ndarray:
+    def embed_queries(
+        self, texts: list[str], use_cache: bool = True, normalize: bool = True
+    ) -> np.ndarray:
         """Embed queries for search. Applies the profile's query prefix."""
-        return self._embed(texts, self.profile.query_prefix, use_cache)
+        return self._embed(texts, self.profile.query_prefix, use_cache, normalize)
 
-    def embed_query(self, text: str, use_cache: bool = True) -> np.ndarray:
-        return self.embed_queries([text], use_cache)[0]
+    def embed_query(self, text: str, use_cache: bool = True, normalize: bool = True) -> np.ndarray:
+        return self.embed_queries([text], use_cache, normalize)[0]
 
     # ---- introspection --------------------------------------------------
 

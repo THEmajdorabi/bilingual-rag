@@ -53,6 +53,9 @@ class VectorStore:
         self.profile = profile or active_profile()
         self.settings = settings or QdrantSettings()
         self._client = None
+        # Set to target the un-normalized sibling collection built for the
+        # ablation baseline. None means the normal collection.
+        self.collection_override: str | None = None
 
     @property
     def client(self):  # noqa: ANN201 - QdrantClient, imported lazily
@@ -73,7 +76,7 @@ class VectorStore:
 
     @property
     def collection(self) -> str:
-        return self.profile.collection_name
+        return self.collection_override or self.profile.collection_name
 
     # ---- lifecycle ------------------------------------------------------
 

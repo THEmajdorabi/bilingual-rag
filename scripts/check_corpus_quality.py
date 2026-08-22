@@ -7,16 +7,22 @@ retrieval quality is quietly destroyed -- normalization then folds the bad
 alef-madda to a bare alef, so the word is wrong in the index *and* in the
 query, in different ways.
 
-Four checks, each catching a different silent failure:
+Five checks, each catching a different silent failure:
 
   1. **Extractability** -- is there a text layer, or is it a scan needing OCR?
   2. **Script order** -- logical or visual? PyMuPDF does no bidi reordering,
      and many Arabic PDFs store glyphs in visual order.
   3. **Letter-frequency sanity** -- a letter appearing far outside its natural
      rate is the signature of a broken font encoding.
-  4. **Known-word probes** -- common Arabic words that must appear in any legal
-     text. If `كذلك` appears zero times and `آذلك` appears eight, the encoding
-     is broken.
+  4. **Kaf probes** -- common words that must appear in any legal text. If
+     `كذلك` appears zero times and `آذلك` appears eight, the encoding is broken.
+  5. **Transposition probes** -- pairs where the wrong spelling is not a word
+     at all. `املادة` is not Arabic; seeing it 814 times means glyphs are
+     stored in visual order and adjacent letters come out swapped.
+
+Two of the three candidate sources for this project failed, in *different*
+ways, and both looked fine until read. That is why this runs before ingestion
+rather than after a disappointing eval score.
 
 Run: python scripts/check_corpus_quality.py data/some.pdf
 """
@@ -30,14 +36,29 @@ import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
-# Words that must appear in any Saudi legal text of reasonable length, paired
-# with the corrupted spelling produced when kaf is mis-encoded as alef-madda.
+# Word pairs: the correct spelling, and the wrong spelling produced by a
+# specific extraction defect. Each pair is a probe that a human can verify by
+# reading, which is what makes this checkable rather than magical.
+#
+# Defect 1 -- kaf mis-encoded as alef-madda. Seen in WIPO's sa055ar.pdf.
 KAF_PROBES = [
     ("كما", "آما"),
     ("كذلك", "آذلك"),
     ("كل", "آل"),
     ("الكتابة", "الآتابة"),
     ("كامل", "آامل"),
+]
+
+# Defect 2 -- adjacent letters transposed, because the PDF stores glyphs in
+# visual order and the lam-alef ligature is emitted reversed. Seen in the
+# l-sat.com PDF: `المادة` came out as `املادة` (lam and meem swapped) and every
+# `لا` pair as `ال`. Each left-hand form is ordinary Arabic; each right-hand
+# form is not a word at all, so a single occurrence is already suspicious.
+TRANSPOSITION_PROBES = [
+    ("المادة", "املادة"),
+    ("اللائحة", "الالئحة"),
+    ("الأول", "األول"),
+    ("لائحة", "الئحة"),
 ]
 
 # Structural markers of Saudi legislation.
@@ -61,6 +82,7 @@ class Report:
     logical_order: bool
     structure_counts: dict[str, int]
     kaf_findings: list[tuple[str, str, int, int]]
+    transposition_findings: list[tuple[str, str, int, int]]
     letter_shares: dict[str, float]
     problems: list[str]
 
@@ -134,6 +156,19 @@ def analyse(path: Path) -> Report:
         detail = ", ".join(f"{bad!r} x{bn} > {good!r} x{gn}" for good, bad, gn, bn in corrupted)
         problems.append(f"kaf appears mis-encoded as alef-madda: {detail}")
 
+    # 5. Letter transposition. The right-hand spellings are not words, so even
+    #    a modest count means the glyph order is wrong.
+    transposed = []
+    for good, bad in TRANSPOSITION_PROBES:
+        good_n, bad_n = flat.count(good), flat.count(bad)
+        transposed.append((good, bad, good_n, bad_n))
+    broken = [t for t in transposed if t[3] > 0 and t[3] >= t[2]]
+    if broken:
+        detail = ", ".join(f"{bad!r} x{bn} vs {good!r} x{gn}" for good, bad, gn, bn in broken)
+        problems.append(
+            f"adjacent letters are transposed (visual-order glyph storage): {detail}"
+        )
+
     structure = {name: len(re.findall(marker, flat)) for name, marker in STRUCTURE.items()}
     if structure["article"] < 20:
         problems.append(
@@ -150,6 +185,7 @@ def analyse(path: Path) -> Report:
         logical_order=logical_order,
         structure_counts=structure,
         kaf_findings=findings,
+        transposition_findings=transposed,
         letter_shares=shares,
         problems=problems,
     )
@@ -170,6 +206,12 @@ def render(report: Report) -> str:
     ]
     for good, bad, good_n, bad_n in report.kaf_findings:
         verdict = "OK" if good_n >= bad_n else "CORRUPT"
+        lines.append(f"   {good:<10} x{good_n:<5}  vs  {bad:<10} x{bad_n:<5}  {verdict}")
+
+    lines.append("")
+    lines.append("transposition probes (real word vs non-word):")
+    for good, bad, good_n, bad_n in report.transposition_findings:
+        verdict = "OK" if bad_n == 0 or bad_n < good_n else "CORRUPT"
         lines.append(f"   {good:<10} x{good_n:<5}  vs  {bad:<10} x{bad_n:<5}  {verdict}")
 
     lines.append("")

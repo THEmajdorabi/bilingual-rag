@@ -39,34 +39,53 @@ known-word probes, and exits non-zero on failure so it can gate CI.
 
 ---
 
-## 2026-08-22 — Corpus provenance: a third-party compilation over the official HTML
+## 2026-08-22 — Corpus: the official HTML, after both PDF candidates failed
 
-**Chose:** the l-sat.com PDF as the **indexed** corpus.
+**Chose:** the Board of Experts HTML (`laws.boe.gov.sa`) as the indexed corpus.
 
-**Rejected:** the Board of Experts HTML (`laws.boe.gov.sa`) as the indexed
-corpus — though it is downloaded and kept.
+**Rejected:** the l-sat.com PDF, which had already been chosen and written into
+`data/README.md` before it was found to be corrupt.
 
-**Why:** this is a genuine trade-off, and the honest reading is that neither
-option is strictly better.
+**Why the reversal:** the l-sat PDF looked like the better engineering choice.
+308 pages, inside the spec's 300-800 range, the Labor Law *with* its
+Implementing Regulations, a clean text layer, zero presentation forms, and it
+passed every kaf probe that had rejected the WIPO file. It also exercised the
+PyMuPDF extraction path, which the HTML does not.
 
-The BOE page is the *authoritative* text, and for a legal demo provenance
-matters. But it is HTML, it carries the statute without the implementing
-regulations, and it would leave the PDF extraction half of this project — the
-part with the real engineering in it — untested.
+Reading the extracted body text showed adjacent letters transposed:
 
-The l-sat PDF is 308 pages, inside the spec's 300–800 page target, includes the
-regulations, has a clean text layer with **zero presentation forms**, is in
-logical order, and passes every quality probe. It exercises the pipeline the
-project is actually about.
+| Correct Arabic | Count | Extracted non-word | Count |
+|---|---|---|---|
+| `المادة` | 248 | `املادة` | **814** |
+| `اللائحة` | 0 | `الالئحة` | **208** |
+| `الأول` | 0 | `األول` | **114** |
 
-**The cost, stated plainly:** it is a third-party republication, not a
-government file. That is a real weakness for a legal application and is
-recorded in `data/README.md` rather than glossed over.
+`المادة` is `ا ل م ا د ة`. The extracted `املادة` is `ا م ل ا د ة` -- lam and
+meem swapped -- and every `لا` pair comes out as `ال`. None of the right-hand
+forms is a word in Arabic.
 
-**Mitigation:** the official BOE text is downloaded alongside it, and
-`scripts/verify_against_official.py` cross-checks indexed article text against
-it. The spec forbids mixing sources in one index, so BOE is a verification
-input, never an indexed one.
+**The important part: the existing check passed this file.** The
+logical-vs-visual test looks for a whole-line reversal (`ةداملا`) and found
+none, because this is a *ligature-level* defect, not a line-level one. One
+check catching one defect gave false confidence about a different defect.
+`TRANSPOSITION_PROBES` was added for exactly this, and the checker now names
+five distinct failure modes.
+
+**Why HTML is the right answer, not a compromise:** both PDF defects have the
+same root cause. A PDF stores glyph indices into an embedded font; extraction
+must invert that mapping, and when the encoding table is wrong or the glyphs
+were laid out visually, the text comes back wrong with no error. HTML has no
+indirection -- the bytes are the characters.
+
+**What it costs:** the PDF extraction path is no longer exercised by the
+indexed corpus. That is a real loss and is mitigated, not hidden: the official
+English translation is a PDF, it extracts cleanly because English needs no
+shaping, and `ingest/extract.py` handles both formats behind one interface.
+
+**What it gains, beyond correctness:** the BOE text is the *official*
+publication and is *current*, carrying amendments from Royal Decree M/44 of
+1446H that every PDF edition predates. The provenance caveat written into the
+previous version of `data/README.md` is simply gone.
 
 ---
 

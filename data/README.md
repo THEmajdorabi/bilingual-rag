@@ -8,56 +8,44 @@ before anything is built on it.
 
 | | |
 |---|---|
-| **Document** | نظام العمل ولائحته التنفيذية — Saudi Labor Law and its Implementing Regulations |
-| **Edition** | Second edition, 1443H (2022) |
-| **File** | `lsat_labor_law_ar.pdf` |
-| **Source URL** | `https://l-sat.com/wp-content/uploads/2022/02/نظام-العمل-ولائحته-التنفيذية-الاصدار-الثاني-1443-الخنفري-.pdf` |
-| **Downloaded** | 2026-08-22 |
-| **Size** | 3,615,329 bytes · 308 pages · 318,491 Arabic characters |
-| **Language** | Arabic |
-
-## Provenance and terms
-
-The Saudi Labor Law is **public legal text**. The law itself carries no
-copyright — legislation is not a copyrightable work — but this particular PDF
-is a third-party republication that adds its own typesetting and the
-implementing regulations alongside the statute.
-
-**This is a compilation, not the government's own file.** It was chosen for
-engineering reasons documented in `../DECISIONS.md`, and its article text is
-cross-checked against the official source below.
-
-### Official cross-check
-
-| | |
-|---|---|
+| **Document** | نظام العمل — Saudi Labor Law, with amendments in force |
 | **Publisher** | هيئة الخبراء بمجلس الوزراء — Board of Experts at the Council of Ministers |
 | **URL** | `https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/08381293-6388-48e2-8ad2-a9a700f2aa94/1` |
 | **File** | `boe_labor_law.html` |
 | **Downloaded** | 2026-08-22 |
-| **Instrument** | Royal Decree No. M/51 dated 23/8/1426H (27 September 2005) |
+| **Size** | 567,479 bytes · 181,287 characters · 140,663 Arabic |
+| **Instrument** | Royal Decree No. M/51 of 23/8/1426H, as amended |
+| **Language** | Arabic |
 
-This is the authoritative text. It is downloaded but **not indexed** — the spec
-forbids mixing sources in v1. It exists so that
-`scripts/verify_against_official.py` can confirm the indexed articles match the
-government's wording.
+This is the **official** text, and it is current: it carries amendments made by
+Royal Decree M/44 of 1446H, which the older PDF editions predate.
+
+It is HTML rather than PDF, and that is precisely why it is clean. HTML carries
+real Unicode; a PDF carries glyph indices into an embedded font, and it is that
+indirection that corrupted both PDF candidates below.
 
 ### English translation
 
 | | |
 |---|---|
-| **Publisher** | Ministry of Human Resources and Social Development (hrsd.gov.sa) |
+| **Publisher** | Ministry of Human Resources and Social Development |
 | **URL** | `https://www.hrsd.gov.sa/sites/default/files/2017-05/LABOR%20LAW.pdf` |
 | **File** | `hrsd_labor_law_en.pdf` · 865,587 bytes · 93 pages |
 | **Downloaded** | 2026-08-22 |
 
-Held for the cross-lingual evaluation questions. **Not indexed** in v1.
+Held for the cross-lingual evaluation questions and to exercise the PDF
+extraction path. Being English, it has none of the Arabic shaping problems.
+**Not indexed** in v1 — the spec forbids mixing sources.
 
-## Rejected source, and why it matters
+## Rejected sources, and why it matters
 
-`sa055ar.pdf` from WIPO Lex was the first candidate and is **silently
-corrupt**. Extraction succeeds and the output looks like Arabic, but the font
-encoding maps **kaf (ك, U+0643) to alef-madda (آ, U+0622)** throughout:
+**Two of three candidate sources were silently corrupt, in different ways.**
+Both are PDFs. Both extract without error. Both look like Arabic.
+
+### 1. WIPO Lex `sa055ar.pdf` — kaf mis-encoded
+
+Its font encoding maps **kaf (ك, U+0643) onto alef-madda (آ, U+0622)**
+throughout:
 
 | Correct | Count | Corrupted | Count |
 |---|---|---|---|
@@ -70,6 +58,40 @@ Nothing raises. Had this been indexed, every word containing kaf would be wrong
 in the index, normalization would then fold the bad alef-madda to a bare alef,
 and retrieval quality would collapse for reasons no error message would ever
 explain.
+
+### 2. l-sat.com PDF — adjacent letters transposed
+
+The second candidate looked ideal: 308 pages, the Labor Law *and* its
+Implementing Regulations, a clean text layer, zero presentation forms, and it
+passed every kaf probe. It was very nearly the chosen corpus.
+
+It stores glyphs in **visual order**, so adjacent letters come out swapped:
+
+| Correct Arabic | Count | Extracted non-word | Count |
+|---|---|---|---|
+| `المادة` (article) | 248 | `املادة` | **814** |
+| `اللائحة` (the regulation) | 0 | `الالئحة` | **208** |
+| `الأول` (the first) | 0 | `األول` | **114** |
+| `لائحة` (regulation) | 0 | `الئحة` | **311** |
+
+Every right-hand spelling is **not a word in Arabic**. `المادة` is
+`ا ل م ا د ة`; the extracted `املادة` is `ا م ل ا د ة`, with lam and meem
+transposed. Every `لا` pair is reversed to `ال`.
+
+The document-level check that PyMuPDF returns logical order **passed** on this
+file, because the word-level ligature order is a separate defect from
+whole-line bidi reversal. Catching it needed probes on words that must exist.
+
+### Why the official HTML wins
+
+Both defects come from the same place: a PDF stores glyph indices into an
+embedded font, not characters. Extraction has to invert that mapping, and when
+the font's encoding table is wrong or the glyphs were laid out visually, the
+text comes back wrong with no error.
+
+HTML has no such indirection. The bytes are the characters. The clean source
+also turned out to be the official and the most current one, which makes the
+provenance argument and the correctness argument point the same way.
 
 This is why `check_corpus_quality.py` exists and why it runs before ingestion.
 

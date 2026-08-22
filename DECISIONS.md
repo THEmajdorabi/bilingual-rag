@@ -718,3 +718,28 @@ price this repo can honestly attribute. What it has is machine time, which is
 measured. Any dollar figure for it depends on an instance rate that is an
 assumption about deployment, so where the README projects one, the rate is
 stated inline and the arithmetic is left visible.
+
+## 2026-08-22 — Repo 04 is an optional dependency, over HTTP, that can be absent
+
+**Chosen:** `qa/router.py` calls repo 04's `/route` when `DIALECT_SERVICE_URL`
+is set, with a 1.5-second timeout, catching everything, and returning
+"unknown" on any failure.
+
+**Rejected:** importing repo 04; making it a hard dependency of `/ask`.
+
+**Why HTTP and not an import:** repo 04 pulls in torch, transformers and a
+model checkpoint. Repo 02 already loads two large models of its own onto one
+8 GB card. Two processes, two lifecycles, one small JSON call between them is
+the correct shape, and it is also the shape this would take in production.
+
+**Why the outage path is the important one.** A classifier that is down, slow,
+or returning nonsense must not change what `/ask` returns. `tests/test_router.py`
+covers the connection refused, timeout, 500, and not-configured cases and
+asserts the same degraded result in each: `route="default"`, `dialect=None`,
+and an answer that is exactly what it would have been without routing.
+
+**What is NOT claimed.** The dialect is reported in the response and nothing is
+done with it. Whether routing on dialect improves retrieval has **not been
+measured**, and asserting a benefit from an integration that has not been
+A/B tested is the kind of claim this repo exists to avoid making. The hook is
+real; the feature is not yet a feature.

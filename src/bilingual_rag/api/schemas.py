@@ -15,6 +15,9 @@ class AskRequest(BaseModel):
     # and takes longer, and most questions do not need it.
     use_agent: bool = False
     check_faithfulness: bool = True
+    # Ask repo 04 which dialect this is. Off unless DIALECT_SERVICE_URL is set,
+    # and a router outage never affects the answer -- see qa/router.py.
+    classify_dialect: bool = True
 
 
 class AskResponse(BaseModel):
@@ -32,6 +35,10 @@ class AskResponse(BaseModel):
     lang: str
     agent_steps: int | None = None
     agent_searches: list[str] = Field(default_factory=list)
+    # From repo 04, when it is reachable. Reported, not acted on: no retrieval
+    # improvement from routing has been measured. See the README.
+    dialect: str | None = None
+    dialect_confidence: float | None = None
 
 
 class SearchRequest(BaseModel):

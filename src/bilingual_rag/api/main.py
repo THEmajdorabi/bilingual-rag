@@ -38,6 +38,7 @@ from bilingual_rag.api.schemas import (
 from bilingual_rag.config import QdrantSettings, load_settings
 from bilingual_rag.index.retriever import Retriever
 from bilingual_rag.qa.answer import Answerer
+from bilingual_rag.qa.router import DialectRouter
 
 log = structlog.get_logger(__name__)
 
@@ -65,6 +66,8 @@ class Service:
         self.started = time.time()
         self.requests = 0
         self.refusals = 0
+        # Off unless DIALECT_SERVICE_URL is set. Repo 04 is optional by design.
+        self.router = DialectRouter()
 
     def load(self) -> None:
         log.info("service.loading")
@@ -161,6 +164,13 @@ def ask(
     answer = answerer.answer(body.question, passages, check_faithfulness=body.check_faithfulness)
     service.refusals += int(answer.refused)
 
+    dialect = None
+    dialect_confidence = None
+    if body.classify_dialect and service.router.enabled:
+        decision = service.router.classify(body.question)
+        dialect = decision.dialect
+        dialect_confidence = decision.confidence if decision.available else None
+
     return AskResponse(
         answer=answer.text,
         citations=answer.citations,
@@ -176,6 +186,8 @@ def ask(
         lang=answer.lang,
         agent_steps=agent_steps,
         agent_searches=searches,
+        dialect=dialect,
+        dialect_confidence=dialect_confidence,
     )
 
 

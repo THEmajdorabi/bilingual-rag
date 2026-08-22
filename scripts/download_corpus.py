@@ -29,10 +29,7 @@ LSAT_URL = (
     "1443-%D8%A7%D9%84%D8%AE%D9%86%D9%81%D8%B1%D9%8A-.pdf"
 )
 
-BOE_URL = (
-    "https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/"
-    "08381293-6388-48e2-8ad2-a9a700f2aa94/1"
-)
+BOE_URL = "https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/08381293-6388-48e2-8ad2-a9a700f2aa94/1"
 
 HRSD_EN_URL = "https://www.hrsd.gov.sa/sites/default/files/2017-05/LABOR%20LAW.pdf"
 

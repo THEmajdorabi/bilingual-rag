@@ -76,14 +76,40 @@ class _TextExtractor(HTMLParser):
 
     # Void elements never emit an end tag, so they must never affect depth.
     VOID = {
-        "area", "base", "br", "col", "embed", "hr", "img", "input",
-        "link", "meta", "param", "source", "track", "wbr",
+        "area",
+        "base",
+        "br",
+        "col",
+        "embed",
+        "hr",
+        "img",
+        "input",
+        "link",
+        "meta",
+        "param",
+        "source",
+        "track",
+        "wbr",
     }
 
     BLOCK = {
-        "p", "div", "br", "li", "tr", "td", "th",
-        "h1", "h2", "h3", "h4", "h5", "h6",
-        "section", "article", "table", "blockquote",
+        "p",
+        "div",
+        "br",
+        "li",
+        "tr",
+        "td",
+        "th",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "section",
+        "article",
+        "table",
+        "blockquote",
     }
 
     def __init__(self) -> None:

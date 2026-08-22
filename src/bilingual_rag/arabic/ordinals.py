@@ -201,10 +201,17 @@ def _parse_below_hundred(tokens: list[str]) -> int | None:
     return None
 
 
-# `المادة` followed by an ordinal phrase, ending at a colon.
-# The phrase is length-bounded and forbids a full stop, so a heading cannot
-# swallow the sentence that precedes it.
-ARTICLE_HEADING = re.compile(r"المادة\s+([^:.\n]{2,60}?)\s*:")
+# `المادة` followed by an ordinal phrase, ending at a colon *or* at the end of
+# the line. Some headings in the official text carry no colon:
+#
+#     المادة الثانية
+#      تعديلات المادة
+#
+# Anchoring to the start of a line is what keeps that from over-matching. Real
+# headings begin a line; cross-references inside prose ("as set out in article
+# thirty-eight") never do. Combined with the requirement that the phrase parse
+# to a number, this is precise enough to use as a chunk boundary.
+ARTICLE_HEADING = re.compile(r"^[ \t]*المادة\s+([^:.\n]{2,60}?)\s*(?::|$)", re.MULTILINE)
 
 
 def find_article_headings(text: str) -> list[tuple[int, int, str, int | None]]:

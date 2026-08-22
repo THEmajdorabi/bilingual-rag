@@ -165,9 +165,7 @@ def analyse(path: Path) -> Report:
     broken = [t for t in transposed if t[3] > 0 and t[3] >= t[2]]
     if broken:
         detail = ", ".join(f"{bad!r} x{bn} vs {good!r} x{gn}" for good, bad, gn, bn in broken)
-        problems.append(
-            f"adjacent letters are transposed (visual-order glyph storage): {detail}"
-        )
+        problems.append(f"adjacent letters are transposed (visual-order glyph storage): {detail}")
 
     structure = {name: len(re.findall(marker, flat)) for name, marker in STRUCTURE.items()}
     if structure["article"] < 20:
@@ -199,8 +197,7 @@ def render(report: Report) -> str:
         f"presentation forms: {report.presentation_forms:,}  "
         f"({'NFKC will fix these' if report.presentation_forms else 'none'})",
         f"script order     : {'logical (good)' if report.logical_order else 'VISUAL (needs repair)'}",
-        "structure        : "
-        + ", ".join(f"{k}={v}" for k, v in report.structure_counts.items()),
+        "structure        : " + ", ".join(f"{k}={v}" for k, v in report.structure_counts.items()),
         "",
         "kaf probes (correct vs corrupted spelling):",
     ]
@@ -217,9 +214,7 @@ def render(report: Report) -> str:
     lines.append("")
     lines.append("letter shares:")
     for ch, share in report.letter_shares.items():
-        lines.append(
-            f"   U+{ord(ch):04X} {ch}  {share:.2%}  (limit {EXPECTED_MAX_SHARE[ch]:.1%})"
-        )
+        lines.append(f"   U+{ord(ch):04X} {ch}  {share:.2%}  (limit {EXPECTED_MAX_SHARE[ch]:.1%})")
 
     lines.append("")
     if report.usable:

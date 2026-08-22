@@ -101,7 +101,7 @@ def test_hamza_and_taa_marbuta_spellings_agree() -> None:
 
 
 def test_find_article_headings_reports_unparsed_rather_than_dropping() -> None:
-    text = "المادة الأولى: نص. المادة كلام غير مفهوم: نص آخر."
+    text = "المادة الأولى: نص\nالمادة كلام غير مفهوم: نص آخر"
     headings = find_article_headings(text)
 
     assert len(headings) == 2
@@ -110,10 +110,29 @@ def test_find_article_headings_reports_unparsed_rather_than_dropping() -> None:
     assert headings[1][3] is None
 
 
-def test_a_heading_cannot_swallow_the_preceding_sentence() -> None:
-    """The phrase pattern forbids a full stop, so it cannot run backwards."""
-    text = "شيء ما ينتهي هنا. المادة الثالثة: النص."
+def test_a_cross_reference_inside_prose_is_not_a_heading() -> None:
+    """Headings begin a line; cross-references never do.
+
+    Amendment text is full of phrases like "as set out in article thirty-eight
+    of this law". Matching those would insert spurious article boundaries and
+    split a real article in half, so the pattern is anchored to line starts.
+    """
+    text = "لا يجوز مخالفة ما تضمنته المادة الثامنة والثلاثون من هذا النظام."
+
+    assert find_article_headings(text) == []
+
+
+def test_a_heading_at_the_start_of_a_line_is_found() -> None:
+    text = "شيء ما ينتهي هنا.\nالمادة الثالثة: النص."
     headings = find_article_headings(text)
 
     assert len(headings) == 1
     assert headings[0][3] == 3
+
+
+def test_a_heading_without_a_colon_is_found() -> None:
+    """The official text writes some headings with no colon at all."""
+    text = "المادة الثانية\n تعديلات المادة\nنص المادة هنا."
+    headings = find_article_headings(text)
+
+    assert headings[0][3] == 2

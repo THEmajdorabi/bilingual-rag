@@ -361,7 +361,7 @@ questions:
   tags:
   - colloquial
   - situational
-  verified_by: drafted
+  verified_by: human
   confidence: low
   confidence_reason: Article 39 was not read in full while drafting; the label is inferred from a snippet.
 - id: q025
@@ -377,7 +377,7 @@ questions:
   - colloquial
   - misspelled
   - situational
-  verified_by: drafted
+  verified_by: human
   confidence: low
   confidence_reason: Article 60 was not read in full while drafting; the label is inferred from a snippet.
 - id: q026

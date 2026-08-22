@@ -1,0 +1,318 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بحث في نظام العمل السعودي — Saudi Labour Law Search</title>
+<style>
+/*
+ * Right-to-left done with LOGICAL properties throughout: margin-inline-start,
+ * padding-inline, border-inline-start, inset-inline. Never margin-left.
+ * Retrofitting physical properties to RTL is where nearly every bilingual demo
+ * breaks, and a language toggle that only flips `dir` exposes it immediately.
+ */
+:root {
+  --bg: #0f1116; --panel: #181c24; --edge: #272d38;
+  --ink: #e9ecf1; --dim: #98a2b3; --accent: #7aa2f7;
+  --ok: #4ec9a0; --bad: #f7768e; --warn: #e0af68;
+  --radius: 10px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", "Traditional Arabic", Arial, sans-serif;
+  font-size: 17px; line-height: 1.9;
+  padding: 24px 16px 64px;
+}
+.wrap { max-width: 900px; margin-inline: auto; }
+
+header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+h1 { font-size: 24px; margin: 0 0 4px; }
+.sub { color: var(--dim); font-size: 14px; }
+
+/* The disclaimer is always visible, never in a footer. */
+.disclaimer {
+  margin: 14px 0 20px; padding: 10px 14px;
+  border-inline-start: 3px solid var(--warn);
+  background: #241f16; color: var(--warn);
+  border-radius: 6px; font-size: 14px;
+}
+
+.ask { display: flex; gap: 10px; flex-wrap: wrap; }
+textarea {
+  flex: 1 1 480px; min-height: 76px; resize: vertical;
+  font-family: inherit; font-size: 18px; line-height: 1.8;
+  padding: 12px 14px; border-radius: var(--radius);
+  border: 1px solid var(--edge); background: #12151b; color: var(--ink);
+}
+button {
+  font-family: inherit; font-size: 16px; padding: 12px 22px;
+  border-radius: var(--radius); border: 1px solid var(--edge);
+  background: #232a36; color: var(--ink); cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: var(--accent); }
+button:disabled { opacity: .5; cursor: default; }
+button.primary { background: #1d2b45; border-color: var(--accent); color: var(--accent); }
+
+.row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 12px; color: var(--dim); font-size: 14px; }
+label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+
+.stage { margin-top: 18px; color: var(--accent); font-size: 15px; }
+.answer {
+  margin-top: 18px; padding: 18px 20px;
+  background: var(--panel); border: 1px solid var(--edge);
+  border-radius: var(--radius); font-size: 19px; line-height: 2.1;
+  white-space: pre-wrap;
+}
+.answer.refused { border-inline-start: 3px solid var(--warn); }
+
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.badge { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #202632; color: var(--dim); }
+.badge.good { background: #16302a; color: var(--ok); }
+.badge.bad { background: #331c22; color: var(--bad); }
+.badge.warn { background: #322a19; color: var(--warn); }
+
+h3 { font-size: 15px; color: var(--dim); margin: 24px 0 8px; font-weight: 600; }
+
+/* Citations expand to show the ORIGINAL passage, diacritics intact. */
+details.citation {
+  background: var(--panel); border: 1px solid var(--edge);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 8px; margin-bottom: 10px; overflow: hidden;
+}
+details.citation.unsupported { border-inline-start-color: var(--bad); }
+details.citation > summary {
+  cursor: pointer; padding: 11px 16px; font-size: 15px;
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+details.citation > summary::marker { color: var(--accent); }
+.passage {
+  padding: 4px 16px 16px; font-size: 17px; line-height: 2.1;
+  white-space: pre-wrap; color: #d3d8e0;
+}
+.path { color: var(--dim); font-size: 13px; }
+
+.warnbox {
+  margin-top: 16px; padding: 12px 16px; border-radius: 8px;
+  background: #2a1a1f; border-inline-start: 3px solid var(--bad); color: var(--bad);
+  font-size: 15px;
+}
+footer { margin-top: 40px; color: var(--dim); font-size: 13px; border-top: 1px solid var(--edge); padding-top: 14px; }
+code { background: #202632; padding: 1px 6px; border-radius: 4px; font-size: 13px; }
+.examples { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.examples button { font-size: 14px; padding: 7px 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1 id="title">بحث في نظام العمل السعودي</h1>
+      <div class="sub" id="subtitle">نظام العمل ولائحته التنفيذية · إجابات مع الإحالة إلى المادة</div>
+    </div>
+    <button id="lang-toggle" type="button">English</button>
+  </header>
+
+  <!-- Always visible, never hidden in a footer. -->
+  <div class="disclaimer" id="disclaimer">
+    عرض توضيحي للبحث في وثائق عامة. ليس استشارة قانونية.
+  </div>
+
+  <div class="ask">
+    <textarea id="q" dir="auto" placeholder="اكتب سؤالك… مثال: مديري قال لي اطلع بكرة، لازم يعطيني وقت قبل؟"></textarea>
+    <button class="primary" id="send" type="button">اسأل</button>
+  </div>
+
+  <div class="examples" id="examples"></div>
+
+  <div class="row">
+    <label><input type="checkbox" id="agent"> <span id="agent-label">دع الوكيل يقرر كيف يبحث (أبطأ)</span></label>
+    <label><input type="checkbox" id="faith" checked> <span id="faith-label">تحقّق من صحة الإسناد</span></label>
+  </div>
+
+  <div class="stage" id="stage"></div>
+  <div id="out"></div>
+
+  <footer id="footer">
+    المصدر: نظام العمل الصادر بالمرسوم الملكي م/٥١ ولائحته التنفيذية.
+    أرقام جودة الاسترجاع مقيسة على مجموعة تقييم غير مُراجَعة بشرياً، فهي مبدئية.
+  </footer>
+</div>
+
+<script>
+const T = {
+  ar: {
+    title: "بحث في نظام العمل السعودي",
+    subtitle: "نظام العمل ولائحته التنفيذية · إجابات مع الإحالة إلى المادة",
+    disclaimer: "عرض توضيحي للبحث في وثائق عامة. ليس استشارة قانونية.",
+    ask: "اسأل", asking: "جارٍ البحث…",
+    placeholder: "اكتب سؤالك… مثال: مديري قال لي اطلع بكرة، لازم يعطيني وقت قبل؟",
+    agent: "دع الوكيل يقرر كيف يبحث (أبطأ)",
+    faith: "تحقّق من صحة الإسناد",
+    retrieving: "يبحث في النصوص…", answering: "يصوغ الإجابة…",
+    sources: "المواد المُستشهد بها", refused: "لا توجد إجابة في النصوص",
+    noSupport: "جمل غير مدعومة بالنص المُستشهد به:",
+    invented: "استشهادات بمواد لم تُسترجع:",
+    footer: "المصدر: نظام العمل الصادر بالمرسوم الملكي م/٥١ ولائحته التنفيذية. أرقام جودة الاسترجاع مقيسة على مجموعة تقييم غير مُراجَعة بشرياً، فهي مبدئية.",
+    examples: [
+      "مديري قال لي اطلع بكرة وانا راتبي شهري، لازم يعطيني وقت قبل؟",
+      "كم يوم اقدر اسافر فيها لاهلي بالسنه وراتبي يمشي؟",
+      "تعبت ورقدت المستشفى شهر كامل، بيخصمون من راتبي؟"
+    ]
+  },
+  en: {
+    title: "Saudi Labour Law Search",
+    subtitle: "The Labor Law and its Implementing Regulations · answers cited to the article",
+    disclaimer: "Retrieval demo over public documents. Not legal advice.",
+    ask: "Ask", asking: "Searching…",
+    placeholder: "Ask a question… e.g. My boss told me to leave tomorrow — must he give me notice?",
+    agent: "Let the agent decide how to search (slower)",
+    faith: "Check citation faithfulness",
+    retrieving: "Searching the corpus…", answering: "Composing the answer…",
+    sources: "Cited articles", refused: "No answer in the passages",
+    noSupport: "Sentences not supported by the cited passage:",
+    invented: "Citations naming articles that were never retrieved:",
+    footer: "Source: the Labor Law (Royal Decree M/51) and its Implementing Regulations. Retrieval quality figures are measured against a model-drafted, unverified evaluation set and are provisional.",
+    examples: [
+      "My boss told me to leave tomorrow and I'm paid monthly. Must he warn me first?",
+      "How many days a year can I travel home and still get paid?",
+      "I was in hospital for a month. Will they cut my pay?"
+    ]
+  }
+};
+
+let lang = "ar";
+const $ = (id) => document.getElementById(id);
+
+function applyLanguage() {
+  const t = T[lang];
+  // The whole document flips direction, not just the text.
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  document.documentElement.lang = lang;
+  $("title").textContent = t.title;
+  $("subtitle").textContent = t.subtitle;
+  $("disclaimer").textContent = t.disclaimer;
+  $("send").textContent = t.ask;
+  $("q").placeholder = t.placeholder;
+  $("agent-label").textContent = t.agent;
+  $("faith-label").textContent = t.faith;
+  $("footer").textContent = t.footer;
+  $("lang-toggle").textContent = lang === "ar" ? "English" : "العربية";
+
+  const box = $("examples");
+  box.innerHTML = "";
+  t.examples.forEach((text) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.dir = "auto";
+    b.textContent = text.length > 52 ? text.slice(0, 52) + "…" : text;
+    b.onclick = () => { $("q").value = text; ask(); };
+    box.appendChild(b);
+  });
+}
+
+$("lang-toggle").onclick = () => { lang = lang === "ar" ? "en" : "ar"; applyLanguage(); };
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function renderAnswer(data) {
+  const t = T[lang];
+  const out = $("out");
+  const parts = [];
+
+  parts.push(
+    `<div class="answer ${data.refused ? "refused" : ""}" dir="auto">${escapeHtml(data.answer)}</div>`
+  );
+
+  const badges = [];
+  if (data.refused) badges.push(`<span class="badge warn">${t.refused}</span>`);
+  if (data.faithfulness !== null && data.faithfulness !== undefined) {
+    const pct = Math.round(data.faithfulness * 100);
+    const cls = pct === 100 ? "good" : pct >= 50 ? "warn" : "bad";
+    badges.push(`<span class="badge ${cls}">faithfulness ${pct}% (${data.claims_checked})</span>`);
+  }
+  badges.push(`<span class="badge">${data.latency_ms} ms</span>`);
+  if (data.cost_usd) badges.push(`<span class="badge">$${data.cost_usd.toFixed(4)}</span>`);
+  parts.push(`<div class="badges">${badges.join("")}</div>`);
+
+  if (data.hallucinated_citations && data.hallucinated_citations.length) {
+    parts.push(
+      `<div class="warnbox" dir="auto">${t.invented} ${escapeHtml(data.hallucinated_citations.join(", "))}</div>`
+    );
+  }
+  if (data.unsupported_claims && data.unsupported_claims.length) {
+    parts.push(
+      `<div class="warnbox" dir="auto">${t.noSupport}<br>` +
+      data.unsupported_claims.map((c) => escapeHtml(c)).join("<br>") + `</div>`
+    );
+  }
+
+  if (data.citations && data.citations.length) {
+    parts.push(`<h3>${t.sources}</h3>`);
+    data.citations.forEach((c) => {
+      const bad = c.supported === false;
+      const mark = c.supported === true ? "✓" : bad ? "✕" : "";
+      parts.push(
+        `<details class="citation ${bad ? "unsupported" : ""}">` +
+        `<summary dir="auto"><b>المادة ${escapeHtml(c.article_no ?? "?")}</b>` +
+        `<span class="path">${escapeHtml((c.heading_path || []).join(" › "))}</span>` +
+        `<span>${mark}</span></summary>` +
+        `<div class="passage" dir="rtl">${escapeHtml(c.quoted)}</div>` +
+        `</details>`
+      );
+    });
+  }
+
+  out.innerHTML = parts.join("");
+}
+
+async function ask() {
+  const question = $("q").value.trim();
+  if (!question) return;
+  const t = T[lang];
+
+  $("send").disabled = true;
+  $("out").innerHTML = "";
+  $("stage").textContent = t.retrieving;
+
+  try {
+    const response = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question,
+        top_k: 10,
+        use_agent: $("agent").checked,
+        check_faithfulness: $("faith").checked
+      })
+    });
+    if (!response.ok) {
+      const detail = await response.text();
+      $("stage").textContent = "";
+      $("out").innerHTML = `<div class="warnbox" dir="auto">${escapeHtml(detail)}</div>`;
+      return;
+    }
+    $("stage").textContent = t.answering;
+    renderAnswer(await response.json());
+  } catch (err) {
+    $("out").innerHTML = `<div class="warnbox" dir="auto">${escapeHtml(err.message)}</div>`;
+  } finally {
+    $("stage").textContent = "";
+    $("send").disabled = false;
+  }
+}
+
+$("send").onclick = ask;
+$("q").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask();
+});
+
+applyLanguage();
+</script>
+</body>
+</html>

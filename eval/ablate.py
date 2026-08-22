@@ -79,9 +79,21 @@ def summarise(runs: list[dict]) -> dict:
 
 
 def render_table(rows: list[tuple[str, dict]], repeats: int) -> str:
+    # Retrieval here is deterministic -- embeddings are cached, BM25 is
+    # deterministic, and reranker scores are cached per (query, chunk) -- so
+    # repeats re-measure the same quality figure and only latency varies.
+    # Saying so matters: "mean of 3 runs" otherwise implies a variance estimate
+    # on quality that this pipeline cannot produce.
+    deterministic = all(data.get("recall@10_sd", 0.0) == 0.0 for _, data in rows)
+
     lines = [
         "",
         f"ABLATION  (mean of {repeats} run{'s' if repeats != 1 else ''})",
+    ]
+    if deterministic and repeats > 1:
+        lines.append("  quality metrics are identical across repeats (sd = 0): retrieval is")
+        lines.append("  deterministic, so the repeats measure latency variance only.")
+    lines += [
         "",
         "| Configuration | recall@10 | MRR@10 | nDCG@10 | p95 latency |",
         "|---|---|---|---|---|",

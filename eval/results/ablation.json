@@ -15,8 +15,8 @@
       "mrr@10_sd": 0.0,
       "ndcg@10": 0.8931075217707692,
       "ndcg@10_sd": 0.0,
-      "p95_latency_ms": 33.052800000101946,
-      "p95_latency_ms_sd": 9.849379666440653
+      "p95_latency_ms": 36.39416666555917,
+      "p95_latency_ms_sd": 8.256418595760392
     },
     {
       "config": "+ Arabic normalization",
@@ -26,8 +26,8 @@
       "mrr@10_sd": 0.0,
       "ndcg@10": 0.8894532642931878,
       "ndcg@10_sd": 0.0,
-      "p95_latency_ms": 33.290533333153384,
-      "p95_latency_ms_sd": 9.879111150043656
+      "p95_latency_ms": 36.09943333140109,
+      "p95_latency_ms_sd": 7.980370898836209
     },
     {
       "config": "+ BM25 hybrid with RRF",
@@ -37,8 +37,8 @@
       "mrr@10_sd": 0.0,
       "ndcg@10": 0.7602142447485872,
       "ndcg@10_sd": 0.0,
-      "p95_latency_ms": 29.910399999304598,
-      "p95_latency_ms_sd": 0.39137159671383326
+      "p95_latency_ms": 31.07343333249446,
+      "p95_latency_ms_sd": 0.13422034997231141
     },
     {
       "config": "+ cross-encoder reranking",
@@ -48,8 +48,8 @@
       "mrr@10_sd": 0.0,
       "ndcg@10": 0.9255544539469548,
       "ndcg@10_sd": 0.0,
-      "p95_latency_ms": 359.5584333337077,
-      "p95_latency_ms_sd": 466.51523764096896
+      "p95_latency_ms": 396.32339999904315,
+      "p95_latency_ms_sd": 515.9200982997959
     }
   ]
 }

@@ -142,3 +142,118 @@ and asserts the class does *not* swallow ordinary letters.
 **Related:** the range is deliberately wider than pyarabic's `TASHKEEL`
 constant, which stops at U+0652 and so misses maddah and the hamza-above/below
 marks at U+0653–U+0655. Those do occur in vocalised legal text.
+
+---
+
+## 2026-08-22 — Arabic normalization is worth far less than the spec predicts
+
+**The spec's claim.** BUILD.md, Part 3, on `arabic/normalize.py`: *"Without
+normalization, dense retrieval is mediocre and BM25 is close to useless. This
+is the step tutorials omit, and it is where most of your recall gain will come
+from."*
+
+**What was measured.** It is worth **+0.007 recall@10** on this corpus, which
+is inside the noise threshold and not a demonstrated improvement.
+
+| Configuration | recall@10 | MRR@10 | nDCG@10 | p95 |
+|---|---|---|---|---|
+| dense only, no normalization | 0.9851 | 0.8954 | 0.893 | 33 ms |
+| + Arabic normalization | **0.9925** | 0.8854 | 0.889 | 33 ms |
+| + BM25 hybrid with RRF | 0.9552 | 0.7071 | 0.760 | 30 ms |
+| + cross-encoder reranking | **0.9925** | **0.9259** | 0.926 | 360 ms |
+
+Reproduce: `python scripts/ingest.py --recreate --build-raw && python eval/ablate.py`.
+Raw output in `eval/results/ablation.json`.
+
+Note that normalization *lowers* MRR slightly (0.8954 → 0.8854) while raising
+recall. It moves a relevant article into the top 10 that was outside it, and
+demotes one that was ranked highly. Both movements are small.
+
+**Why the spec is wrong here, specifically.** Two reasons, and neither means
+the spec's reasoning was bad in general:
+
+1. **BGE-M3 already absorbs orthographic variation.** The spec's claim dates
+   from a world of lexical and weaker multilingual embedders. A model trained
+   on large multilingual corpora has seen `الأجر` and `الاجر` and maps them
+   close together without help.
+2. **The corpus is unusually clean.** It is official HTML: typed, unvocalised,
+   no diacritics, no presentation forms, no tatweel padding. The variation
+   normalization exists to collapse is *largely absent from the input*. On a
+   scanned or PDF-extracted corpus -- the two candidates rejected earlier in
+   this file -- it would have far more to do.
+
+**What changed, and what deliberately did not.**
+
+**Changed:** the claim. No README or docstring in this repo repeats the spec's
+"most of your recall gain" line. The ablation table is published with the
+measured `+0.007` and the "within noise" verdict attached, rather than the
+number being quietly omitted because it is unflattering.
+
+**Not changed: normalization stays on by default.** Removing it would be
+over-fitting to one clean corpus, and would be wrong for three concrete
+reasons:
+
+- **BM25 depends on it.** The lexical index matches strings. The dense
+  encoder's tolerance for spelling variation does nothing for BM25, and the
+  baseline row's BM25 is unstemmed and unnormalized precisely so the row is a
+  true baseline.
+- **Queries are dirtier than the corpus.** The corpus is typed by a ministry;
+  queries are typed by users. The eval set's `colloquial` and `misspelled`
+  questions exist for this reason, and user text carries the variation the
+  official text does not.
+- **The next corpus may not be clean.** Normalization is cheap (+0 ms at p95)
+  and is the difference between working and not working on a scanned source.
+
+Turning off a component that costs nothing, guards a real failure mode, and
+merely fails to help *on this particular input* would be the wrong lesson to
+draw from the measurement.
+
+**Three caveats, stated because they bound how much this measurement is worth:**
+
+1. **The baseline is already 0.985.** There is almost no headroom for any
+   component to demonstrate value on recall@10. This measurement discriminates
+   poorly by construction, and MRR is doing most of the real work.
+2. **The eval set is model-drafted, not human-verified.** Per `eval/schema.py`,
+   these figures measure the pipeline rather than its quality until
+   `eval/review.py` has been run.
+3. **The three repeats show `sd = 0.0000` on every quality metric**, because
+   retrieval here is deterministic: embeddings are cached, BM25 is
+   deterministic, and reranker scores are cached per (query, chunk). The
+   repeats vary latency only. "Mean of 3 runs" must not be read as a variance
+   estimate on quality -- there is no run-to-run variance to estimate.
+
+---
+
+## 2026-08-22 — The BM25 hybrid hurts on this corpus, and is kept anyway (for now)
+
+**Measured:** adding BM25 with RRF fusion **lowers** recall@10 from 0.9925 to
+0.9552 and MRR@10 from 0.8854 to 0.7071. Cross-encoder reranking then recovers
+it exactly, back to 0.9925 recall and 0.9259 MRR, for **+330 ms at p95**.
+
+So on this corpus `dense + normalization` and the full four-stage pipeline
+reach **identical recall@10 (0.9925)**. The BM25-plus-reranker pair is a wash
+on recall, buys +0.041 MRR, and costs an order of magnitude in latency
+(33 ms → 360 ms).
+
+**Why BM25 hurts here.** With 305 chunks and dense retrieval already at 0.99,
+a second retriever has no signal left to add. What it does add is
+lexically-similar-but-wrong articles -- legal text reuses the same vocabulary
+across chapters -- and RRF promotes anything both lists rank at all, so those
+near-misses displace correct articles from the top 10.
+
+**Decision: no change to the default pipeline yet.** Dropping BM25 and the
+reranker on this evidence would be premature, because the evidence has the
+three weaknesses in the entry above: a near-ceiling baseline, an unverified
+eval set, and no variance estimate. Making an architectural cut on a
+measurement that cannot discriminate is how you end up with a fast pipeline
+that is worse on the questions you did not test.
+
+**Gate on the decision, so it does not drift into a default by neglect:**
+re-run the ablation once the eval set is human-verified *and* extended with
+harder questions -- ones where the answer is spread across chapters or phrased
+without the article's own vocabulary. If the hybrid still fails to earn its
+330 ms there, cut it and record the removal here.
+
+**Confirmed rather than contradicted:** the spec predicts reranking is "usually
+the biggest single latency cost". Measured: +330 ms of a 360 ms p95, against
+~33 ms for dense and under 1 ms for BM25. That is exactly right.

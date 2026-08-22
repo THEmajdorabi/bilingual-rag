@@ -514,7 +514,7 @@ questions:
   - colloquial
   - misspelled
   - situational
-  verified_by: drafted
+  verified_by: human
   confidence: low
   confidence_reason: Article 15_bis was not read in full while drafting; the label is inferred from a
     snippet.
@@ -823,22 +823,6 @@ questions:
   confidence: medium
   confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
     is a judgement call.
-- id: q054
-  question_ar: كم الحد الادنى للراتب بالريال اللي لازم ياخذه اي موظف؟
-  relevant_chunks: []
-  relevant_articles: []
-  doc_id: saudi_labor_law
-  answerable: false
-  category: out_of_scope
-  difficulty: hard
-  tags:
-  - colloquial
-  - misspelled
-  verified_by: drafted
-  notes: The Labor Law fixes no numeric minimum wage.
-  confidence: low
-  confidence_reason: Judged out of scope against the Labor Law alone, BEFORE the Implementing Regulations
-    were indexed. The Regulations may well cover this, which would make the label wrong.
 - id: q055
   question_ar: كم يخصمون من راتبي ضريبه للدوله كل شهر؟
   relevant_chunks: []

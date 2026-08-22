@@ -16,6 +16,7 @@ does not do:
 
 from __future__ import annotations
 
+import os
 import re
 import time
 from dataclasses import dataclass, field
@@ -70,7 +71,20 @@ class Answer(BaseModel):
     refusal_reason: str | None = None
     retrieved_count: int = 0
     latency_ms: int = 0
+    # Total spend, and the split. They are recorded separately because the two
+    # calls scale differently: answer generation is one call per question, the
+    # faithfulness check is one call per CLAIM. Reporting only the total hides
+    # which half a cost projection is actually sensitive to.
     cost_usd: float = 0.0
+    answer_cost_usd: float = 0.0
+    faithfulness_cost_usd: float = 0.0
+    answer_input_tokens: int = 0
+    answer_output_tokens: int = 0
+    faithfulness_input_tokens: int = 0
+    faithfulness_output_tokens: int = 0
+    # Wall time of retrieval alone. No API cost -- the embedder and the
+    # cross-encoder run locally -- but it is the machine-time half of the bill.
+    retrieval_ms: int = 0
     # Faithfulness, measured per claim.
     claims_checked: int = 0
     claims_supported: int = 0
@@ -172,11 +186,26 @@ def extract_citations(text: str, passages: list[Passage]) -> tuple[list[Citation
 class Answerer:
     """Turns retrieved passages into a grounded, cited answer or a refusal."""
 
-    def __init__(self, settings: Settings | None = None) -> None:
+    def __init__(self, settings: Settings | None = None, model_set: str = "") -> None:
         self.settings = settings or load_settings()
         self._answer_provider = None
         self._check_provider = None
         self.stats = AnswerStats()
+        # A model set selects a whole row of config.yaml at once: "" uses
+        # `answer` and `faithfulness`, "openai" uses `answer_openai` and
+        # `faithfulness_openai`. Swapping providers is then a config lookup,
+        # not an edit, which is what makes a cross-provider comparison
+        # reproducible rather than a thing someone did once by hand.
+        self.model_set = model_set or os.environ.get("BILINGUAL_RAG_MODEL_SET", "")
+
+    def _key(self, role: str) -> str:
+        key = f"{role}_{self.model_set}" if self.model_set else role
+        if key not in self.settings.models:
+            known = ", ".join(sorted(self.settings.models))
+            raise KeyError(
+                f"no model {key!r} in config.yaml (model set {self.model_set!r}). Known: {known}"
+            )
+        return key
 
     # ---- providers, built lazily so importing this module needs no key ----
 
@@ -189,13 +218,13 @@ class Answerer:
     @property
     def answer_provider(self):  # noqa: ANN201
         if self._answer_provider is None:
-            self._answer_provider = self._provider("answer")
+            self._answer_provider = self._provider(self._key("answer"))
         return self._answer_provider
 
     @property
     def check_provider(self):  # noqa: ANN201
         if self._check_provider is None:
-            self._check_provider = self._provider("faithfulness")
+            self._check_provider = self._provider(self._key("faithfulness"))
         return self._check_provider
 
     def _cost(self, model_id: str, input_tokens: int, output_tokens: int) -> float:
@@ -231,7 +260,7 @@ class Answerer:
                 lang=language,
             )
 
-        spec = self.settings.models["answer"]
+        spec = self.settings.models[self._key("answer")]
         completion = self.answer_provider.complete(
             prompt=build_answer_prompt(
                 question, [p.to_dict() | {"doc_id": p.doc_id} for p in passages]
@@ -251,6 +280,9 @@ class Answerer:
             refusal_reason="model found no supporting passage" if refused else None,
             retrieved_count=len(passages),
             cost_usd=cost,
+            answer_cost_usd=cost,
+            answer_input_tokens=completion.input_tokens,
+            answer_output_tokens=completion.output_tokens,
             hallucinated_citations=invented,
             lang=language,
         )
@@ -278,7 +310,7 @@ class Answerer:
         the source of the faithfulness number.
         """
         by_article = {p.article_no: p for p in passages if p.article_no}
-        spec = self.settings.models["faithfulness"]
+        spec = self.settings.models[self._key("faithfulness")]
 
         for claim in split_claims(answer.text):
             match = CITATION.search(claim)
@@ -302,7 +334,11 @@ class Answerer:
                 log.warning("faithfulness.check_failed", error=str(exc))
                 continue
 
-            answer.cost_usd += self._cost(spec.id, verdict.input_tokens, verdict.output_tokens)
+            claim_cost = self._cost(spec.id, verdict.input_tokens, verdict.output_tokens)
+            answer.cost_usd += claim_cost
+            answer.faithfulness_cost_usd += claim_cost
+            answer.faithfulness_input_tokens += verdict.input_tokens
+            answer.faithfulness_output_tokens += verdict.output_tokens
             answer.claims_checked += 1
 
             if "SUPPORTED" in verdict.text.upper() and "UNSUPPORTED" not in verdict.text.upper():

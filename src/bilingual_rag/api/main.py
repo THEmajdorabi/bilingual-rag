@@ -72,6 +72,7 @@ class Service:
             qdrant_settings=QdrantSettings(**self.settings.qdrant.model_dump())
         )
         self.retriever.load_bm25()
+        # The model set comes from BILINGUAL_RAG_MODEL_SET; see Answerer._key.
         self.answerer = Answerer(settings=self.settings)
         # Warm the models so the first real request is not the one that pays
         # for loading them.
@@ -276,6 +277,11 @@ def healthz(retriever: Retriever = Depends(get_retriever)) -> HealthResponse:
         documents=documents,
         eval_set_verified=False,
         eval_set_note=EVAL_NOTE,
+        answer_model=(
+            service.answerer.settings.models[service.answerer._key("answer")].id
+            if service.answerer
+            else "unloaded"
+        ),
     )
 
 

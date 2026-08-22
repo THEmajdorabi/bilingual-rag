@@ -71,3 +71,4 @@ class HealthResponse(BaseModel):
     # service reports about itself.
     eval_set_verified: bool
     eval_set_note: str
+    answer_model: str = ""

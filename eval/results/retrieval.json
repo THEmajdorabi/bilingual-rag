@@ -1,1863 +1,1679 @@
 {
   "config": "full",
   "provenance": {
-    "human_verified": 0,
-    "total": 67
+    "human_verified": 3,
+    "total": 53
   },
   "overall": {
-    "n": 67,
-    "recall@1": 0.791,
-    "recall@5": 0.9552,
-    "recall@10": 0.9925,
-    "hit@10": 1.0,
-    "mrr@10": 0.9358,
-    "ndcg@10": 0.9301,
-    "p50_latency_ms": 964.2,
-    "p95_latency_ms": 1102.1
+    "n": 53,
+    "recall@1": 0.1792,
+    "recall@5": 0.5755,
+    "recall@10": 0.6226,
+    "hit@10": 0.6604,
+    "mrr@10": 0.3392,
+    "ndcg@10": 0.401,
+    "p50_latency_ms": 1038.7,
+    "p95_latency_ms": 1249.9
   },
   "groups": {
     "category:annual_leave": {
-      "n": 11,
-      "recall@1": 0.9091,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 1.0,
-      "ndcg@10": 1.0,
-      "p50_latency_ms": 909.5,
-      "p95_latency_ms": 1012.6
+      "n": 8,
+      "recall@1": 0.0,
+      "recall@5": 0.25,
+      "recall@10": 0.3125,
+      "hit@10": 0.375,
+      "mrr@10": 0.1146,
+      "ndcg@10": 0.16,
+      "p50_latency_ms": 1024.5,
+      "p95_latency_ms": 1484.3
     },
     "category:contracts": {
-      "n": 8,
-      "recall@1": 0.875,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 1.0,
-      "ndcg@10": 1.0,
-      "p50_latency_ms": 1019.6,
-      "p95_latency_ms": 1117.9
+      "n": 6,
+      "recall@1": 0.0,
+      "recall@5": 0.5,
+      "recall@10": 0.6667,
+      "hit@10": 0.6667,
+      "mrr@10": 0.2083,
+      "ndcg@10": 0.3196,
+      "p50_latency_ms": 1027.0,
+      "p95_latency_ms": 1183.1
     },
-    "category:definitions": {
+    "category:employment": {
       "n": 2,
-      "recall@1": 1.0,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 1.0,
-      "ndcg@10": 1.0,
-      "p50_latency_ms": 921.2,
-      "p95_latency_ms": 1046.6
+      "recall@1": 0.0,
+      "recall@5": 0.5,
+      "recall@10": 0.5,
+      "hit@10": 0.5,
+      "mrr@10": 0.1,
+      "ndcg@10": 0.1934,
+      "p50_latency_ms": 955.6,
+      "p95_latency_ms": 1057.5
     },
     "category:end_of_service": {
-      "n": 4,
-      "recall@1": 0.75,
+      "n": 2,
+      "recall@1": 0.0,
       "recall@5": 1.0,
       "recall@10": 1.0,
       "hit@10": 1.0,
-      "mrr@10": 0.875,
-      "ndcg@10": 0.9077,
-      "p50_latency_ms": 1035.4,
-      "p95_latency_ms": 1094.5
+      "mrr@10": 0.5,
+      "ndcg@10": 0.6309,
+      "p50_latency_ms": 782.5,
+      "p95_latency_ms": 933.0
     },
     "category:leave": {
+      "n": 3,
+      "recall@1": 0.0,
+      "recall@5": 0.1667,
+      "recall@10": 0.1667,
+      "hit@10": 0.3333,
+      "mrr@10": 0.1667,
+      "ndcg@10": 0.129,
+      "p50_latency_ms": 932.7,
+      "p95_latency_ms": 1048.1
+    },
+    "category:maternity": {
+      "n": 5,
+      "recall@1": 0.4,
+      "recall@5": 0.4,
+      "recall@10": 0.5,
+      "hit@10": 0.6,
+      "mrr@10": 0.4222,
+      "ndcg@10": 0.4369,
+      "p50_latency_ms": 1046.4,
+      "p95_latency_ms": 1108.8
+    },
+    "category:notice_period": {
+      "n": 4,
+      "recall@1": 0.0,
+      "recall@5": 0.25,
+      "recall@10": 0.25,
+      "hit@10": 0.25,
+      "mrr@10": 0.125,
+      "ndcg@10": 0.1577,
+      "p50_latency_ms": 990.9,
+      "p95_latency_ms": 1249.9
+    },
+    "category:rest_days": {
+      "n": 3,
+      "recall@1": 0.3333,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "hit@10": 1.0,
+      "mrr@10": 0.5111,
+      "ndcg@10": 0.629,
+      "p50_latency_ms": 1015.6,
+      "p95_latency_ms": 1041.7
+    },
+    "category:sick_leave": {
       "n": 3,
       "recall@1": 0.6667,
       "recall@5": 1.0,
       "recall@10": 1.0,
       "hit@10": 1.0,
-      "mrr@10": 1.0,
-      "ndcg@10": 0.9323,
-      "p50_latency_ms": 885.7,
-      "p95_latency_ms": 885.8
-    },
-    "category:maternity": {
-      "n": 5,
-      "recall@1": 0.9,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 1.0,
-      "ndcg@10": 1.0,
-      "p50_latency_ms": 910.7,
-      "p95_latency_ms": 964.2
-    },
-    "category:notice_period": {
-      "n": 8,
-      "recall@1": 0.75,
-      "recall@5": 0.875,
-      "recall@10": 0.9375,
-      "hit@10": 1.0,
-      "mrr@10": 0.9062,
-      "ndcg@10": 0.8594,
-      "p50_latency_ms": 1008.9,
-      "p95_latency_ms": 23201.3
-    },
-    "category:rest_days": {
-      "n": 3,
-      "recall@1": 1.0,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 1.0,
-      "ndcg@10": 1.0,
-      "p50_latency_ms": 938.4,
-      "p95_latency_ms": 961.8
-    },
-    "category:sick_leave": {
-      "n": 3,
-      "recall@1": 1.0,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 1.0,
-      "ndcg@10": 1.0,
-      "p50_latency_ms": 886.5,
-      "p95_latency_ms": 1008.1
+      "mrr@10": 0.75,
+      "ndcg@10": 0.8102,
+      "p50_latency_ms": 985.9,
+      "p95_latency_ms": 1046.9
     },
     "category:termination": {
-      "n": 12,
-      "recall@1": 0.75,
-      "recall@5": 0.875,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 0.9583,
-      "ndcg@10": 0.9123,
-      "p50_latency_ms": 1065.0,
-      "p95_latency_ms": 1116.7
+      "n": 10,
+      "recall@1": 0.1,
+      "recall@5": 0.6,
+      "recall@10": 0.65,
+      "hit@10": 0.7,
+      "mrr@10": 0.2683,
+      "ndcg@10": 0.3469,
+      "p50_latency_ms": 1043.9,
+      "p95_latency_ms": 1400.7
     },
-    "category:working_hours": {
-      "n": 8,
-      "recall@1": 0.4375,
-      "recall@5": 0.9375,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 0.6813,
-      "ndcg@10": 0.7585,
-      "p50_latency_ms": 901.8,
-      "p95_latency_ms": 946.4
-    },
-    "difficulty:easy": {
-      "n": 20,
-      "recall@1": 0.9,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 0.95,
-      "ndcg@10": 0.9631,
-      "p50_latency_ms": 961.8,
-      "p95_latency_ms": 1101.2
-    },
-    "difficulty:hard": {
-      "n": 7,
-      "recall@1": 0.4286,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 0.6429,
-      "ndcg@10": 0.7319,
-      "p50_latency_ms": 1000.9,
-      "p95_latency_ms": 1116.7
-    },
-    "difficulty:medium": {
-      "n": 25,
+    "category:training": {
+      "n": 1,
       "recall@1": 1.0,
       "recall@5": 1.0,
       "recall@10": 1.0,
       "hit@10": 1.0,
       "mrr@10": 1.0,
       "ndcg@10": 1.0,
-      "p50_latency_ms": 953.1,
-      "p95_latency_ms": 1091.0
+      "p50_latency_ms": 1069.5,
+      "p95_latency_ms": 1069.5
     },
-    "difficulty:multi_hop": {
-      "n": 15,
-      "recall@1": 0.4667,
-      "recall@5": 0.8,
-      "recall@10": 0.9667,
-      "hit@10": 1.0,
-      "mrr@10": 0.9467,
-      "ndcg@10": 0.8622,
-      "p50_latency_ms": 964.4,
-      "p95_latency_ms": 1102.1
-    },
-    "lang:ar": {
-      "n": 47,
-      "recall@1": 0.7872,
-      "recall@5": 0.9574,
+    "category:working_hours": {
+      "n": 6,
+      "recall@1": 0.4167,
+      "recall@5": 1.0,
       "recall@10": 1.0,
       "hit@10": 1.0,
-      "mrr@10": 0.9468,
-      "ndcg@10": 0.9359,
-      "p50_latency_ms": 997.2,
-      "p95_latency_ms": 1116.7
+      "mrr@10": 0.6722,
+      "ndcg@10": 0.7358,
+      "p50_latency_ms": 1083.0,
+      "p95_latency_ms": 1152.1
+    },
+    "difficulty:hard": {
+      "n": 44,
+      "recall@1": 0.2045,
+      "recall@5": 0.6136,
+      "recall@10": 0.6364,
+      "hit@10": 0.6364,
+      "mrr@10": 0.3379,
+      "ndcg@10": 0.4103,
+      "p50_latency_ms": 1037.7,
+      "p95_latency_ms": 1249.9
+    },
+    "difficulty:multi_hop": {
+      "n": 9,
+      "recall@1": 0.0556,
+      "recall@5": 0.3889,
+      "recall@10": 0.5556,
+      "hit@10": 0.7778,
+      "mrr@10": 0.3457,
+      "ndcg@10": 0.3551,
+      "p50_latency_ms": 1044.2,
+      "p95_latency_ms": 1183.1
+    },
+    "lang:ar": {
+      "n": 33,
+      "recall@1": 0.1364,
+      "recall@5": 0.5303,
+      "recall@10": 0.6061,
+      "hit@10": 0.6667,
+      "mrr@10": 0.3029,
+      "ndcg@10": 0.3637,
+      "p50_latency_ms": 1046.9,
+      "p95_latency_ms": 1400.7
     },
     "lang:en": {
       "n": 20,
-      "recall@1": 0.8,
-      "recall@5": 0.95,
-      "recall@10": 0.975,
-      "hit@10": 1.0,
-      "mrr@10": 0.91,
-      "ndcg@10": 0.9165,
-      "p50_latency_ms": 937.3,
-      "p95_latency_ms": 1061.5
+      "recall@1": 0.25,
+      "recall@5": 0.65,
+      "recall@10": 0.65,
+      "hit@10": 0.65,
+      "mrr@10": 0.3992,
+      "ndcg@10": 0.4624,
+      "p50_latency_ms": 990.9,
+      "p95_latency_ms": 1068.6
     },
     "multi_hop": {
-      "n": 15,
-      "recall@1": 0.4667,
-      "recall@5": 0.8,
-      "recall@10": 0.9667,
-      "hit@10": 1.0,
-      "mrr@10": 0.9467,
-      "ndcg@10": 0.8622,
-      "p50_latency_ms": 964.4,
-      "p95_latency_ms": 1102.1
+      "n": 9,
+      "recall@1": 0.0556,
+      "recall@5": 0.3889,
+      "recall@10": 0.5556,
+      "hit@10": 0.7778,
+      "mrr@10": 0.3457,
+      "ndcg@10": 0.3551,
+      "p50_latency_ms": 1044.2,
+      "p95_latency_ms": 1183.1
     },
     "tag:colloquial": {
-      "n": 5,
-      "recall@1": 0.4,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 0.6,
-      "ndcg@10": 0.6985,
-      "p50_latency_ms": 1000.9,
-      "p95_latency_ms": 1094.5
+      "n": 30,
+      "recall@1": 0.15,
+      "recall@5": 0.5,
+      "recall@10": 0.5667,
+      "hit@10": 0.6333,
+      "mrr@10": 0.3015,
+      "ndcg@10": 0.3538,
+      "p50_latency_ms": 1046.9,
+      "p95_latency_ms": 1400.7
     },
     "tag:cross_lingual": {
       "n": 20,
-      "recall@1": 0.8,
-      "recall@5": 0.95,
-      "recall@10": 0.975,
-      "hit@10": 1.0,
-      "mrr@10": 0.91,
-      "ndcg@10": 0.9165,
-      "p50_latency_ms": 937.3,
-      "p95_latency_ms": 1061.5
+      "recall@1": 0.25,
+      "recall@5": 0.65,
+      "recall@10": 0.65,
+      "hit@10": 0.65,
+      "mrr@10": 0.3992,
+      "ndcg@10": 0.4624,
+      "p50_latency_ms": 990.9,
+      "p95_latency_ms": 1068.6
     },
     "tag:misspelled": {
-      "n": 2,
-      "recall@1": 0.5,
-      "recall@5": 1.0,
-      "recall@10": 1.0,
-      "hit@10": 1.0,
-      "mrr@10": 0.75,
-      "ndcg@10": 0.8155,
-      "p50_latency_ms": 828.2,
-      "p95_latency_ms": 1094.5
+      "n": 12,
+      "recall@1": 0.125,
+      "recall@5": 0.4583,
+      "recall@10": 0.5,
+      "hit@10": 0.5833,
+      "mrr@10": 0.2986,
+      "ndcg@10": 0.3261,
+      "p50_latency_ms": 1069.5,
+      "p95_latency_ms": 1249.9
+    },
+    "tag:situational": {
+      "n": 53,
+      "recall@1": 0.1792,
+      "recall@5": 0.5755,
+      "recall@10": 0.6226,
+      "hit@10": 0.6604,
+      "mrr@10": 0.3392,
+      "ndcg@10": 0.401,
+      "p50_latency_ms": 1038.7,
+      "p95_latency_ms": 1249.9
     }
   },
   "per_question": [
     {
       "id": "q001",
-      "query": "ما هي مدة الإشعار المطلوبة قبل إنهاء عقد العمل غير محدد المدة؟",
+      "query": "مديري قال لي اطلع بكرة وانا راتبي شهري، لازم يعطيني وقت قبل؟",
       "expected": [
-        "75"
+        "saudi_labor_law:75"
       ],
       "retrieved": [
-        "75",
-        "76",
-        "55",
-        "74",
-        "77",
-        "53",
-        "48",
-        "78"
+        "saudi_labor_law:61",
+        "labor_regulations:55",
+        "labor_regulations:61",
+        "labor_regulations:45",
+        "saudi_labor_law:97",
+        "saudi_labor_law:94",
+        "saudi_labor_law:70",
+        "saudi_labor_law:90",
+        "saudi_labor_law:2",
+        "labor_regulations:22_bis"
       ],
-      "tags": [],
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
       "category": "notice_period",
-      "difficulty": "easy",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 23201.3
+      "latency_ms": 137.2
     },
     {
       "id": "q002",
-      "query": "كم يوماً يجب الإشعار قبل الإنهاء إذا كان أجر العامل يدفع شهرياً؟",
+      "query": "طلعوني من الشغل فجاه بدون ما يخبروني قبل بمده، لي شي عندهم؟",
       "expected": [
-        "75"
+        "saudi_labor_law:76"
       ],
       "retrieved": [
-        "75",
-        "77",
-        "78",
-        "109",
-        "88",
-        "76",
-        "2",
-        "90",
-        "53"
+        "saudi_labor_law:81",
+        "saudi_labor_law:78",
+        "saudi_labor_law:111",
+        "saudi_labor_law:182",
+        "saudi_labor_law:75",
+        "saudi_labor_law:197",
+        "saudi_labor_law:80",
+        "saudi_labor_law:94"
       ],
-      "tags": [],
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
       "category": "notice_period",
-      "difficulty": "easy",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1101.2
+      "latency_ms": 1249.9
     },
     {
       "id": "q003",
-      "query": "ماذا يلزم الطرف الذي أنهى العقد دون مراعاة مهلة الإشعار؟",
+      "query": "صاحب الشغل طردني وما عطاني سبب مقنع، كم المفروض ياخذ مني تعويض؟",
       "expected": [
-        "76"
+        "saudi_labor_law:77"
       ],
       "retrieved": [
-        "76",
-        "81",
-        "75",
-        "77",
-        "182",
-        "80",
-        "183",
-        "78",
-        "88"
+        "saudi_labor_law:80",
+        "labor_regulations:58",
+        "saudi_labor_law:62",
+        "saudi_labor_law:77",
+        "saudi_labor_law:71",
+        "saudi_labor_law:78",
+        "saudi_labor_law:138",
+        "saudi_labor_law:29",
+        "saudi_labor_law:94"
       ],
-      "tags": [],
-      "category": "notice_period",
-      "difficulty": "medium",
+      "tags": [
+        "situational"
+      ],
+      "category": "termination",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1017.1
+      "latency_ms": 1236.1
     },
     {
       "id": "q004",
-      "query": "ما هو التعويض المستحق عند إنهاء عقد غير محدد المدة لسبب غير مشروع؟",
+      "query": "خدمت عندهم سبع سنين وقررت اطلع، كم فلوس المفروض تجيني؟",
       "expected": [
-        "77"
+        "saudi_labor_law:84"
       ],
       "retrieved": [
-        "77",
-        "76",
-        "75",
-        "80",
-        "87",
-        "55",
-        "94",
-        "85"
+        "saudi_labor_law:85",
+        "saudi_labor_law:84",
+        "labor_regulations:11",
+        "labor_regulations:33",
+        "saudi_labor_law:71",
+        "saudi_labor_law:114",
+        "saudi_labor_law:77",
+        "labor_regulations:35",
+        "labor_regulations:44",
+        "saudi_labor_law:109"
       ],
-      "tags": [],
-      "category": "termination",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "end_of_service",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1091.0
+      "latency_ms": 782.5
     },
     {
       "id": "q005",
-      "query": "كيف تحسب مكافأة نهاية الخدمة؟",
+      "query": "مديري يخليني اجلس بالمكتب من الصبح لين المغرب كل يوم، هذا مسموح؟",
       "expected": [
-        "84"
+        "saudi_labor_law:98"
       ],
       "retrieved": [
-        "84",
-        "86",
-        "18",
-        "85",
-        "54",
-        "172",
-        "96",
-        "2",
-        "77",
-        "10"
+        "labor_regulations:27",
+        "saudi_labor_law:100",
+        "saudi_labor_law:101",
+        "saudi_labor_law:188",
+        "saudi_labor_law:98",
+        "labor_regulations:26",
+        "saudi_labor_law:104",
+        "labor_regulations:10",
+        "labor_regulations:11",
+        "saudi_labor_law:99"
       ],
-      "tags": [],
-      "category": "end_of_service",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "working_hours",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1035.4
+      "latency_ms": 1133.9
     },
     {
       "id": "q006",
-      "query": "ما مقدار مكافأة نهاية الخدمة عن السنوات الخمس الأولى؟",
+      "query": "في رمضان يبوني ادوام نفس الدوام العادي، صح كذا؟",
       "expected": [
-        "84"
+        "saudi_labor_law:98"
       ],
       "retrieved": [
-        "84",
-        "85",
-        "54",
-        "77",
-        "18",
-        "86",
-        "109",
-        "2",
-        "172",
-        "88"
+        "saudi_labor_law:98",
+        "saudi_labor_law:164",
+        "labor_regulations:26",
+        "labor_regulations:23",
+        "labor_regulations:39",
+        "saudi_labor_law:60",
+        "saudi_labor_law:106",
+        "saudi_labor_law:105",
+        "saudi_labor_law:101",
+        "labor_regulations:24"
       ],
-      "tags": [],
-      "category": "end_of_service",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "working_hours",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1056.1
+      "latency_ms": 1152.1
     },
     {
       "id": "q007",
-      "query": "ما هو الحد الأقصى لساعات العمل الفعلية في اليوم الواحد؟",
+      "query": "يبوني اشتغل سبعة ايام بالاسبوع بدون ما ارتاح ولا يوم، ينفع؟",
       "expected": [
-        "98"
+        "saudi_labor_law:104"
       ],
       "retrieved": [
-        "164",
-        "98",
-        "188",
-        "106",
-        "99",
-        "101",
-        "100",
-        "154",
-        "6",
-        "49"
+        "labor_regulations:26",
+        "labor_regulations:27",
+        "saudi_labor_law:164",
+        "labor_regulations:7",
+        "saudi_labor_law:104",
+        "labor_regulations:25",
+        "saudi_labor_law:78",
+        "labor_regulations:38",
+        "labor_regulations:22_bis"
       ],
-      "tags": [],
-      "category": "working_hours",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "rest_days",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 946.4
+      "latency_ms": 1041.7
     },
     {
       "id": "q008",
-      "query": "كم ساعة عمل في الأسبوع إذا اعتمد صاحب العمل المعيار الأسبوعي؟",
+      "query": "عرضوا علي فلوس زياده مقابل ما ارتاح يوم بالاسبوع، اقدر اوافق؟",
       "expected": [
-        "98"
+        "saudi_labor_law:104"
       ],
       "retrieved": [
-        "98",
-        "100",
-        "107",
-        "106",
-        "105",
-        "104",
-        "78",
-        "99",
-        "2",
-        "164"
+        "labor_regulations:17",
+        "labor_regulations:26",
+        "saudi_labor_law:104",
+        "saudi_labor_law:100",
+        "saudi_labor_law:105",
+        "labor_regulations:116",
+        "labor_regulations:22_bis",
+        "saudi_labor_law:2",
+        "saudi_labor_law:116",
+        "saudi_labor_law:93"
       ],
-      "tags": [],
-      "category": "working_hours",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
+      "category": "rest_days",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 858.4
+      "latency_ms": 1015.6
     },
     {
       "id": "q009",
-      "query": "كم تخفض ساعات العمل خلال شهر رمضان للمسلمين؟",
+      "query": "كم يوم اقدر اسافر فيها لاهلي بالسنه وراتبي يمشي؟",
       "expected": [
-        "98"
+        "saudi_labor_law:109"
       ],
       "retrieved": [
-        "98",
-        "164",
-        "2",
-        "101",
-        "99",
-        "102",
-        "188",
-        "104",
-        "106",
-        "25"
+        "saudi_labor_law:114",
+        "labor_regulations:117",
+        "labor_regulations:44",
+        "labor_regulations:8",
+        "saudi_labor_law:117",
+        "saudi_labor_law:188",
+        "labor_regulations:39",
+        "labor_regulations:33",
+        "labor_regulations:24",
+        "saudi_labor_law:105"
       ],
-      "tags": [],
-      "category": "working_hours",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
+      "category": "annual_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 889.8
+      "latency_ms": 1024.5
     },
     {
       "id": "q010",
-      "query": "ما هو يوم الراحة الأسبوعية للعمال؟",
+      "query": "صار لي خمس سنوات بالشركه، يزيد شي عن اول؟",
       "expected": [
-        "104"
+        "saudi_labor_law:109"
       ],
       "retrieved": [
-        "104",
-        "105",
-        "164",
-        "17",
-        "6",
-        "100",
-        "49",
-        "109",
-        "78",
-        "98"
+        "saudi_labor_law:84",
+        "saudi_labor_law:85",
+        "labor_regulations:33",
+        "saudi_labor_law:109",
+        "labor_regulations:10",
+        "saudi_labor_law:77",
+        "labor_regulations:8",
+        "saudi_labor_law:55",
+        "saudi_labor_law:53"
       ],
-      "tags": [],
-      "category": "rest_days",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
+      "category": "annual_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 938.4
+      "latency_ms": 1153.2
     },
     {
       "id": "q011",
-      "query": "هل يجوز تعويض يوم الراحة الأسبوعية بمقابل نقدي؟",
+      "query": "ابي فلوس بدل ما اروح، ياخذونها كاش وانا مستمر بالشغل؟",
       "expected": [
-        "104"
+        "saudi_labor_law:109"
       ],
       "retrieved": [
-        "104",
-        "105",
-        "109",
-        "6",
-        "90",
-        "100",
-        "164",
-        "17",
-        "2",
-        "111"
+        "saudi_labor_law:2",
+        "saudi_labor_law:18",
+        "saudi_labor_law:103",
+        "saudi_labor_law:97",
+        "saudi_labor_law:80",
+        "labor_regulations:24",
+        "saudi_labor_law:74",
+        "saudi_labor_law:99",
+        "labor_regulations:22_bis"
       ],
-      "tags": [],
-      "category": "rest_days",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "annual_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 928.0
+      "latency_ms": 1484.3
     },
     {
       "id": "q012",
-      "query": "ما الحد الأدنى لمدة الإجازة السنوية للعامل؟",
+      "query": "ما لحقت اطلع هالسنه بسبب ضغط الشغل، تروح علي ولا تنقل؟",
       "expected": [
-        "109"
+        "saudi_labor_law:110"
       ],
       "retrieved": [
-        "109",
-        "114",
-        "110",
-        "117",
-        "116",
-        "113",
-        "152",
-        "115",
-        "53"
+        "saudi_labor_law:29",
+        "saudi_labor_law:179",
+        "labor_regulations:8",
+        "labor_regulations:13",
+        "saudi_labor_law:106",
+        "saudi_labor_law:20",
+        "saudi_labor_law:188",
+        "saudi_labor_law:184",
+        "labor_regulations:24",
+        "saudi_labor_law:126"
       ],
-      "tags": [],
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
       "category": "annual_leave",
-      "difficulty": "easy",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 939.4
+      "latency_ms": 1205.6
     },
     {
       "id": "q013",
-      "query": "متى تزاد الإجازة السنوية إلى ثلاثين يوماً؟",
+      "query": "تعبت ورقدت المستشفى شهر كامل، بيخصمون من راتبي؟",
       "expected": [
-        "109"
+        "saudi_labor_law:117"
       ],
       "retrieved": [
-        "109",
-        "117",
-        "2",
-        "113",
-        "110",
-        "152",
-        "53",
-        "114",
-        "151"
+        "saudi_labor_law:152",
+        "saudi_labor_law:151",
+        "labor_regulations:26",
+        "saudi_labor_law:117",
+        "labor_regulations:50",
+        "labor_regulations:117",
+        "labor_regulations:41",
+        "saudi_labor_law:137",
+        "saudi_labor_law:113"
       ],
-      "tags": [],
-      "category": "annual_leave",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "sick_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 905.0
+      "latency_ms": 985.4
     },
     {
       "id": "q014",
-      "query": "هل يجوز للعامل أن يتقاضى بدلاً نقدياً عن إجازته السنوية أثناء خدمته؟",
+      "query": "مرضت وقعدت شهرين ونص بالبيت، الراتب يستمر كامل؟",
       "expected": [
-        "109"
+        "saudi_labor_law:117"
       ],
       "retrieved": [
-        "109",
-        "116",
-        "111",
-        "104",
-        "82",
-        "114",
-        "152",
-        "115",
-        "107",
-        "118"
+        "saudi_labor_law:117",
+        "labor_regulations:41",
+        "labor_regulations:117",
+        "saudi_labor_law:152",
+        "labor_regulations:26",
+        "saudi_labor_law:151",
+        "labor_regulations:50",
+        "saudi_labor_law:82",
+        "saudi_labor_law:137"
       ],
-      "tags": [],
-      "category": "annual_leave",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "sick_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1012.6
+      "latency_ms": 1046.9
     },
     {
       "id": "q015",
-      "query": "كم المدة التي يجوز لصاحب العمل تأجيل إجازة العامل بعدها؟",
+      "query": "زوجتي بتولد قريب وتشتغل، كم تقعد بالبيت وراتبها يمشي؟",
       "expected": [
-        "110"
+        "saudi_labor_law:151"
       ],
       "retrieved": [
-        "110",
-        "109",
-        "116",
-        "82",
-        "114",
-        "155",
-        "105",
-        "115",
-        "53"
+        "labor_regulations:154",
+        "saudi_labor_law:154",
+        "saudi_labor_law:113",
+        "labor_regulations:40",
+        "labor_regulations:51",
+        "saudi_labor_law:188",
+        "labor_regulations:31",
+        "labor_regulations:50",
+        "saudi_labor_law:160"
       ],
-      "tags": [],
-      "category": "annual_leave",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "maternity",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 882.4
+      "latency_ms": 1026.2
     },
     {
       "id": "q016",
-      "query": "ما حق العامل في الإجازة المرضية عن الثلاثين يوماً الأولى؟",
+      "query": "مديرها عرف انها حامل وقال بيستغني عنها، يقدر يسوي كذا؟",
       "expected": [
-        "117"
+        "saudi_labor_law:155"
       ],
       "retrieved": [
-        "117",
-        "109",
-        "53",
-        "82",
-        "113",
-        "111",
-        "114",
-        "155"
+        "saudi_labor_law:155",
+        "saudi_labor_law:156",
+        "labor_regulations:65",
+        "saudi_labor_law:160",
+        "labor_regulations:31",
+        "saudi_labor_law:223",
+        "saudi_labor_law:138",
+        "labor_regulations:35",
+        "saudi_labor_law:191",
+        "saudi_labor_law:81"
       ],
-      "tags": [],
-      "category": "sick_leave",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "maternity",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 874.2
+      "latency_ms": 1108.8
     },
     {
       "id": "q017",
-      "query": "كم نسبة الأجر في الإجازة المرضية عن الستين يوماً التالية؟",
+      "query": "انا مو سعودي وشغال هنا بدون ورق موقع، وش وضعي؟",
       "expected": [
-        "117"
+        "saudi_labor_law:37"
       ],
       "retrieved": [
-        "117",
-        "137",
-        "111",
-        "152",
-        "151",
-        "160",
-        "114",
-        "107",
-        "113"
+        "saudi_labor_law:33",
+        "saudi_labor_law:37",
+        "labor_regulations:30",
+        "labor_regulations:14",
+        "labor_regulations:1",
+        "saudi_labor_law:40",
+        "labor_regulations:5",
+        "labor_regulations:11",
+        "labor_regulations:3"
       ],
-      "tags": [],
-      "category": "sick_leave",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "contracts",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1008.1
+      "latency_ms": 1027.0
     },
     {
       "id": "q018",
-      "query": "ما مدة إجازة الوضع للمرأة العاملة؟",
+      "query": "اشتغلت سنه ولا احد جدد لي شي، بقيت شغال عادي، ايش صار للاتفاق؟",
       "expected": [
-        "151"
+        "saudi_labor_law:37"
       ],
       "retrieved": [
-        "151",
-        "152",
-        "155",
-        "160",
-        "154",
-        "156",
-        "113",
-        "87"
+        "saudi_labor_law:74",
+        "labor_regulations:33",
+        "saudi_labor_law:37",
+        "labor_regulations:37",
+        "labor_regulations:25",
+        "saudi_labor_law:54",
+        "saudi_labor_law:84",
+        "labor_regulations:116",
+        "saudi_labor_law:152"
       ],
-      "tags": [],
-      "category": "maternity",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
+      "category": "contracts",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 964.2
+      "latency_ms": 1114.3
     },
     {
       "id": "q019",
-      "query": "هل يجوز فصل العاملة أثناء حملها أو إجازة الوضع؟",
+      "query": "ما وقعت اي ورقه مع صاحب العمل، اقدر اثبت حقوقي؟",
       "expected": [
-        "155"
+        "saudi_labor_law:51"
       ],
       "retrieved": [
-        "155",
-        "156",
-        "152",
-        "151",
-        "160",
-        "154",
-        "157",
-        "113"
+        "saudi_labor_law:80",
+        "labor_regulations:51",
+        "saudi_labor_law:29",
+        "saudi_labor_law:118",
+        "saudi_labor_law:81",
+        "saudi_labor_law:51",
+        "saudi_labor_law:63",
+        "labor_regulations:5",
+        "labor_regulations:61"
       ],
-      "tags": [],
-      "category": "maternity",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "contracts",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 910.7
+      "latency_ms": 1022.8
     },
     {
       "id": "q020",
-      "query": "ما شروط عقد عمل غير السعودي من حيث الكتابة والمدة؟",
+      "query": "ضربت زميلي بالمكتب وطلعوني على طول بدون اي مستحقات، من حقهم؟",
       "expected": [
-        "37"
+        "saudi_labor_law:80"
       ],
       "retrieved": [
-        "37",
-        "33",
-        "55",
-        "40",
-        "2",
-        "25",
-        "42",
-        "31",
-        "52",
-        "51"
+        "saudi_labor_law:157",
+        "saudi_labor_law:111",
+        "saudi_labor_law:87",
+        "labor_regulations:55",
+        "saudi_labor_law:80",
+        "saudi_labor_law:81",
+        "labor_regulations:71",
+        "saudi_labor_law:90",
+        "saudi_labor_law:94",
+        "saudi_labor_law:92"
       ],
-      "tags": [],
-      "category": "contracts",
-      "difficulty": "medium",
+      "tags": [
+        "situational"
+      ],
+      "category": "termination",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 995.6
+      "latency_ms": 1038.7
     },
     {
       "id": "q021",
-      "query": "إذا خلا عقد غير السعودي من بيان مدته، فما المدة التي يعد عليها؟",
+      "query": "قبل ما يستغنون عني، لازم يسمعون كلامي وردي؟",
       "expected": [
-        "37"
+        "saudi_labor_law:80"
       ],
       "retrieved": [
-        "37",
-        "55",
-        "75",
-        "76",
-        "40",
-        "53",
-        "116",
-        "33",
-        "74"
+        "labor_regulations:56",
+        "saudi_labor_law:61",
+        "labor_regulations:45",
+        "labor_regulations:53",
+        "labor_regulations:61",
+        "saudi_labor_law:71",
+        "labor_regulations:230",
+        "saudi_labor_law:9",
+        "saudi_labor_law:165",
+        "saudi_labor_law:220"
       ],
-      "tags": [],
-      "category": "contracts",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "termination",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1117.9
+      "latency_ms": 1400.7
     },
     {
       "id": "q022",
-      "query": "هل يعد عقد العمل قائماً إذا لم يكن مكتوباً؟",
+      "query": "اتفقت مع صاحب العمل ودياً اني اطلع، لازم يكون بورقه مكتوبه؟",
       "expected": [
-        "51"
+        "saudi_labor_law:74"
       ],
       "retrieved": [
-        "51",
-        "37",
-        "46",
-        "2",
-        "79",
-        "74",
-        "95",
-        "171",
-        "75"
+        "labor_regulations:51",
+        "saudi_labor_law:51",
+        "saudi_labor_law:46",
+        "saudi_labor_law:73",
+        "saudi_labor_law:37",
+        "labor_regulations:37",
+        "saudi_labor_law:2",
+        "labor_regulations:68",
+        "labor_regulations:116"
       ],
-      "tags": [],
-      "category": "contracts",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
+      "category": "termination",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 997.2
+      "latency_ms": 1102.3
     },
     {
       "id": "q023",
-      "query": "من عدد النسخ التي يجب أن يكتب بها عقد العمل؟",
+      "query": "العيد جاي، اداوم ولا اقعد وراتبي يمشي؟",
       "expected": [
-        "51"
+        "saudi_labor_law:112"
       ],
       "retrieved": [
-        "51",
-        "171",
-        "37",
-        "52",
-        "50",
-        "46",
-        "170",
-        "2",
-        "73"
+        "labor_regulations:24",
+        "saudi_labor_law:114",
+        "labor_regulations:39",
+        "labor_regulations:44",
+        "saudi_labor_law:102",
+        "saudi_labor_law:164",
+        "labor_regulations:19",
+        "labor_regulations:8",
+        "labor_regulations:28",
+        "saudi_labor_law:104"
       ],
-      "tags": [],
-      "category": "contracts",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1047.3
+      "latency_ms": 922.0
     },
     {
       "id": "q024",
-      "query": "في أي الحالات ينتهي عقد العمل؟",
+      "query": "اشتغل عند واحد ويبي يخليني اروح اشتغل عند غيره، ينفع؟",
       "expected": [
-        "74"
+        "saudi_labor_law:39"
       ],
       "retrieved": [
-        "74",
-        "79",
-        "55",
-        "57",
-        "81",
-        "80",
-        "182",
-        "183"
+        "saudi_labor_law:118",
+        "labor_regulations:39",
+        "saudi_labor_law:157",
+        "saudi_labor_law:54",
+        "saudi_labor_law:39",
+        "saudi_labor_law:140",
+        "labor_regulations:62",
+        "saudi_labor_law:29",
+        "saudi_labor_law:3",
+        "saudi_labor_law:33"
       ],
-      "tags": [],
-      "category": "termination",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 1066.6
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "employment",
+      "difficulty": "hard",
+      "verified_by": "human",
+      "latency_ms": 955.6
     },
     {
       "id": "q025",
-      "query": "هل يشترط أن تكون موافقة العامل على إنهاء العقد كتابية؟",
+      "query": "وظفوني على شغل معين وفجاه يبوني اسوي شي ثاني تماماً، الزم؟",
       "expected": [
-        "74"
+        "saudi_labor_law:60"
       ],
       "retrieved": [
-        "74",
-        "75",
-        "2",
-        "80",
-        "53",
-        "182"
+        "labor_regulations:10",
+        "saudi_labor_law:57",
+        "saudi_labor_law:29",
+        "labor_regulations:39",
+        "labor_regulations:36",
+        "saudi_labor_law:118",
+        "labor_regulations:12",
+        "saudi_labor_law:157",
+        "labor_regulations:23",
+        "saudi_labor_law:2"
       ],
-      "tags": [],
-      "category": "termination",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 1047.5
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
+      "category": "employment",
+      "difficulty": "hard",
+      "verified_by": "human",
+      "latency_ms": 1057.5
     },
     {
       "id": "q026",
-      "query": "متى يجوز لصاحب العمل فسخ العقد دون مكافأة أو إشعار أو تعويض؟",
+      "query": "طلعوني بدون ما يخبروني قبل، كم لي عن المده وكم لي عن السنين اللي خدمتها؟",
       "expected": [
-        "80"
+        "saudi_labor_law:76",
+        "saudi_labor_law:84"
       ],
       "retrieved": [
-        "80",
-        "182",
-        "81",
-        "75",
-        "87",
-        "183",
-        "77",
-        "48"
+        "saudi_labor_law:85",
+        "labor_regulations:33",
+        "saudi_labor_law:84",
+        "labor_regulations:37",
+        "saudi_labor_law:109",
+        "saudi_labor_law:77",
+        "labor_regulations:53",
+        "saudi_labor_law:114",
+        "labor_regulations:8",
+        "labor_regulations:44"
       ],
-      "tags": [],
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
       "category": "termination",
-      "difficulty": "hard",
+      "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 1116.7
+      "latency_ms": 1036.6
     },
     {
       "id": "q027",
-      "query": "هل يجب إتاحة الفرصة للعامل لإبداء أسباب معارضته للفسخ؟",
+      "query": "ما اخذت اجازتي هالسنه وطلعت من الشغل، تروح علي ولا تتحسب لي فلوس؟",
       "expected": [
-        "80"
+        "saudi_labor_law:109",
+        "saudi_labor_law:110"
       ],
       "retrieved": [
-        "80",
-        "94",
-        "75",
-        "81",
-        "78",
-        "72",
-        "83",
-        "92"
+        "saudi_labor_law:154",
+        "labor_regulations:154",
+        "labor_regulations:35",
+        "saudi_labor_law:157",
+        "labor_regulations:51",
+        "saudi_labor_law:109",
+        "labor_regulations:11",
+        "saudi_labor_law:116",
+        "saudi_labor_law:152",
+        "labor_regulations:116"
       ],
-      "tags": [],
-      "category": "termination",
-      "difficulty": "medium",
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
+      "category": "annual_leave",
+      "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 983.3
+      "latency_ms": 887.1
     },
     {
       "id": "q028",
-      "query": "ما تعريف العامل في نظام العمل؟",
+      "query": "زوجتي ولدت وبعدها تعبت، كم تقعد وهل يقدرون يستغنون عنها بهالفتره؟",
       "expected": [
-        "2"
+        "saudi_labor_law:151",
+        "saudi_labor_law:155"
       ],
       "retrieved": [
-        "2",
-        "65",
-        "12",
-        "81",
-        "52",
-        "5",
-        "61"
+        "labor_regulations:154",
+        "saudi_labor_law:154",
+        "saudi_labor_law:113",
+        "labor_regulations:51",
+        "saudi_labor_law:156",
+        "labor_regulations:40",
+        "labor_regulations:31",
+        "saudi_labor_law:160",
+        "saudi_labor_law:155",
+        "saudi_labor_law:138"
       ],
-      "tags": [],
-      "category": "definitions",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "situational"
+      ],
+      "category": "maternity",
+      "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 1046.6
+      "latency_ms": 1074.8
     },
     {
       "id": "q029",
-      "query": "ما اسم هذا النظام؟",
+      "query": "كم ساعه بالدوام وكم يوم راحه لي بالاسبوع؟",
       "expected": [
-        "1"
+        "saudi_labor_law:98",
+        "saudi_labor_law:104"
       ],
       "retrieved": [
-        "1",
-        "244",
-        "245",
-        "16",
-        "52",
-        "2",
-        "5",
-        "10",
-        "74"
+        "saudi_labor_law:104",
+        "labor_regulations:26",
+        "saudi_labor_law:100",
+        "saudi_labor_law:98",
+        "saudi_labor_law:164",
+        "labor_regulations:31",
+        "saudi_labor_law:105",
+        "labor_regulations:27",
+        "saudi_labor_law:101",
+        "labor_regulations:49"
       ],
-      "tags": [],
-      "category": "definitions",
-      "difficulty": "easy",
+      "tags": [
+        "colloquial",
+        "misspelled",
+        "situational"
+      ],
+      "category": "working_hours",
+      "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 921.2
+      "latency_ms": 1083.0
     },
     {
       "id": "q030",
-      "query": "هل للعامل حق في إجازة بأجر كامل في الأعياد؟",
+      "query": "ضربت مسؤولي وطردوني، هل لي مستحقات عن سنين خدمتي ولا تروح؟",
       "expected": [
-        "112"
+        "saudi_labor_law:80",
+        "saudi_labor_law:84"
       ],
       "retrieved": [
-        "112",
-        "114",
-        "113",
-        "115",
-        "107",
-        "152",
-        "53",
-        "111"
+        "saudi_labor_law:85",
+        "saudi_labor_law:84",
+        "labor_regulations:33",
+        "labor_regulations:35",
+        "saudi_labor_law:109",
+        "saudi_labor_law:88",
+        "saudi_labor_law:87",
+        "saudi_labor_law:77",
+        "saudi_labor_law:80",
+        "saudi_labor_law:81"
       ],
-      "tags": [],
-      "category": "leave",
-      "difficulty": "easy",
+      "tags": [
+        "situational"
+      ],
+      "category": "termination",
+      "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 885.7
+      "latency_ms": 1044.2
     },
     {
       "id": "q031",
-      "query": "ابغى اعرف كم مدة الانذار قبل الفصل من الشغل",
+      "query": "مرضت شهر وبعدها ابي اسافر اجازه، الاثنين منفصلين؟",
       "expected": [
-        "75"
+        "saudi_labor_law:109",
+        "saudi_labor_law:117"
       ],
       "retrieved": [
-        "80",
-        "78",
-        "155",
-        "75",
-        "66",
-        "71",
-        "203",
-        "81"
+        "labor_regulations:117",
+        "saudi_labor_law:117",
+        "labor_regulations:41",
+        "labor_regulations:26",
+        "saudi_labor_law:155",
+        "saudi_labor_law:151",
+        "saudi_labor_law:152",
+        "labor_regulations:50",
+        "saudi_labor_law:160"
       ],
       "tags": [
-        "colloquial"
+        "colloquial",
+        "misspelled",
+        "situational"
       ],
-      "category": "notice_period",
-      "difficulty": "hard",
+      "category": "leave",
+      "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 1008.9
+      "latency_ms": 932.7
     },
     {
       "id": "q032",
-      "query": "كم اجازتي السنويه لو خدمت اكثر من خمس سنوات",
+      "query": "انا وافد وما عندي ورق، ومديري يبي يطلعني، وش حقوقي؟",
       "expected": [
-        "109"
+        "saudi_labor_law:37",
+        "saudi_labor_law:51"
       ],
       "retrieved": [
-        "109",
-        "152",
-        "85",
-        "114",
-        "84",
-        "110",
-        "77",
-        "53",
-        "117",
-        "49"
+        "saudi_labor_law:81",
+        "saudi_labor_law:16",
+        "labor_regulations:53",
+        "labor_regulations:65",
+        "labor_regulations:11",
+        "labor_regulations:3",
+        "saudi_labor_law:15",
+        "labor_regulations:55",
+        "labor_regulations:1",
+        "saudi_labor_law:63"
       ],
       "tags": [
         "colloquial",
-        "misspelled"
+        "situational"
       ],
-      "category": "annual_leave",
-      "difficulty": "hard",
+      "category": "contracts",
+      "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 828.2
+      "latency_ms": 1183.1
     },
     {
       "id": "q033",
-      "query": "مكافاه نهايه الخدمه كم تطلع",
+      "query": "الشركه لازم تسجل بيانات تدريب موظفيها السعوديين كل سنه؟",
       "expected": [
-        "84"
+        "labor_regulations:15_bis"
       ],
       "retrieved": [
-        "85",
-        "84",
-        "86",
-        "54",
-        "18",
-        "88",
-        "172",
-        "87",
-        "77",
-        "109"
+        "labor_regulations:15_bis",
+        "labor_regulations:5",
+        "saudi_labor_law:42",
+        "saudi_labor_law:43",
+        "labor_regulations:42",
+        "saudi_labor_law:26",
+        "labor_regulations:22",
+        "labor_regulations:13",
+        "labor_regulations:16"
       ],
       "tags": [
         "colloquial",
-        "misspelled"
+        "misspelled",
+        "situational"
       ],
-      "category": "end_of_service",
+      "category": "training",
       "difficulty": "hard",
-      "verified_by": "drafted",
-      "latency_ms": 1094.5
+      "verified_by": "human",
+      "latency_ms": 1069.5
     },
     {
       "id": "q034",
-      "query": "كم ساعه اشتغل في اليوم حسب النظام",
+      "query": "My boss told me to leave tomorrow and I'm paid monthly. Does he have to warn me first?",
       "expected": [
-        "98"
+        "saudi_labor_law:75"
       ],
       "retrieved": [
-        "99",
-        "164",
-        "106",
-        "98",
-        "188",
-        "100",
-        "101",
-        "2",
-        "78",
-        "107"
+        "saudi_labor_law:81",
+        "saudi_labor_law:75",
+        "saudi_labor_law:66",
+        "saudi_labor_law:182",
+        "saudi_labor_law:80",
+        "saudi_labor_law:166",
+        "saudi_labor_law:90",
+        "saudi_labor_law:12",
+        "saudi_labor_law:39",
+        "saudi_labor_law:16"
       ],
       "tags": [
-        "colloquial"
+        "cross_lingual",
+        "situational"
       ],
-      "category": "working_hours",
+      "category": "notice_period",
       "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 938.1
+      "latency_ms": 1062.2
     },
     {
       "id": "q035",
-      "query": "هل ينفع اخذ فلوس بدل الاجازه",
+      "query": "They let me go with no warning at all. Do they owe me anything for that?",
       "expected": [
-        "109"
+        "saudi_labor_law:76"
       ],
       "retrieved": [
-        "109",
-        "154",
-        "111",
-        "107",
-        "157",
-        "116",
-        "118",
-        "115",
-        "105"
+        "saudi_labor_law:81",
+        "saudi_labor_law:80",
+        "labor_regulations:58",
+        "saudi_labor_law:182",
+        "saudi_labor_law:87",
+        "saudi_labor_law:12",
+        "saudi_labor_law:13",
+        "saudi_labor_law:14",
+        "saudi_labor_law:19",
+        "labor_regulations:117"
       ],
       "tags": [
-        "colloquial"
+        "cross_lingual",
+        "situational"
       ],
-      "category": "annual_leave",
+      "category": "notice_period",
       "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1000.9
+      "latency_ms": 990.9
     },
     {
       "id": "q036",
-      "query": "ما مدة الإشعار المطلوبة، وماذا يترتب على من لم يراعها؟",
+      "query": "I worked there seven years and quit. How much money should I get on the way out?",
       "expected": [
-        "75",
-        "76"
+        "saudi_labor_law:84"
       ],
       "retrieved": [
-        "76",
-        "78",
-        "80",
-        "2",
-        "81",
-        "75",
-        "69",
-        "68"
+        "saudi_labor_law:85",
+        "saudi_labor_law:84",
+        "saudi_labor_law:77",
+        "saudi_labor_law:87",
+        "saudi_labor_law:19",
+        "saudi_labor_law:88",
+        "saudi_labor_law:137",
+        "saudi_labor_law:97",
+        "labor_regulations:22_bis",
+        "saudi_labor_law:109"
       ],
-      "tags": [],
-      "category": "notice_period",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "end_of_service",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 964.4
+      "latency_ms": 933.0
     },
     {
       "id": "q037",
-      "query": "إذا انتهى العقد باتفاق الطرفين، فما المكافأة المستحقة للعامل؟",
+      "query": "My manager keeps me at the desk from morning until sunset. Is that allowed?",
       "expected": [
-        "74",
-        "84"
+        "saudi_labor_law:98"
       ],
       "retrieved": [
-        "84",
-        "77",
-        "87",
-        "85",
-        "76",
-        "2",
-        "88",
-        "18",
-        "80",
-        "74"
+        "saudi_labor_law:106",
+        "saudi_labor_law:100",
+        "saudi_labor_law:98",
+        "saudi_labor_law:188",
+        "saudi_labor_law:60",
+        "saudi_labor_law:101",
+        "labor_regulations:10",
+        "saudi_labor_law:164",
+        "saudi_labor_law:105",
+        "saudi_labor_law:99"
       ],
-      "tags": [],
-      "category": "termination",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "working_hours",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1095.2
+      "latency_ms": 912.2
     },
     {
       "id": "q038",
-      "query": "ما مدة الإجازة السنوية، وإلى متى يجوز تأجيلها؟",
+      "query": "During Ramadan they want the same hours as usual. Is that right?",
       "expected": [
-        "109",
-        "110"
+        "saudi_labor_law:98"
       ],
       "retrieved": [
-        "110",
-        "109",
-        "152",
-        "114",
-        "116",
-        "117",
-        "82",
-        "164",
-        "151"
+        "saudi_labor_law:98",
+        "saudi_labor_law:164",
+        "labor_regulations:26",
+        "labor_regulations:23",
+        "saudi_labor_law:105",
+        "saudi_labor_law:102",
+        "labor_regulations:27",
+        "saudi_labor_law:101",
+        "saudi_labor_law:100",
+        "saudi_labor_law:114"
       ],
-      "tags": [],
-      "category": "annual_leave",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "working_hours",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 935.5
+      "latency_ms": 1103.4
     },
     {
       "id": "q039",
-      "query": "ما مدة إجازة الوضع، وهل تحمي العاملة من الفصل؟",
+      "query": "They want me in seven days a week with no day off. Can they do that?",
       "expected": [
-        "151",
-        "155"
+        "saudi_labor_law:104"
       ],
       "retrieved": [
-        "155",
-        "151",
-        "156",
-        "152",
-        "160",
-        "154",
-        "157",
-        "109",
-        "87"
+        "saudi_labor_law:104",
+        "saudi_labor_law:100",
+        "labor_regulations:26",
+        "labor_regulations:116",
+        "saudi_labor_law:116",
+        "labor_regulations:38",
+        "labor_regulations:22_bis",
+        "saudi_labor_law:98",
+        "labor_regulations:40",
+        "labor_regulations:50"
       ],
-      "tags": [],
-      "category": "maternity",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "rest_days",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 896.5
+      "latency_ms": 930.1
     },
     {
       "id": "q040",
-      "query": "كم ساعات العمل اليومية، وما هو يوم الراحة الأسبوعية؟",
+      "query": "How many days a year can I travel home and still get paid?",
       "expected": [
-        "98",
-        "104"
+        "saudi_labor_law:109"
       ],
       "retrieved": [
-        "104",
-        "164",
-        "98",
-        "100",
-        "49",
-        "106",
-        "101",
-        "6",
-        "105",
-        "2"
+        "labor_regulations:117",
+        "saudi_labor_law:109",
+        "saudi_labor_law:117",
+        "labor_regulations:33",
+        "labor_regulations:41",
+        "labor_regulations:44",
+        "labor_regulations:116",
+        "saudi_labor_law:114",
+        "labor_regulations:40",
+        "saudi_labor_law:113"
       ],
-      "tags": [],
-      "category": "working_hours",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "annual_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 901.8
+      "latency_ms": 862.9
     },
     {
       "id": "q041",
-      "query": "إذا فسخ صاحب العمل العقد لسبب مشروع، هل يستحق العامل تعويضاً أو مكافأة؟",
+      "query": "I've been at the company five years now. Does anything change for me?",
       "expected": [
-        "80",
-        "84"
+        "saudi_labor_law:109"
       ],
       "retrieved": [
-        "80",
-        "77",
-        "87",
-        "54",
-        "85",
-        "75",
-        "84",
-        "2",
-        "94"
+        "saudi_labor_law:18",
+        "saudi_labor_law:85",
+        "saudi_labor_law:55",
+        "saudi_labor_law:54",
+        "saudi_labor_law:56",
+        "labor_regulations:15",
+        "saudi_labor_law:53",
+        "labor_regulations:26",
+        "saudi_labor_law:83",
+        "saudi_labor_law:16"
       ],
-      "tags": [],
-      "category": "termination",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "annual_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1094.4
+      "latency_ms": 1022.7
     },
     {
       "id": "q042",
-      "query": "ما شكل عقد غير السعودي، وهل يعد العقد قائماً إن لم يكتب؟",
+      "query": "Can I just take the cash instead of going away, while I'm still working there?",
       "expected": [
-        "37",
-        "51"
+        "saudi_labor_law:109"
       ],
       "retrieved": [
-        "37",
-        "51",
-        "55",
-        "33",
-        "2",
-        "40",
-        "75",
-        "74"
+        "labor_regulations:35",
+        "labor_regulations:24",
+        "labor_regulations:22_bis",
+        "saudi_labor_law:81",
+        "saudi_labor_law:2",
+        "saudi_labor_law:118",
+        "saudi_labor_law:62",
+        "saudi_labor_law:97",
+        "labor_regulations:42",
+        "saudi_labor_law:92"
       ],
-      "tags": [],
-      "category": "contracts",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "annual_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1043.3
+      "latency_ms": 1037.7
     },
     {
       "id": "q043",
-      "query": "ما التعويض عن الإنهاء غير المشروع، وما مكافأة نهاية الخدمة؟",
+      "query": "I was in hospital for a month. Will they cut my pay?",
       "expected": [
-        "77",
-        "84"
+        "saudi_labor_law:117"
       ],
       "retrieved": [
-        "77",
-        "54",
-        "18",
-        "85",
-        "172",
-        "84",
-        "80",
-        "86",
-        "87"
+        "saudi_labor_law:117",
+        "labor_regulations:117",
+        "labor_regulations:41",
+        "labor_regulations:26",
+        "saudi_labor_law:137",
+        "saudi_labor_law:156",
+        "saudi_labor_law:155",
+        "saudi_labor_law:75",
+        "saudi_labor_law:97",
+        "saudi_labor_law:133"
       ],
-      "tags": [],
-      "category": "termination",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "sick_leave",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1060.1
+      "latency_ms": 985.9
     },
     {
       "id": "q044",
-      "query": "ما حقوق العامل في الإجازة المرضية والإجازة السنوية؟",
+      "query": "My wife is having a baby soon and she works. How long can she stay home on pay?",
       "expected": [
-        "109",
-        "117"
+        "saudi_labor_law:151"
       ],
       "retrieved": [
-        "117",
-        "82",
-        "109",
-        "110",
-        "53",
-        "114",
-        "152",
-        "111",
-        "157"
+        "labor_regulations:31",
+        "labor_regulations:40",
+        "labor_regulations:50",
+        "saudi_labor_law:113",
+        "saudi_labor_law:155",
+        "labor_regulations:154",
+        "saudi_labor_law:154",
+        "saudi_labor_law:156",
+        "saudi_labor_law:160"
       ],
-      "tags": [],
-      "category": "leave",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "maternity",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 854.1
+      "latency_ms": 1046.4
     },
     {
       "id": "q045",
-      "query": "في أي حالات ينتهي العقد، ومتى يجوز الفسخ دون إشعار؟",
+      "query": "Her manager found out she's pregnant and says he'll replace her. Can he?",
       "expected": [
-        "74",
-        "80"
+        "saudi_labor_law:155"
       ],
       "retrieved": [
-        "80",
-        "182",
-        "81",
-        "74",
-        "75",
-        "57",
-        "76"
+        "saudi_labor_law:155",
+        "saudi_labor_law:156",
+        "saudi_labor_law:153",
+        "labor_regulations:39",
+        "saudi_labor_law:16",
+        "saudi_labor_law:12",
+        "saudi_labor_law:14",
+        "saudi_labor_law:39",
+        "saudi_labor_law:66",
+        "saudi_labor_law:13"
       ],
-      "tags": [],
-      "category": "termination",
-      "difficulty": "multi_hop",
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "maternity",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1076.2
-    },
-    {
-      "id": "q045a",
-      "query": "ما مدة الإجازة المرضية بأجر كامل، وهل تحسب ضمن الإجازة السنوية؟",
-      "expected": [
-        "109",
-        "117"
-      ],
-      "retrieved": [
-        "117",
-        "152",
-        "151",
-        "109",
-        "82",
-        "113",
-        "114",
-        "115",
-        "160"
-      ],
-      "tags": [],
-      "category": "leave",
-      "difficulty": "multi_hop",
-      "verified_by": "drafted",
-      "latency_ms": 885.8
-    },
-    {
-      "id": "q045b",
-      "query": "إذا لم يكتب عقد غير السعودي، فما مدته وكيف يثبت العامل حقوقه؟",
-      "expected": [
-        "37",
-        "51"
-      ],
-      "retrieved": [
-        "37",
-        "51",
-        "55",
-        "33",
-        "40",
-        "52",
-        "75",
-        "88",
-        "7"
-      ],
-      "tags": [],
-      "category": "contracts",
-      "difficulty": "multi_hop",
-      "verified_by": "drafted",
-      "latency_ms": 1102.1
+      "latency_ms": 948.4
     },
     {
       "id": "q046",
-      "query": "What notice period is required before terminating an open-ended contract?",
+      "query": "I'm not Saudi and I've been working here without signing anything. Where do I stand?",
       "expected": [
-        "75"
+        "saudi_labor_law:37"
       ],
       "retrieved": [
-        "75",
-        "76",
-        "53",
-        "48",
-        "182",
-        "80",
-        "77",
-        "183"
+        "labor_regulations:37",
+        "saudi_labor_law:33",
+        "labor_regulations:12",
+        "saudi_labor_law:37",
+        "labor_regulations:6",
+        "labor_regulations:1",
+        "labor_regulations:11",
+        "labor_regulations:30"
       ],
       "tags": [
-        "cross_lingual"
+        "cross_lingual",
+        "situational"
       ],
-      "category": "notice_period",
-      "difficulty": "easy",
+      "category": "contracts",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 995.2
+      "latency_ms": 984.7
     },
     {
       "id": "q047",
-      "query": "How many days notice is required if the worker is paid monthly?",
+      "query": "I never signed a thing with the owner. Can I still prove what I'm owed?",
       "expected": [
-        "75"
+        "saudi_labor_law:51"
       ],
       "retrieved": [
-        "75",
-        "2",
-        "109",
-        "90",
-        "97",
-        "91",
-        "76",
-        "117",
-        "166",
-        "72"
+        "labor_regulations:51",
+        "saudi_labor_law:71",
+        "labor_regulations:67",
+        "saudi_labor_law:19",
+        "saudi_labor_law:12",
+        "saudi_labor_law:13",
+        "saudi_labor_law:14",
+        "saudi_labor_law:97",
+        "saudi_labor_law:64",
+        "saudi_labor_law:80"
       ],
       "tags": [
-        "cross_lingual"
+        "cross_lingual",
+        "situational"
       ],
-      "category": "notice_period",
-      "difficulty": "medium",
+      "category": "contracts",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 939.1
+      "latency_ms": 1054.6
     },
     {
       "id": "q048",
-      "query": "How is the end-of-service award calculated?",
+      "query": "I hit a colleague at work and they threw me out the same day with nothing. Were they allowed?",
       "expected": [
-        "84"
+        "saudi_labor_law:80"
       ],
       "retrieved": [
-        "84",
-        "86",
-        "85",
-        "18",
-        "96",
-        "77",
-        "88",
-        "64",
-        "76",
-        "2"
+        "saudi_labor_law:80",
+        "saudi_labor_law:70",
+        "saudi_labor_law:139",
+        "labor_regulations:65",
+        "saudi_labor_law:13",
+        "saudi_labor_law:29",
+        "saudi_labor_law:20",
+        "saudi_labor_law:12",
+        "saudi_labor_law:81"
       ],
       "tags": [
-        "cross_lingual"
-      ],
-      "category": "end_of_service",
-      "difficulty": "easy",
-      "verified_by": "drafted",
-      "latency_ms": 1030.5
-    },
-    {
-      "id": "q049",
-      "query": "What is the maximum number of working hours per day?",
-      "expected": [
-        "98"
-      ],
-      "retrieved": [
-        "99",
-        "98",
-        "188",
-        "164",
-        "101",
-        "100",
-        "106",
-        "179",
-        "163",
-        "2"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "working_hours",
-      "difficulty": "easy",
-      "verified_by": "drafted",
-      "latency_ms": 902.7
-    },
-    {
-      "id": "q050",
-      "query": "How are working hours reduced during Ramadan for Muslim workers?",
-      "expected": [
-        "98"
-      ],
-      "retrieved": [
-        "98",
-        "164",
-        "105",
-        "102",
-        "101",
-        "104",
-        "160",
-        "99",
-        "114",
-        "100"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "working_hours",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 918.4
-    },
-    {
-      "id": "q051",
-      "query": "What is the weekly rest day for workers?",
-      "expected": [
-        "104"
-      ],
-      "retrieved": [
-        "104",
-        "105",
-        "17",
-        "100",
-        "78",
-        "98",
-        "109",
-        "101",
-        "113",
-        "114"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "rest_days",
-      "difficulty": "easy",
-      "verified_by": "drafted",
-      "latency_ms": 961.8
-    },
-    {
-      "id": "q052",
-      "query": "What is the minimum annual leave entitlement?",
-      "expected": [
-        "109"
-      ],
-      "retrieved": [
-        "109",
-        "114",
-        "110",
-        "117",
-        "111",
-        "113",
-        "105",
-        "85",
-        "116",
-        "104"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "annual_leave",
-      "difficulty": "easy",
-      "verified_by": "drafted",
-      "latency_ms": 995.0
-    },
-    {
-      "id": "q053",
-      "query": "When does annual leave increase to thirty days?",
-      "expected": [
-        "109"
-      ],
-      "retrieved": [
-        "109",
-        "113",
-        "117",
-        "110",
-        "53",
-        "114",
-        "151",
-        "23"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "annual_leave",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 841.0
-    },
-    {
-      "id": "q054",
-      "query": "What sick leave pay is a worker entitled to in the first thirty days?",
-      "expected": [
-        "117"
-      ],
-      "retrieved": [
-        "117",
-        "137",
-        "113",
-        "109",
-        "111",
-        "114",
-        "151",
-        "105",
-        "138"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "sick_leave",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 886.5
-    },
-    {
-      "id": "q055",
-      "query": "How long is maternity leave?",
-      "expected": [
-        "151"
-      ],
-      "retrieved": [
-        "151",
-        "113",
-        "155",
-        "160",
-        "156",
-        "117",
-        "154",
-        "105"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "maternity",
-      "difficulty": "easy",
-      "verified_by": "drafted",
-      "latency_ms": 809.1
-    },
-    {
-      "id": "q056",
-      "query": "Can an employer dismiss a female worker during pregnancy?",
-      "expected": [
-        "155"
-      ],
-      "retrieved": [
-        "155",
-        "156",
-        "153",
-        "151",
-        "154",
-        "160",
-        "113",
-        "78",
-        "12"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "maternity",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 940.4
-    },
-    {
-      "id": "q057",
-      "query": "Must a non-Saudi worker's contract be in writing?",
-      "expected": [
-        "37"
-      ],
-      "retrieved": [
-        "37",
-        "40",
-        "33",
-        "51",
-        "31",
-        "170",
-        "43",
-        "26",
-        "30"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "contracts",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 917.3
-    },
-    {
-      "id": "q058",
-      "query": "Is an employment contract valid if it was never written down?",
-      "expected": [
-        "51"
-      ],
-      "retrieved": [
-        "51",
-        "37",
-        "2",
-        "74",
-        "75",
-        "79",
-        "18",
-        "80",
-        "50"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "contracts",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 1019.6
-    },
-    {
-      "id": "q059",
-      "query": "In what circumstances does an employment contract end?",
-      "expected": [
-        "74"
-      ],
-      "retrieved": [
-        "74",
-        "57",
-        "55",
-        "182",
-        "79",
-        "81",
-        "84",
-        "183",
-        "80"
-      ],
-      "tags": [
-        "cross_lingual"
-      ],
-      "category": "termination",
-      "difficulty": "medium",
-      "verified_by": "drafted",
-      "latency_ms": 953.1
-    },
-    {
-      "id": "q060",
-      "query": "When may an employer terminate without award, notice or compensation?",
-      "expected": [
-        "80"
-      ],
-      "retrieved": [
-        "182",
-        "80",
-        "81",
-        "75",
-        "155",
-        "78",
-        "66",
-        "116",
-        "77"
-      ],
-      "tags": [
-        "cross_lingual"
+        "cross_lingual",
+        "situational"
       ],
       "category": "termination",
       "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 937.3
+      "latency_ms": 1043.9
     },
     {
-      "id": "q061",
-      "query": "What compensation is due for unlawful termination of an open-ended contract?",
+      "id": "q049",
+      "query": "Before they get rid of me, do they have to hear my side?",
       "expected": [
-        "77"
+        "saudi_labor_law:80"
       ],
       "retrieved": [
-        "77",
-        "87",
-        "76",
-        "80",
-        "182",
-        "138",
-        "238",
-        "237",
-        "235",
-        "231"
+        "labor_regulations:56",
+        "saudi_labor_law:12",
+        "saudi_labor_law:13",
+        "saudi_labor_law:14",
+        "saudi_labor_law:80",
+        "saudi_labor_law:81",
+        "labor_regulations:55",
+        "labor_regulations:62"
       ],
       "tags": [
-        "cross_lingual"
+        "cross_lingual",
+        "situational"
       ],
       "category": "termination",
-      "difficulty": "medium",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 1065.0
+      "latency_ms": 1015.8
     },
     {
-      "id": "q062",
-      "query": "Can a worker take cash instead of annual leave while still employed?",
+      "id": "q050",
+      "query": "They fired me and gave no real reason. What am I owed?",
       "expected": [
-        "109"
+        "saudi_labor_law:77"
       ],
       "retrieved": [
-        "109",
-        "111",
-        "110",
-        "116",
-        "114",
-        "118",
-        "105",
-        "81",
-        "2",
-        "80"
+        "saudi_labor_law:13",
+        "saudi_labor_law:80",
+        "saudi_labor_law:85",
+        "saudi_labor_law:12",
+        "saudi_labor_law:77",
+        "saudi_labor_law:14",
+        "saudi_labor_law:94",
+        "saudi_labor_law:19",
+        "saudi_labor_law:87"
       ],
       "tags": [
-        "cross_lingual"
+        "cross_lingual",
+        "situational"
       ],
-      "category": "annual_leave",
-      "difficulty": "medium",
+      "category": "termination",
+      "difficulty": "hard",
       "verified_by": "drafted",
-      "latency_ms": 883.8
+      "latency_ms": 980.6
     },
     {
-      "id": "q063",
-      "query": "What notice is required, and what happens if it is not observed?",
+      "id": "q051",
+      "query": "Eid is coming. Do I have to show up, or do I stay home and still get paid?",
       "expected": [
-        "75",
-        "76"
+        "saudi_labor_law:112"
       ],
       "retrieved": [
-        "76",
-        "71",
-        "231",
-        "232",
-        "11",
-        "237",
-        "236",
-        "238",
-        "233",
-        "234"
+        "saudi_labor_law:114",
+        "labor_regulations:39",
+        "labor_regulations:44",
+        "saudi_labor_law:62",
+        "saudi_labor_law:2",
+        "saudi_labor_law:90",
+        "saudi_labor_law:97",
+        "saudi_labor_law:111",
+        "labor_regulations:40",
+        "labor_regulations:24"
       ],
       "tags": [
-        "cross_lingual"
+        "cross_lingual",
+        "situational"
       ],
-      "category": "notice_period",
+      "category": "leave",
+      "difficulty": "hard",
+      "verified_by": "drafted",
+      "latency_ms": 1048.1
+    },
+    {
+      "id": "q052",
+      "query": "They pushed me out with no warning. What do I get for the warning, and what for my years there?",
+      "expected": [
+        "saudi_labor_law:76",
+        "saudi_labor_law:84"
+      ],
+      "retrieved": [
+        "saudi_labor_law:66",
+        "saudi_labor_law:81",
+        "saudi_labor_law:80",
+        "labor_regulations:58",
+        "saudi_labor_law:85",
+        "labor_regulations:68",
+        "labor_regulations:66",
+        "labor_regulations:64",
+        "labor_regulations:55"
+      ],
+      "tags": [
+        "cross_lingual",
+        "situational"
+      ],
+      "category": "termination",
       "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 1061.5
+      "latency_ms": 1068.6
     },
     {
-      "id": "q064",
-      "query": "How long is annual leave, and how long may it be deferred?",
+      "id": "q053",
+      "query": "How many hours is a normal day, and how much time off do I get each week?",
       "expected": [
-        "109",
-        "110"
+        "saudi_labor_law:98",
+        "saudi_labor_law:104"
       ],
       "retrieved": [
-        "110",
-        "109",
-        "105",
-        "114",
-        "117",
-        "151",
-        "53",
-        "113",
-        "155"
+        "saudi_labor_law:100",
+        "saudi_labor_law:98",
+        "labor_regulations:26",
+        "saudi_labor_law:104",
+        "labor_regulations:27",
+        "saudi_labor_law:164",
+        "saudi_labor_law:99",
+        "labor_regulations:23",
+        "saudi_labor_law:188",
+        "labor_regulations:29"
       ],
       "tags": [
-        "cross_lingual"
-      ],
-      "category": "annual_leave",
-      "difficulty": "multi_hop",
-      "verified_by": "drafted",
-      "latency_ms": 909.5
-    },
-    {
-      "id": "q065",
-      "query": "What are the daily working hours and the weekly rest entitlement?",
-      "expected": [
-        "98",
-        "104"
-      ],
-      "retrieved": [
-        "6",
-        "49",
-        "100",
-        "164",
-        "104",
-        "98",
-        "101",
-        "17",
-        "105",
-        "2"
-      ],
-      "tags": [
-        "cross_lingual"
+        "cross_lingual",
+        "situational"
       ],
       "category": "working_hours",
       "difficulty": "multi_hop",
       "verified_by": "drafted",
-      "latency_ms": 898.7
+      "latency_ms": 948.0
     }
   ]
 }

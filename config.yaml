@@ -14,12 +14,20 @@ models:
   # Translates a query for cross-lingual retrieval.
   translate: { provider: anthropic, id: "claude-haiku-4-5", max_tokens: 512 }
 
+  # The `openai` model set: same roles, other provider. Selected with
+  # BILINGUAL_RAG_MODEL_SET=openai, or `--model-set openai` on the eval
+  # scripts. Having it here rather than as a hand-edit is what makes the
+  # cross-provider answer comparison reproducible.
+  answer_openai: { provider: openai, id: "gpt-5.6-terra", max_tokens: 2048 }
+  faithfulness_openai: { provider: openai, id: "gpt-5.6-luna", max_tokens: 512 }
+
 pricing:
   # usd per 1M tokens
   "claude-opus-5":    { input: 5.00, output: 25.00 }
   "claude-sonnet-5":  { input: 3.00, output: 15.00 }
   "claude-haiku-4-5": { input: 1.00, output: 5.00 }
   "gpt-5.6-terra":    { input: 2.00, output: 12.00 }
+  "gpt-5.6-luna":     { input: 0.20, output: 1.20 }
 
 retrieval:
   # Fixed at 10 for every ablation row, so recall@10 means the same thing on

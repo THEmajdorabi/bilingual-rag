@@ -570,3 +570,151 @@ same fix: the name has to be importable at module level.
 **What did not change:** the file format, the sampling design, the actions, or
 the meaning of `verified_by`. This is a different front end onto the same
 23-question `--sample` review.
+
+## 2026-08-22 — Label review was called off; the eval set ships UNVERIFIED
+
+**Chosen:** stop the label review at 2 of 68 questions and publish every number
+as provisional.
+
+**Rejected:** finishing the 23-question `--sample` review before publishing;
+quietly marking the remainder `verified_by: drafted` and reporting the numbers
+without a caveat.
+
+**Why:** the review is a human's time, and the owner of this repo chose to
+spend it elsewhere and take the accuracy cost knowingly. That is a legitimate
+trade. What is not legitimate is letting the resulting numbers read as though
+the labels were checked.
+
+**What this actually means for every number in this repo.** Recall@10 is
+"the labelled article appeared in the top ten". If the label is wrong, a
+correct retrieval scores as a miss and an incorrect one can score as a hit.
+So:
+
+- **recall, MRR and nDCG are bounded above by label quality**, and the bound is
+  unknown because the labels are unchecked;
+- **the ablation table's *differences* are more trustworthy than its levels.**
+  Every configuration is scored against the same labels, so a shared label
+  error mostly cancels in the comparison and mostly does not cancel in the
+  absolute number;
+- **faithfulness does not depend on the labels at all.** It asks whether a
+  claim is supported by the passage the answer cited, which is checked against
+  the retrieved text, not against `relevant_articles`. It is the one answer
+  metric here that is independent of the eval set's provenance;
+- **refusal accuracy depends entirely on the labels**, since `answerable` is a
+  label like any other, and there are only five unanswerable questions.
+
+**How it is enforced rather than merely intended.** A caveat in a README is a
+promise; these are checks:
+
+- `eval/run_eval.py`, `eval/ablate.py` and `eval/run_answer_eval.py` each print
+  the verified count before any metric, and print a block warning when it is
+  zero;
+- every results JSON carries `provenance.human_verified`;
+- `GET /healthz` returns `eval_set_verified: false` with a note, so a service
+  consumer sees it without reading the repo;
+- the README states it above the tables, not in a footnote.
+
+**The two verified labels are q024 and q025**, both reviewed in the browser
+tool before review was called off. Two is not a sample; it is not enough to
+estimate a label error rate, and this document does not pretend otherwise. The
+honest summary is: *66 of 68 labels have been read by no one*.
+
+## 2026-08-22 — Refusal is a sentinel from the model, not a phrase match
+
+**Chosen:** the answer prompt instructs the model to reply with the exact token
+`NO_ANSWER` and nothing else when the passages do not contain the answer;
+`parse_refusal()` tests for that token.
+
+**Rejected:** matching refusal phrases ("لا تتوفر", "I don't have enough
+information", "the documents do not state"), which is what this repo did first.
+
+**Why:** phrase matching is wrong in both directions, and both directions were
+observed. It missed refusals phrased in a way the list did not anticipate, and
+worse, it counted *hedged answers* as refusals -- "I cannot be certain, but the
+period is sixty days" contains the refusal phrase and is not a refusal. That
+error inflates refusal accuracy and deflates the false refusal rate at the same
+time, which makes a system look cautious precisely when it is being reckless.
+
+A sentinel is a single string under the prompt's control, and the failure mode
+is loud: if the model stops emitting it, refusal accuracy collapses to zero
+rather than drifting quietly.
+
+**The cost:** it depends on instruction-following. A weaker model that ignores
+the instruction breaks this. That is a reason to check the sentinel rate when
+changing models, not a reason to go back to guessing from prose.
+
+## 2026-08-22 — Faithfulness is checked per claim, and the score is claim-weighted
+
+**Chosen:** split the answer into claims, ask a cheap model whether the cited
+passage supports each one, and report supported claims over total claims across
+the whole run.
+
+**Rejected:** a per-answer 0/1 "is this answer faithful"; the mean of
+per-question faithfulness rates.
+
+**Why per claim:** an answer that gets four things right and invents a fifth is
+not 0% faithful and it is not 100% faithful. Per-claim scoring is the only
+resolution at which "mostly grounded, one invented deadline" is expressible,
+and the invented deadline is exactly the failure that matters in a legal
+setting.
+
+**Why claim-weighted and not the mean of rates:** a one-claim answer and a
+six-claim answer would otherwise count equally, so a system could improve its
+score by answering tersely. The run reports 116 claims across 43 answers, so
+the weighting is not a rounding detail.
+
+**What it does not measure:** whether the claim is true. It measures whether
+the cited passage says it. An answer that faithfully restates an article that
+does not govern the question scores 1.0 on faithfulness and 0.0 on citation
+correctness -- which is why both are reported and neither is called "accuracy".
+
+## 2026-08-22 — A reviewer rejected q054; the set is 67 questions, not 68
+
+**What happened:** during review, q054 (*"كم الحد الادنى للراتب بالريال اللي
+لازم ياخذه اي موظف؟"* — what is the minimum wage) was **rejected** and removed.
+Its own `confidence_reason` had flagged the risk: the label was drafted as
+`answerable: false` against the Labor Law alone, *before* the Implementing
+Regulations were indexed, and the Regulations may well cover it. A question
+whose correct label is unknown is worse than no question, because it scores
+the retriever against a coin flip.
+
+**Consequences, stated rather than smoothed over:**
+
+- **Counts differ between runs, and both are reported as measured.** The
+  answer-quality run covers **68** questions; it completed before the
+  rejection. The retrieval and ablation runs cover the **53 answerable** of the
+  current **67**. Nothing has been back-fitted to make the two agree.
+- **Two labels are human-verified** (q024, q025) and **one was rejected**
+  (q054). That is the entire extent of human review: 64 of the remaining 67
+  labels have been read by no one.
+
+**A test had to change, and the change is the interesting part.**
+`test_the_sample_is_the_23_question_set` asserted `len(state.order) == 23` and
+failed the moment the data legitimately changed. The sample size is *derived* —
+every low-confidence label, plus 5 unanswerable and 10 answerable — so pinning
+the literal total tested the data, not the recipe. It now asserts the
+composition: the three groups are disjoint, every low-confidence label is
+included, and the two samples are exactly 5 and 10. That test would have caught
+a broken sampler; the old one caught a reviewer doing their job.
+
+## 2026-08-22 — Answer cost is recorded split, not just totalled
+
+**Chosen:** `Answer` carries `answer_cost_usd` and `faithfulness_cost_usd`
+separately, with token counts for each, and the eval reports both plus a
+per-claim faithfulness cost.
+
+**Rejected:** a single `cost_usd`, which is what it had.
+
+**Why:** the two calls scale differently. Answer generation is **one call per
+question**; the faithfulness check is **one call per claim**, and a run
+produced 116 claims across 43 answered questions — 2.7 claims each. A cost
+projection built on the total is therefore insensitive to the one lever that
+actually moves it at volume. Splitting them makes the arithmetic in the
+README's cost section derivable from measurements rather than asserted.
+
+**Retrieval is reported as latency, not dollars.** The embedder and the
+cross-encoder run locally, so retrieval makes no API call and has no per-query
+price this repo can honestly attribute. What it has is machine time, which is
+measured. Any dollar figure for it depends on an instance rate that is an
+assumption about deployment, so where the README projects one, the rate is
+stated inline and the arithmetic is left visible.

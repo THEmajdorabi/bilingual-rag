@@ -216,8 +216,28 @@ def test_the_article_text_reaches_the_page(client, state) -> None:
     assert key in body
 
 
-def test_the_sample_is_the_23_question_set(state) -> None:
-    assert len(state.order) == 23
+def test_the_sample_is_composed_as_documented(state) -> None:
+    """Assert the sample's *composition*, not its size.
+
+    The size is derived -- every low-confidence label, plus 5 unanswerable and
+    10 answerable -- so it legitimately changes when the eval set does. It did:
+    a reviewer rejected q054, and a test pinned to the literal 23 failed for a
+    correct change to the data. What must not drift is the recipe.
+    """
+    from schema import EvalSet
+
+    evalset = EvalSet.load(rs.QUESTIONS)
+    low = {q.id for q in evalset.by_confidence("low")}
+    sample = state.order
+
+    assert len(sample) == len(set(sample)), "the three groups must be disjoint"
+    assert low <= set(sample), "every low-confidence label must be reviewed"
+    assert len(sample) == len(low) + 5 + 10
+
+    picked = {q.id: q for q in evalset.questions}
+    extra = [picked[i] for i in sample if i not in low]
+    assert sum(1 for q in extra if not q.answerable) == 5
+    assert sum(1 for q in extra if q.answerable) == 10
 
 
 def test_an_out_of_range_index_shows_the_done_page(client) -> None:

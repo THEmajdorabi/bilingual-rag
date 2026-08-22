@@ -71,3 +71,11 @@ markers = [
     "slow: loads an embedding model; excluded from `make test`",
 ]
 addopts = "-m 'not integration and not slow' --strict-markers"
+
+[tool.ruff.lint.per-file-ignores]
+# B008 flags a function call in an argument default. `Depends(...)` in the
+# signature is FastAPI's dependency-injection syntax, not an accidental
+# mutable default -- FastAPI reads it off the signature and never evaluates it
+# as a Python default. Moving the calls into the bodies would disable
+# injection, and with it the 503-while-loading behaviour.
+"src/bilingual_rag/api/main.py" = ["B008"]

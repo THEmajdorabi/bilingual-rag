@@ -59,6 +59,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--use-agent", action="store_true")
+    parser.add_argument(
+        "--model-set",
+        default="",
+        help="a suffix under `models:` in config.yaml. '' = the Anthropic default, "
+        "'openai' = answer_openai + faithfulness_openai.",
+    )
     parser.add_argument("--out", default="eval/results/answers.json")
     args = parser.parse_args()
 
@@ -79,7 +85,7 @@ def main() -> int:
     settings = load_settings()
     retriever = Retriever(qdrant_settings=QdrantSettings(**settings.qdrant.model_dump()))
     retriever.load_bm25()
-    answerer = Answerer(settings=settings)
+    answerer = Answerer(settings=settings, model_set=args.model_set)
 
     agent = None
     if args.use_agent:
@@ -96,6 +102,7 @@ def main() -> int:
             passages, _ = agent.gather(question.query)
         else:
             passages = retriever.retrieve(question.query).passages
+        retrieval_ms = (time.perf_counter() - started) * 1000
 
         answer = answerer.answer(question.query, passages)
         elapsed = (time.perf_counter() - started) * 1000
@@ -116,7 +123,15 @@ def main() -> int:
                 "faithfulness": answer.faithfulness,
                 "hallucinated_citations": answer.hallucinated_citations,
                 "latency_ms": round(elapsed, 1),
+                "retrieval_ms": round(retrieval_ms, 1),
                 "cost_usd": round(answer.cost_usd, 6),
+                "answer_cost_usd": round(answer.answer_cost_usd, 6),
+                "faithfulness_cost_usd": round(answer.faithfulness_cost_usd, 6),
+                "answer_input_tokens": answer.answer_input_tokens,
+                "answer_output_tokens": answer.answer_output_tokens,
+                "faithfulness_input_tokens": answer.faithfulness_input_tokens,
+                "faithfulness_output_tokens": answer.faithfulness_output_tokens,
+                "answer_text": answer.text,
                 "lang": answer.lang,
                 "verified_by": question.verified_by,
             }
@@ -165,8 +180,34 @@ def main() -> int:
         "p50_latency_ms": round(percentile([r["latency_ms"] for r in rows], 0.50), 1),
         "p95_latency_ms": round(percentile([r["latency_ms"] for r in rows], 0.95), 1),
         "total_cost_usd": round(sum(r["cost_usd"] for r in rows), 4),
+        # The cost breakdown. Retrieval makes no API call, so its share of the
+        # bill is machine time, reported as latency rather than as dollars this
+        # repo cannot honestly attribute.
+        "cost_per_question_usd": round(sum(r["cost_usd"] for r in rows) / len(rows), 6),
+        "answer_cost_usd": round(sum(r["answer_cost_usd"] for r in rows), 4),
+        "faithfulness_cost_usd": round(sum(r["faithfulness_cost_usd"] for r in rows), 4),
+        "answer_cost_per_question_usd": round(
+            sum(r["answer_cost_usd"] for r in rows) / len(rows), 6
+        ),
+        "faithfulness_cost_per_question_usd": round(
+            sum(r["faithfulness_cost_usd"] for r in rows) / len(rows), 6
+        ),
+        "faithfulness_cost_per_claim_usd": (
+            round(sum(r["faithfulness_cost_usd"] for r in rows) / total_claims, 6)
+            if total_claims
+            else None
+        ),
+        "answer_input_tokens": sum(r["answer_input_tokens"] for r in rows),
+        "answer_output_tokens": sum(r["answer_output_tokens"] for r in rows),
+        "faithfulness_input_tokens": sum(r["faithfulness_input_tokens"] for r in rows),
+        "faithfulness_output_tokens": sum(r["faithfulness_output_tokens"] for r in rows),
+        "p50_retrieval_ms": round(percentile([r["retrieval_ms"] for r in rows], 0.50), 1),
+        "p95_retrieval_ms": round(percentile([r["retrieval_ms"] for r in rows], 0.95), 1),
         "wall_s": round(time.perf_counter() - started_all, 1),
         "used_agent": args.use_agent,
+        "model_set": args.model_set or "default",
+        "answer_model": settings.models[answerer._key("answer")].id,
+        "faithfulness_model": settings.models[answerer._key("faithfulness")].id,
     }
 
     print()

@@ -1,0 +1,44 @@
+# Model IDs and prices checked against provider docs on 2026-08-22.
+#   Anthropic: https://docs.anthropic.com/en/docs/about-claude/models
+#   OpenAI:    https://developers.openai.com/api/docs/pricing
+#
+# Embedding and reranking models are local open-source weights and cost
+# nothing to run; they live in src/bilingual_rag/config.py because they are
+# selected by hardware profile, not by preference.
+
+models:
+  # Generates the grounded answer from retrieved passages.
+  answer:  { provider: anthropic, id: "claude-sonnet-5", max_tokens: 2048 }
+  # Checks each claim against its cited passage. A cheap, high-volume call.
+  faithfulness: { provider: anthropic, id: "claude-haiku-4-5", max_tokens: 512 }
+  # Translates a query for cross-lingual retrieval.
+  translate: { provider: anthropic, id: "claude-haiku-4-5", max_tokens: 512 }
+
+pricing:
+  # usd per 1M tokens
+  "claude-opus-5":    { input: 5.00, output: 25.00 }
+  "claude-sonnet-5":  { input: 3.00, output: 15.00 }
+  "claude-haiku-4-5": { input: 1.00, output: 5.00 }
+  "gpt-5.6-terra":    { input: 2.00, output: 12.00 }
+
+retrieval:
+  # Fixed at 10 for every ablation row, so recall@10 means the same thing on
+  # every line of the table.
+  top_k: 10
+  dense_top_k: 50
+  bm25_top_k: 50
+  # Reciprocal rank fusion constant. One value, one code path: see DECISIONS.md.
+  rrf_k: 60
+
+qdrant:
+  url: "http://localhost:6333"
+  timeout_s: 30.0
+
+answer:
+  max_steps: 6
+  max_cost_usd: 0.10
+  refusal_threshold: 0.35
+
+corpus_path: "data/boe_labor_law.html"
+doc_id: "saudi_labor_law"
+chunks_path: "data/chunks.jsonl"

@@ -140,6 +140,48 @@ class EvalSet(BaseModel):
     def by_confidence(self, level: str) -> list[Question]:
         return [q for q in self.questions if q.confidence == level]
 
+    def review_sample(self, seed: int = 20260822) -> list[Question]:
+        """The questions a partial, risk-weighted review should cover.
+
+        Reviewing all 68 labels by hand is expensive, and the risk is not
+        spread evenly across them. This selects three **disjoint** groups:
+
+          1. every low-confidence label -- the drafter's own flagged doubts;
+          2. a sample of the *high-confidence* unanswerable labels, so refusal
+             labels get coverage beyond the ones already flagged risky;
+          3. a sample of high-confidence answerable labels, which is the
+             control -- if these turn out wrong, the confidence self-assessment
+             is not trustworthy and the whole set needs reviewing.
+
+        Group 2 deliberately excludes the low-confidence unanswerables, which
+        are already in group 1; otherwise the counts would double-count and the
+        review would be smaller than it appears.
+
+        Seeded, so the same sample comes back on every run and the DECISIONS.md
+        record stays accurate.
+        """
+        import random
+
+        rng = random.Random(seed)
+
+        low = sorted(self.by_confidence("low"), key=lambda q: q.id)
+        chosen_ids = {q.id for q in low}
+
+        unanswerable_pool = sorted(
+            (q for q in self.unanswerable() if q.id not in chosen_ids),
+            key=lambda q: q.id,
+        )
+        unanswerable_sample = rng.sample(unanswerable_pool, min(5, len(unanswerable_pool)))
+        chosen_ids.update(q.id for q in unanswerable_sample)
+
+        answerable_pool = sorted(
+            (q for q in self.questions if q.answerable and q.id not in chosen_ids),
+            key=lambda q: q.id,
+        )
+        answerable_sample = rng.sample(answerable_pool, min(10, len(answerable_pool)))
+
+        return [*low, *unanswerable_sample, *answerable_sample]
+
     def review_order(self) -> list[Question]:
         """Drafted questions, least confident first."""
         rank = {"low": 0, "medium": 1, "high": 2}

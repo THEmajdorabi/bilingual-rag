@@ -461,3 +461,65 @@ BM25 is made then.
 measured value, with a footnote pointing here, because a reader who sees
 "-0.170" deserves to know that most of it is a weighting artifact and that the
 component is useless rather than actively catastrophic.
+
+---
+
+## 2026-08-22 — Label verification is partial, by risk-weighted sampling
+
+**Chose:** verify **23 of 68** labels by hand, selected by risk, rather than
+all 68.
+
+**Rejected:** full manual review (accurate but expensive), and no review at all
+(cheap but leaves every number uninterpretable).
+
+**Why:** risk is not spread evenly across the labels, so neither extreme is the
+right trade. Reviewing all 68 costs hours of a domain reader's attention, most
+of it spent confirming labels that were never in doubt. Reviewing none leaves
+recall capped by label quality in a way no retrieval change can lift.
+
+**The sample, three disjoint groups** (`EvalSet.review_sample`, seeded at
+20260822 so it reproduces exactly):
+
+| Group | n | Why |
+|---|---|---|
+| every low-confidence label | **8** | the drafter's own flagged doubts: 3 cite articles never read in full, 5 are refusal labels judged before the Regulations were indexed |
+| high-confidence **unanswerable**, sampled | **5** | refusal labels carry a specific risk that retrieval labels do not, so they get coverage beyond the ones already flagged |
+| high-confidence **answerable**, sampled | **10** | the **control** |
+| | **23 / 68** | |
+
+The groups are disjoint on purpose. Five of the eight low-confidence labels are
+themselves unanswerable, so counting them in both groups would have made the
+review look larger than it is.
+
+**The third group is the point.** If the high-confidence sample comes back
+clean, the drafter's confidence self-assessment is calibrated and leaving the
+other 45 unreviewed is defensible. **If any of those 10 are wrong, the
+self-assessment is not trustworthy and all 68 need reviewing** -- the sample is
+designed to detect that, not to assume it away.
+
+**What this means for the README, stated so the claim stays accurate:**
+
+- No figure may be described as measured against a *verified* eval set.
+  The accurate phrasing is **"measured against a partly-verified set: 23 of 68
+  labels checked by hand, selected by risk-weighted sampling."**
+- `run_eval.py` and `ablate.py` print a PARTIAL VERIFICATION banner naming the
+  exact counts whenever some but not all labels are verified, so the caveat
+  travels with the numbers rather than living only here.
+- `--verified-only` computes over the verified subset alone. With n=23 that is
+  a small sample, and it over-represents hard and risky questions by
+  construction, so it is a **lower** bound rather than a like-for-like
+  comparison with the full-set figure.
+
+**Reproduce the sample:**
+
+```bash
+python eval/review.py --sample
+```
+
+**One safeguard added the hard way.** While testing the CLI, piped input
+marked three labels `verified_by: human` that no human had read. They were
+reset, and `review.py` now refuses to run when stdin is not a terminal.
+Manufacturing provenance is worse than having none: an unverified label is
+merely unknown, whereas a falsely verified one is a number nobody will think
+to re-check. `--status` still works non-interactively, since inspecting
+records no judgement.

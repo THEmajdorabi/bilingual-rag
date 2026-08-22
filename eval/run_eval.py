@@ -114,21 +114,46 @@ def by_group(details: list[dict], questions: list[Question]) -> dict[str, Retrie
 
 
 def provenance_banner(evalset: EvalSet, evaluated: list[Question]) -> str:
+    """State how far these numbers can be trusted, before stating the numbers.
+
+    Three regimes, and the difference between them matters more than the
+    figures underneath:
+
+      * nothing verified   -- measures the pipeline, not its quality;
+      * partly verified    -- verification was by *sampling*, so the verified
+                              subset is evidence about the labels in general
+                              only to the extent the sample was representative;
+      * fully verified     -- the labels are checked.
+    """
     verified = sum(1 for q in evaluated if q.verified_by == "human")
     total = len(evaluated)
+    whole_set = len(evalset.questions)
+    whole_verified = len(evalset.verified())
+
     lines = [
         "PROVENANCE",
         f"  questions evaluated : {total}",
         f"  human-verified      : {verified}",
         f"  model-drafted       : {total - verified}",
+        f"  eval set overall    : {whole_verified}/{whole_set} verified",
     ]
-    if verified < total:
+
+    if whole_verified == 0:
         lines += [
             "",
             "  !! These figures measure the retrieval pipeline, not its quality.",
             "     The eval set has not been checked by a human, and an eval set",
             "     written by a model flatters the system it is scoring.",
-            "     Run `python eval/review.py` before quoting these numbers.",
+            "     Run `python eval/review.py --sample` before quoting these numbers.",
+        ]
+    elif whole_verified < whole_set:
+        lines += [
+            "",
+            f"  !! PARTIAL VERIFICATION: {whole_verified} of {whole_set} labels were checked,",
+            "     selected by risk-weighted sampling rather than reviewed in full.",
+            "     Unverified labels cap recall in a way no retrieval change can lift,",
+            "     so quote these figures as measured against a partly-verified set.",
+            "     See DECISIONS.md for the exact sampling design.",
         ]
     return "\n".join(lines)
 

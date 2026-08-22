@@ -12,6 +12,7 @@ cites**, and records `verified_by: human` only on an explicit yes.
 self-assessment of each label, so the shakiest get your attention while it is
 freshest. Its only job is to order the queue; it is not a measurement.
 
+    python eval/review.py --sample           # the risk-weighted partial review
     python eval/review.py                    # all drafted, least confident first
     python eval/review.py --confidence low   # only the risky ones
     python eval/review.py --unanswerable     # only refusal labels
@@ -165,6 +166,28 @@ def ask_articles(current: list[str]) -> list[str] | None:
     return parts or None
 
 
+def require_interactive() -> None:
+    """Refuse to run when stdin is not a terminal.
+
+    This tool exists to record *human* judgement. Piping input into it -- a
+    test harness, a shell heredoc, a stray `echo` -- would mark labels
+    `verified_by: human` when no human saw them, which is worse than leaving
+    them unverified: it manufactures provenance.
+
+    This guard was added after exactly that happened while testing the CLI:
+    three labels came back marked human-verified and had to be reset.
+    """
+    if not sys.stdin.isatty():
+        print(
+            "\nrefusing to run: stdin is not a terminal.\n\n"
+            "This CLI records human judgement, so it must be driven by a human.\n"
+            "Piped input would mark labels as human-verified when nobody read them.\n\n"
+            "Run it directly in a terminal, or use --status to inspect without reviewing.",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+
 def prompt() -> str:
     valid = {"y", "n", "e", "a", "u", "s", "?", "q"}
     while True:
@@ -201,6 +224,12 @@ def main() -> int:
     parser.add_argument("--id", help="review only this question id")
     parser.add_argument("--category", help="review only this category")
     parser.add_argument("--confidence", choices=["low", "medium", "high"])
+    parser.add_argument(
+        "--sample",
+        action="store_true",
+        help="risk-weighted partial review: all low-confidence, plus a sample of "
+        "high-confidence unanswerable and answerable labels",
+    )
     parser.add_argument("--unanswerable", action="store_true", help="only refusal labels")
     parser.add_argument("--status", action="store_true", help="print counts and exit")
     parser.add_argument("--all", action="store_true", help="include already-verified")
@@ -212,7 +241,29 @@ def main() -> int:
         print_status(evalset)
         return 0
 
-    pool = evalset.questions if args.all else evalset.review_order()
+    if args.sample:
+        pool = evalset.review_sample()
+        low = sum(1 for q in pool if q.confidence == "low")
+        unanswerable = sum(1 for q in pool if not q.answerable and q.confidence != "low")
+        answerable = sum(1 for q in pool if q.answerable and q.confidence != "low")
+        low_unanswerable = sum(1 for q in pool if q.confidence == "low" and not q.answerable)
+        print()
+        print("RISK-WEIGHTED SAMPLE")
+        print(
+            f"  {low:2} low-confidence      (every flagged doubt, "
+            f"incl. {low_unanswerable} unanswerable)"
+        )
+        print(
+            f"  {unanswerable:2} unanswerable        (high-confidence, sampled: refusal coverage)"
+        )
+        print(f"  {answerable:2} answerable          (high-confidence, sampled: the control)")
+        print(f"  {len(pool):2} total, disjoint groups, out of {len(evalset.questions)} questions")
+        print()
+        print("  The third group is the control: if high-confidence labels turn out")
+        print("  wrong, the self-assessment is untrustworthy and all 68 need review.")
+    else:
+        pool = evalset.questions if args.all else evalset.review_order()
+
     if args.id:
         pool = [q for q in pool if q.id == args.id]
     if args.category:
@@ -225,6 +276,10 @@ def main() -> int:
     if not pool:
         print("nothing to review")
         return 0
+
+    # Checked here, after --status and the filters, so inspection still works
+    # in a pipeline and only the judgement-recording path is gated.
+    require_interactive()
 
     articles = load_articles()
     reviewed = 0

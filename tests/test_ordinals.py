@@ -105,7 +105,7 @@ def test_find_article_headings_reports_unparsed_rather_than_dropping() -> None:
     headings = find_article_headings(text)
 
     assert len(headings) == 2
-    assert headings[0][2:] == ("الأولى", 1)
+    assert headings[0][2:] == ("الأولى", "1")
     # The second is surfaced with None, so a caller can count failures.
     assert headings[1][3] is None
 
@@ -127,7 +127,7 @@ def test_a_heading_at_the_start_of_a_line_is_found() -> None:
     headings = find_article_headings(text)
 
     assert len(headings) == 1
-    assert headings[0][3] == 3
+    assert headings[0][3] == "3"
 
 
 def test_a_heading_without_a_colon_is_found() -> None:
@@ -135,4 +135,56 @@ def test_a_heading_without_a_colon_is_found() -> None:
     text = "المادة الثانية\n تعديلات المادة\nنص المادة هنا."
     headings = find_article_headings(text)
 
-    assert headings[0][3] == 2
+    assert headings[0][3] == "2"
+
+
+# ---------------------------------------------------------------------------
+# The Implementing Regulations use a different numbering style
+# ---------------------------------------------------------------------------
+
+
+def test_digit_headings_from_the_regulations_are_found() -> None:
+    """The Law spells its article numbers; the Regulations use digits.
+
+    Both documents share one index, so both styles must parse. The Regulations
+    write `المادة (23):` -- and PDF extraction of right-to-left text mirrors
+    the brackets, so `)23(` is what actually arrives.
+    """
+    upright = "\n".join(["المادة (23):", "نص"])
+    mirrored = "\n".join(["المادة )23(", "نص"])
+
+    assert find_article_headings(upright)[0][3] == "23"
+    assert find_article_headings(mirrored)[0][3] == "23"
+
+
+def test_bis_articles_get_their_own_number() -> None:
+    """`مكرر` marks an article inserted between two existing ones.
+
+    Article 15 مكرر sits between 15 and 16 and is a distinct article, so it
+    cannot collapse onto 15 -- a citation to one is not a citation to the other.
+    """
+    bis = "\n".join(["المادة )15( مكرر", "نص"])
+    plain = "\n".join(["المادة )15(", "نص"])
+
+    assert find_article_headings(bis)[0][3] == "15_bis"
+    assert find_article_headings(plain)[0][3] == "15"
+
+
+def test_arabic_indic_digits_in_headings_are_read() -> None:
+    text = "\n".join(["المادة )٢٣(", "نص"])
+    assert find_article_headings(text)[0][3] == "23"
+
+
+def test_both_numbering_styles_come_back_in_document_order() -> None:
+    """The chunker ends each article at the next heading, so order matters."""
+    text = "\n".join(
+        [
+            "المادة الأولى: نص",
+            "المادة )2(",
+            "نص آخر",
+            "المادة الثالثة: ثالث",
+        ]
+    )
+    numbers = [h[3] for h in find_article_headings(text)]
+
+    assert numbers == ["1", "2", "3"]

@@ -145,7 +145,16 @@ marks at U+0653–U+0655. Those do occur in vocalised legal text.
 
 ---
 
-## 2026-08-22 — Arabic normalization is worth far less than the spec predicts
+## 2026-08-22 — [VOID, SUPERSEDED] Arabic normalization is worth far less than the spec predicts
+
+> **This entry's conclusion is WRONG and is retained only as a record of the
+> mistake.** It was measured against an eval set that could not discriminate:
+> the dense-only baseline was 0.985, leaving no headroom for any component to
+> show value. Re-measured on a corpus roughly twice the size and questions that
+> do not reuse the article's vocabulary, normalization is worth **+0.028**,
+> above the noise threshold and a demonstrated improvement. **The spec was
+> right and this entry was wrong.** See "Re-measured on a discriminating eval
+> set" below.
 
 **The spec's claim.** BUILD.md, Part 3, on `arabic/normalize.py`: *"Without
 normalization, dense retrieval is mediocre and BM25 is close to useless. This
@@ -224,7 +233,13 @@ draw from the measurement.
 
 ---
 
-## 2026-08-22 — The BM25 hybrid hurts on this corpus, and is kept anyway (for now)
+## 2026-08-22 — [VOID, SUPERSEDED] The BM25 hybrid hurts on this corpus, and is kept anyway (for now)
+
+> **This entry's numbers are void**, measured against the same
+> non-discriminating eval set. The direction was right but the magnitude was
+> badly understated: BM25 alone costs **-0.170**, not -0.037. The conclusion
+> that the hybrid is "a wash" is also wrong -- with reranking the full pipeline
+> now beats dense+normalization by +0.038. See below.
 
 **Measured:** adding BM25 with RRF fusion **lowers** recall@10 from 0.9925 to
 0.9552 and MRR@10 from 0.8854 to 0.7071. Cross-encoder reranking then recovers
@@ -257,3 +272,94 @@ without the article's own vocabulary. If the hybrid still fails to earn its
 **Confirmed rather than contradicted:** the spec predicts reranking is "usually
 the biggest single latency cost". Measured: +330 ms of a 360 ms p95, against
 ~33 ms for dense and under 1 ms for BM25. That is exactly right.
+
+---
+
+## 2026-08-22 — Re-measured on a discriminating eval set; two earlier conclusions void
+
+**What was wrong.** The first ablation reported a dense-only baseline of
+**0.985 recall@10**. At that ceiling no component can demonstrate value, and
+every delta in the table was noise dressed as a finding. The cause was
+measured, not guessed:
+
+| Diagnostic | Before | After |
+|---|---|---|
+| chunks indexed | 305 | **561** |
+| corpus characters | 169,406 | **304,092** |
+| mean question/passage lexical containment | 0.517 | **0.088** |
+| median containment | 0.625 | **0.000** |
+| questions with >= 75% containment | 37% | **0%** |
+| labelled article at BM25 rank 1 | 52% | **2%** |
+| labelled article in BM25 top 10 | 67% | **17%** |
+
+The old questions restated their own answers. `ما هي مدة الإشعار المطلوبة قبل
+إنهاء عقد العمل غير محدد المدة؟` shares every key term with article 75, so
+**BM25 alone solved half the set by string matching**. That is a vocabulary
+benchmark, not a retrieval benchmark.
+
+**Two changes.**
+
+1. **Corpus enlarged** with the Implementing Regulations
+   (`hrsd_regulations_ar.pdf`, 109 pages, official HRSD publication, passes all
+   five quality checks). 305 -> 561 chunks. Retrieval now has real competition,
+   and the PDF path lost when the corpus moved to HTML is exercised again.
+   The regulations number articles with **digits in brackets** -- `المادة )15(
+   مكرر` -- where the Law spells them as ordinals, so the heading parser now
+   handles both, and `مكرر` articles get a `15_bis` id.
+2. **Every question rewritten to describe the situation, not the legal
+   concept**, in Gulf colloquial with the misspellings users actually type:
+   `مديري قال لي اطلع بكرة وراتبي شهري، لازم يعطيني وقت قبل؟` in place of the
+   phrasing above.
+
+Article labels are now `doc_id:article`, because both documents number an
+"article 15" and a bare number stopped being unique.
+
+**The new table** (53 answerable questions, mean of 3 runs, `cuda_small`):
+
+| Configuration | recall@10 | MRR@10 | nDCG@10 | p95 |
+|---|---|---|---|---|
+| dense only, no normalization | 0.557 | 0.274 | 0.331 | 36 ms |
+| + Arabic normalization | 0.585 | 0.293 | 0.352 | 36 ms |
+| + BM25 hybrid with RRF | 0.415 | 0.185 | 0.236 | 31 ms |
+| + cross-encoder reranking | **0.623** | **0.339** | **0.401** | 413 ms |
+
+**What each conclusion becomes:**
+
+- **Normalization: the spec was right, I was wrong.** +0.028 recall@10, above
+  the 0.02 noise threshold, for 0 ms. The earlier "+0.007, within noise, the
+  spec is wrong" was an artifact of a saturated benchmark. The lesson is not
+  about Arabic -- it is that **a component measured at ceiling always looks
+  worthless**, and the honest response to a suspiciously flat ablation is to
+  attack the benchmark before drawing conclusions from it.
+- **BM25 alone still hurts, and by far more than reported:** -0.170, not
+  -0.037. Legal text reuses vocabulary across chapters, and RRF promotes
+  anything both lists rank at all, so lexical near-misses displace correct
+  articles.
+- **Reranking is now clearly the largest single win:** +0.208 recall@10 and
+  +0.154 MRR, for +382 ms. It more than recovers what BM25 costs.
+- **The full pipeline is now justified, where before it was a wash.** Full
+  (0.623) beats dense+normalization (0.585) by +0.038, above the noise
+  threshold. Previously both sat at 0.993 and the extra 330 ms bought nothing.
+  **The gate set in the superseded BM25 entry therefore resolves toward keeping
+  the hybrid**, not cutting it.
+
+**Still true, and still limiting:** these questions remain `verified_by:
+drafted`. A model wrote them and a model labelled them; nobody has read the
+article and confirmed. `eval/review.py` exists for that, and until it has been
+run these numbers measure the pipeline rather than its quality. Retrieval is
+also still deterministic, so `sd = 0` across repeats and there is no
+variance estimate on quality.
+
+**Composition drifted and is under target:** the rewrite cut multi-hop
+questions from 15 to 9 against the spec's floor of 15, and answerable Arabic
+from 47 to 33. Situation-framing makes multi-hop questions harder to write
+without sliding back into legal phrasing. This is a stated gap, not a silent
+one.
+
+**Reproduce:**
+
+```bash
+python scripts/ingest.py --recreate --build-raw
+python scripts/diagnose_eval_difficulty.py
+python eval/ablate.py --repeats 3
+```

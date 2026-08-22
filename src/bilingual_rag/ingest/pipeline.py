@@ -116,8 +116,7 @@ def build_raw_indexes(
 
 
 def ingest(
-    source: str | Path,
-    doc_id: str,
+    sources: list[tuple[str | Path, str]],
     chunks_path: str | Path = "data/chunks.jsonl",
     profile: Profile | None = None,
     qdrant_settings: QdrantSettings | None = None,
@@ -125,17 +124,34 @@ def ingest(
     check_quality: bool = True,
     build_raw: bool = False,
 ) -> IngestReport:
-    """Run the whole pipeline and return what it produced."""
+    """Run the whole pipeline over every source and return what it produced.
+
+    Multiple documents share one index. Chunk ids are namespaced by doc_id, so
+    two documents that both have an "article 15" stay distinct, and citations
+    carry the doc_id alongside the article number.
+    """
     profile = profile or active_profile()
-    source = Path(source)
+    chunks: list[Chunk] = []
 
-    if check_quality:
-        _gate_on_quality(source)
+    for raw_path, doc_id in sources:
+        path = Path(raw_path)
+        if check_quality:
+            _gate_on_quality(path)
 
-    document = extract(source, doc_id=doc_id)
-    chunks = chunk_document(document)
+        document = extract(path, doc_id=doc_id)
+        document_chunks = chunk_document(document)
+        if not document_chunks:
+            raise RuntimeError(f"no chunks produced from {path}: check the article heading pattern")
+        log.info(
+            "ingest.source_done",
+            doc_id=doc_id,
+            chunks=len(document_chunks),
+            articles=len({c.article_no for c in document_chunks if c.article_no}),
+        )
+        chunks.extend(document_chunks)
+
     if not chunks:
-        raise RuntimeError(f"no chunks produced from {source}: check the article heading pattern")
+        raise RuntimeError("no sources produced any chunks")
 
     save_chunks(chunks, chunks_path)
 
@@ -161,7 +177,7 @@ def ingest(
         raw_embedder.unload()
 
     report = IngestReport(
-        doc_id=doc_id,
+        doc_id=", ".join(doc_id for _, doc_id in sources),
         chunks=len(chunks),
         articles=len({c.article_no for c in chunks if c.article_no}),
         points_written=written,

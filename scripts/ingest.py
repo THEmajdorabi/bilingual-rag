@@ -28,9 +28,17 @@ def main() -> int:
     args = parser.parse_args()
 
     settings = load_settings()
+    sources = (
+        [(args.source, "override")]
+        if args.source
+        else [(s.path, s.doc_id) for s in settings.sources]
+    )
+    if not sources:
+        print("no sources configured. Add a `sources:` list to config.yaml.")
+        return 1
+
     report = ingest(
-        source=args.source or settings.corpus_path,
-        doc_id=settings.doc_id,
+        sources=sources,
         chunks_path=settings.chunks_path,
         qdrant_settings=QdrantSettings(**settings.qdrant.model_dump()),
         recreate=args.recreate,

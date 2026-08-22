@@ -33,6 +33,14 @@ BOE_URL = "https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/08381293-6388-48e2-8a
 
 HRSD_EN_URL = "https://www.hrsd.gov.sa/sites/default/files/2017-05/LABOR%20LAW.pdf"
 
+HRSD_REGULATIONS_URL = (
+    "https://www.hrsd.gov.sa/sites/default/files/2025-04/"
+    "%D8%A7%D9%84%D9%84%D8%A7%D8%A6%D8%AD%D8%A9%20"
+    "%D8%A7%D9%84%D8%AA%D9%86%D9%81%D9%8A%D8%B0%D9%8A%D8%A9%20"
+    "%D9%84%D9%86%D8%B8%D8%A7%D9%85%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%20"
+    "%D9%88%D9%85%D9%84%D8%AD%D9%82%D8%A7%D8%AA%D9%87%D8%A7.pdf"
+)
+
 
 @dataclass
 class Source:
@@ -41,21 +49,34 @@ class Source:
     role: str
     indexed: bool
     min_bytes: int
+    rejected: bool = False
 
 
 SOURCES = [
+    # NOT downloaded by default: rejected as silently corrupt (glyphs stored
+    # in visual order, so `المادة` extracts as `املادة`). Kept in the file so
+    # `check_corpus_quality.py` can be demonstrated against a failing source.
+    # See data/README.md.
     Source(
         filename="lsat_labor_law_ar.pdf",
         url=LSAT_URL,
-        role="Arabic corpus: Labor Law + Implementing Regulations, 1443H",
-        indexed=True,
+        role="REJECTED: transposed letters. Fetch only to reproduce the failure.",
+        indexed=False,
         min_bytes=3_000_000,
+        rejected=True,
+    ),
+    Source(
+        filename="hrsd_regulations_ar.pdf",
+        url=HRSD_REGULATIONS_URL,
+        role="Arabic corpus: Implementing Regulations, indexed alongside the Law",
+        indexed=True,
+        min_bytes=2_000_000,
     ),
     Source(
         filename="boe_labor_law.html",
         url=BOE_URL,
-        role="Official Board of Experts text, for provenance cross-check",
-        indexed=False,
+        role="Arabic corpus: the Labor Law itself, official Board of Experts text",
+        indexed=True,
         min_bytes=100_000,
     ),
     Source(
@@ -97,12 +118,20 @@ def download(source: Source, force: bool) -> tuple[bool, str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--force", action="store_true", help="re-download existing files")
+    parser.add_argument(
+        "--include-rejected",
+        action="store_true",
+        help="also fetch sources rejected by the quality checker, to reproduce the failure",
+    )
     args = parser.parse_args()
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     failed = False
 
     for source in SOURCES:
+        if source.rejected and not args.include_rejected:
+            print(f"[rejected ] {source.filename}: skipped ({source.role})")
+            continue
         marker = "INDEXED" if source.indexed else "reference"
         changed, message = download(source, args.force)
         print(f"[{marker:9}] {source.filename}: {message}")

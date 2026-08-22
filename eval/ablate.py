@@ -53,10 +53,13 @@ def run_config(retriever: Retriever, questions: list, config: RetrievalConfig) -
 
         articles: list[str] = []
         for passage in result.passages:
-            if passage.article_no and passage.article_no not in articles:
-                articles.append(passage.article_no)
+            if not passage.article_no:
+                continue
+            key = f"{passage.doc_id}:{passage.article_no}"
+            if key not in articles:
+                articles.append(key)
 
-        triples.append((articles, question.relevant_articles, latency_ms))
+        triples.append((articles, question.qualified_articles(), latency_ms))
 
     metrics = aggregate(triples)
     return {

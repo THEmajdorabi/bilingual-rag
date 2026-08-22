@@ -213,16 +213,63 @@ def _parse_below_hundred(tokens: list[str]) -> int | None:
 # to a number, this is precise enough to use as a chunk boundary.
 ARTICLE_HEADING = re.compile(r"^[ \t]*المادة\s+([^:.\n]{2,60}?)\s*(?::|$)", re.MULTILINE)
 
+# The implementing regulations number their articles with DIGITS in brackets,
+# not ordinal words:
+#
+#     المادة )15( مكرر
+#     المادة (23):
+#
+# Note the mirrored brackets. PDF extraction of right-to-left text emits `)`
+# where `(` was rendered, because the bracket is mirrored for display and the
+# extractor reports the display character. Both orders must be accepted.
+#
+# `مكرر` ("bis") marks a article inserted after an existing one -- 15 مكرر sits
+# between 15 and 16 and is a distinct article, so it gets its own suffix.
+ARTICLE_HEADING_DIGITS = re.compile(
+    r"^[ \t]*المادة\s*[)(]\s*([\d٠-٩]{1,3})\s*[)(]\s*(مكرر)?",
+    re.MULTILINE,
+)
 
-def find_article_headings(text: str) -> list[tuple[int, int, str, int | None]]:
+
+def find_article_headings(text: str) -> list[tuple[int, int, str, str | None]]:
     """Locate every article heading in `text`.
 
-    Returns (start, end, phrase, article_number) per match, in document order.
-    `article_number` is None when the phrase could not be parsed, so the caller
+    Handles both numbering styles this corpus uses: the Labor Law spells its
+    article numbers as ordinal words, and the Implementing Regulations use
+    digits in brackets. Both appear in the same index, so both are found here.
+
+    Returns (start, end, phrase, article_number) in document order, with the
+    number as a **string** -- `مكرر` articles are "15_bis", which is a real
+    article between 15 and 16 and cannot be an int.
+
+    `article_number` is None when the phrase could not be parsed, so a caller
     can count and report failures rather than silently dropping articles.
     """
-    results = []
+    results: list[tuple[int, int, str, str | None]] = []
+
     for match in ARTICLE_HEADING.finditer(text):
         phrase = match.group(1).strip()
-        results.append((match.start(), match.end(), phrase, parse_ordinal(phrase)))
-    return results
+        parsed = parse_ordinal(phrase)
+        results.append((match.start(), match.end(), phrase, str(parsed) if parsed else None))
+
+    for match in ARTICLE_HEADING_DIGITS.finditer(text):
+        digits = normalize_ar(match.group(1))  # folds Arabic-Indic to ASCII
+        if not digits.isdigit():
+            continue
+        number = f"{int(digits)}_bis" if match.group(2) else str(int(digits))
+        results.append((match.start(), match.end(), match.group(0).strip(), number))
+
+    # Both patterns match a digit heading -- the ordinal one sees `المادة` and
+    # a short phrase and yields an unparseable candidate at the same offset.
+    # Keeping both would give the chunker two boundaries at one position and
+    # would put an unparsed entry first, so collapse by start offset and keep
+    # whichever actually resolved to a number.
+    best: dict[int, tuple[int, int, str, str | None]] = {}
+    for item in results:
+        existing = best.get(item[0])
+        if existing is None or (existing[3] is None and item[3] is not None):
+            best[item[0]] = item
+
+    # Document order, so the chunker's "next heading ends this article" logic
+    # works across both styles.
+    return sorted(best.values(), key=lambda item: item[0])

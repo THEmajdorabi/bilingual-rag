@@ -1,700 +1,635 @@
 # Evaluation set for bilingual-rag.
 #
-# PROVENANCE: every question below is marked `verified_by: drafted`. They were
-# written by a model against the real text of the cited articles -- not from
-# memory of Saudi labour law -- but nobody has yet read the article and
-# confirmed the label. Until a human does, these numbers measure the pipeline,
-# not its quality.
+# REWRITTEN 2026-08-22 after the first version was diagnosed as non-discriminating.
+# The original questions restated the article's own wording: mean lexical
+# containment 0.517, 37% of questions sharing 75%+ of their content words with
+# the labelled passage, and BM25 alone putting the right article at rank 1 for
+# 52% of them. Retrieval scored 0.985 for every configuration, so the ablation
+# table could not tell components apart. See DECISIONS.md.
 #
-# Promote a question with:  python eval/review.py
-# That CLI shows the cited article's text next to the question and records
-# `verified_by: human` only when you confirm it.
+# The rule for this version: **describe the situation, never the legal concept.**
 #
-# `run_eval.py` reports the human-verified and drafted populations separately
-# and refuses to headline a figure computed over drafted questions.
+#   BAD  ما هي مدة الإشعار المطلوبة قبل إنهاء عقد العمل غير محدد المدة؟
+#        (reuses إشعار / إنهاء / عقد / غير محدد المدة -- every key term)
+#   GOOD مديري قال لي اطلع بكرة وراتبي شهري، لازم يعطيني وقت؟
+#        (my manager told me to leave tomorrow and I'm paid monthly, does he
+#         have to give me time? -- no shared legal vocabulary at all)
 #
-# Composition target from the spec: 45 answerable Arabic, 20 cross-lingual,
-# 15 unanswerable, with at least 15 of the answerable ones tagged multi_hop.
+# Gulf colloquial and common misspellings are used deliberately, because that is
+# how the users of this system actually type. `ه`/`ة`, `ا`/`أ`, `ي`/`ى` confusion
+# and dropped hamzas are the norm, not the exception.
+#
+# PROVENANCE: every question is `verified_by: drafted` -- written by a model
+# against the real article text, but not yet checked by a person. Promote with
+# `python eval/review.py`.
+#
+# `doc_id` says which document the article numbers belong to. The index now
+# holds the Labor Law AND its Implementing Regulations, and both number an
+# "article 15".
 
 questions:
   # ---------------------------------------------------------------------
-  # Answerable, asked in Arabic
+  # Answerable, Arabic, situation-framed
   # ---------------------------------------------------------------------
   - id: q001
-    question_ar: ما هي مدة الإشعار المطلوبة قبل إنهاء عقد العمل غير محدد المدة؟
+    question_ar: مديري قال لي اطلع بكرة وانا راتبي شهري، لازم يعطيني وقت قبل؟
     relevant_articles: ["75"]
     answerable: true
     category: notice_period
-    difficulty: easy
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
   - id: q002
-    question_ar: كم يوماً يجب الإشعار قبل الإنهاء إذا كان أجر العامل يدفع شهرياً؟
-    relevant_articles: ["75"]
-    answerable: true
-    category: notice_period
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q003
-    question_ar: ماذا يلزم الطرف الذي أنهى العقد دون مراعاة مهلة الإشعار؟
+    question_ar: طلعوني من الشغل فجاه بدون ما يخبروني قبل بمده، لي شي عندهم؟
     relevant_articles: ["76"]
     answerable: true
     category: notice_period
-    difficulty: medium
+    difficulty: hard
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
-  - id: q004
-    question_ar: ما هو التعويض المستحق عند إنهاء عقد غير محدد المدة لسبب غير مشروع؟
+  - id: q003
+    question_ar: صاحب الشغل طردني وما عطاني سبب مقنع، كم المفروض ياخذ مني تعويض؟
     relevant_articles: ["77"]
     answerable: true
     category: termination
-    difficulty: medium
+    difficulty: hard
+    tags: [situational]
+    verified_by: drafted
+
+  - id: q004
+    question_ar: خدمت عندهم سبع سنين وقررت اطلع، كم فلوس المفروض تجيني؟
+    relevant_articles: ["84"]
+    answerable: true
+    category: end_of_service
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
   - id: q005
-    question_ar: كيف تحسب مكافأة نهاية الخدمة؟
-    relevant_articles: ["84"]
+    question_ar: مديري يخليني اجلس بالمكتب من الصبح لين المغرب كل يوم، هذا مسموح؟
+    relevant_articles: ["98"]
     answerable: true
-    category: end_of_service
-    difficulty: easy
+    category: working_hours
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
   - id: q006
-    question_ar: ما مقدار مكافأة نهاية الخدمة عن السنوات الخمس الأولى؟
-    relevant_articles: ["84"]
+    question_ar: في رمضان يبوني ادوام نفس الدوام العادي، صح كذا؟
+    relevant_articles: ["98"]
     answerable: true
-    category: end_of_service
-    difficulty: easy
+    category: working_hours
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
   - id: q007
-    question_ar: ما هو الحد الأقصى لساعات العمل الفعلية في اليوم الواحد؟
-    relevant_articles: ["98"]
+    question_ar: يبوني اشتغل سبعة ايام بالاسبوع بدون ما ارتاح ولا يوم، ينفع؟
+    relevant_articles: ["104"]
     answerable: true
-    category: working_hours
-    difficulty: easy
+    category: rest_days
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
   - id: q008
-    question_ar: كم ساعة عمل في الأسبوع إذا اعتمد صاحب العمل المعيار الأسبوعي؟
-    relevant_articles: ["98"]
+    question_ar: عرضوا علي فلوس زياده مقابل ما ارتاح يوم بالاسبوع، اقدر اوافق؟
+    relevant_articles: ["104"]
     answerable: true
-    category: working_hours
-    difficulty: easy
+    category: rest_days
+    difficulty: hard
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
   - id: q009
-    question_ar: كم تخفض ساعات العمل خلال شهر رمضان للمسلمين؟
-    relevant_articles: ["98"]
+    question_ar: كم يوم اقدر اسافر فيها لاهلي بالسنه وراتبي يمشي؟
+    relevant_articles: ["109"]
     answerable: true
-    category: working_hours
-    difficulty: medium
+    category: annual_leave
+    difficulty: hard
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
   - id: q010
-    question_ar: ما هو يوم الراحة الأسبوعية للعمال؟
-    relevant_articles: ["104"]
+    question_ar: صار لي خمس سنوات بالشركه، يزيد شي عن اول؟
+    relevant_articles: ["109"]
     answerable: true
-    category: rest_days
-    difficulty: easy
+    category: annual_leave
+    difficulty: hard
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
   - id: q011
-    question_ar: هل يجوز تعويض يوم الراحة الأسبوعية بمقابل نقدي؟
-    relevant_articles: ["104"]
+    question_ar: ابي فلوس بدل ما اروح، ياخذونها كاش وانا مستمر بالشغل؟
+    relevant_articles: ["109"]
     answerable: true
-    category: rest_days
-    difficulty: medium
+    category: annual_leave
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
   - id: q012
-    question_ar: ما الحد الأدنى لمدة الإجازة السنوية للعامل؟
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q013
-    question_ar: متى تزاد الإجازة السنوية إلى ثلاثين يوماً؟
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: medium
-    verified_by: drafted
-
-  - id: q014
-    question_ar: هل يجوز للعامل أن يتقاضى بدلاً نقدياً عن إجازته السنوية أثناء خدمته؟
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: medium
-    verified_by: drafted
-
-  - id: q015
-    question_ar: كم المدة التي يجوز لصاحب العمل تأجيل إجازة العامل بعدها؟
+    question_ar: ما لحقت اطلع هالسنه بسبب ضغط الشغل، تروح علي ولا تنقل؟
     relevant_articles: ["110"]
     answerable: true
     category: annual_leave
-    difficulty: medium
+    difficulty: hard
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
-  - id: q016
-    question_ar: ما حق العامل في الإجازة المرضية عن الثلاثين يوماً الأولى؟
+  - id: q013
+    question_ar: تعبت ورقدت المستشفى شهر كامل، بيخصمون من راتبي؟
     relevant_articles: ["117"]
     answerable: true
     category: sick_leave
-    difficulty: easy
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
-  - id: q017
-    question_ar: كم نسبة الأجر في الإجازة المرضية عن الستين يوماً التالية؟
+  - id: q014
+    question_ar: مرضت وقعدت شهرين ونص بالبيت، الراتب يستمر كامل؟
     relevant_articles: ["117"]
     answerable: true
     category: sick_leave
-    difficulty: medium
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
-  - id: q018
-    question_ar: ما مدة إجازة الوضع للمرأة العاملة؟
+  - id: q015
+    question_ar: زوجتي بتولد قريب وتشتغل، كم تقعد بالبيت وراتبها يمشي؟
     relevant_articles: ["151"]
     answerable: true
     category: maternity
-    difficulty: easy
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
-  - id: q019
-    question_ar: هل يجوز فصل العاملة أثناء حملها أو إجازة الوضع؟
+  - id: q016
+    question_ar: مديرها عرف انها حامل وقال بيستغني عنها، يقدر يسوي كذا؟
     relevant_articles: ["155"]
     answerable: true
     category: maternity
-    difficulty: medium
+    difficulty: hard
+    tags: [colloquial, situational]
+    verified_by: drafted
+
+  - id: q017
+    question_ar: انا مو سعودي وشغال هنا بدون ورق موقع، وش وضعي؟
+    relevant_articles: ["37"]
+    answerable: true
+    category: contracts
+    difficulty: hard
+    tags: [colloquial, situational]
+    verified_by: drafted
+
+  - id: q018
+    question_ar: اشتغلت سنه ولا احد جدد لي شي، بقيت شغال عادي، ايش صار للاتفاق؟
+    relevant_articles: ["37"]
+    answerable: true
+    category: contracts
+    difficulty: hard
+    tags: [colloquial, misspelled, situational]
+    verified_by: drafted
+
+  - id: q019
+    question_ar: ما وقعت اي ورقه مع صاحب العمل، اقدر اثبت حقوقي؟
+    relevant_articles: ["51"]
+    answerable: true
+    category: contracts
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
   - id: q020
-    question_ar: ما شروط عقد عمل غير السعودي من حيث الكتابة والمدة؟
-    relevant_articles: ["37"]
+    question_ar: ضربت زميلي بالمكتب وطلعوني على طول بدون اي مستحقات، من حقهم؟
+    relevant_articles: ["80"]
     answerable: true
-    category: contracts
-    difficulty: medium
+    category: termination
+    difficulty: hard
+    tags: [situational]
     verified_by: drafted
 
   - id: q021
-    question_ar: إذا خلا عقد غير السعودي من بيان مدته، فما المدة التي يعد عليها؟
-    relevant_articles: ["37"]
+    question_ar: قبل ما يستغنون عني، لازم يسمعون كلامي وردي؟
+    relevant_articles: ["80"]
     answerable: true
-    category: contracts
-    difficulty: medium
+    category: termination
+    difficulty: hard
+    tags: [colloquial, situational]
     verified_by: drafted
 
   - id: q022
-    question_ar: هل يعد عقد العمل قائماً إذا لم يكن مكتوباً؟
-    relevant_articles: ["51"]
+    question_ar: اتفقت مع صاحب العمل ودياً اني اطلع، لازم يكون بورقه مكتوبه؟
+    relevant_articles: ["74"]
     answerable: true
-    category: contracts
-    difficulty: medium
+    category: termination
+    difficulty: hard
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
   - id: q023
-    question_ar: من عدد النسخ التي يجب أن يكتب بها عقد العمل؟
-    relevant_articles: ["51"]
-    answerable: true
-    category: contracts
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q024
-    question_ar: في أي الحالات ينتهي عقد العمل؟
-    relevant_articles: ["74"]
-    answerable: true
-    category: termination
-    difficulty: medium
-    verified_by: drafted
-
-  - id: q025
-    question_ar: هل يشترط أن تكون موافقة العامل على إنهاء العقد كتابية؟
-    relevant_articles: ["74"]
-    answerable: true
-    category: termination
-    difficulty: medium
-    verified_by: drafted
-
-  - id: q026
-    question_ar: متى يجوز لصاحب العمل فسخ العقد دون مكافأة أو إشعار أو تعويض؟
-    relevant_articles: ["80"]
-    answerable: true
-    category: termination
-    difficulty: hard
-    verified_by: drafted
-
-  - id: q027
-    question_ar: هل يجب إتاحة الفرصة للعامل لإبداء أسباب معارضته للفسخ؟
-    relevant_articles: ["80"]
-    answerable: true
-    category: termination
-    difficulty: medium
-    verified_by: drafted
-
-  - id: q028
-    question_ar: ما تعريف العامل في نظام العمل؟
-    relevant_articles: ["2"]
-    answerable: true
-    category: definitions
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q029
-    question_ar: ما اسم هذا النظام؟
-    relevant_articles: ["1"]
-    answerable: true
-    category: definitions
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q030
-    question_ar: هل للعامل حق في إجازة بأجر كامل في الأعياد؟
+    question_ar: العيد جاي، اداوم ولا اقعد وراتبي يمشي؟
     relevant_articles: ["112"]
     answerable: true
     category: leave
-    difficulty: easy
-    verified_by: drafted
-
-  # Colloquial and misspelled phrasings: real users write this way.
-  - id: q031
-    question_ar: ابغى اعرف كم مدة الانذار قبل الفصل من الشغل
-    relevant_articles: ["75"]
-    answerable: true
-    category: notice_period
     difficulty: hard
-    tags: [colloquial]
+    tags: [colloquial, situational]
     verified_by: drafted
 
-  - id: q032
-    question_ar: كم اجازتي السنويه لو خدمت اكثر من خمس سنوات
-    relevant_articles: ["109"]
+  - id: q024
+    question_ar: اشتغل عند واحد ويبي يخليني اروح اشتغل عند غيره، ينفع؟
+    relevant_articles: ["39"]
     answerable: true
-    category: annual_leave
+    category: employment
     difficulty: hard
-    tags: [colloquial, misspelled]
+    tags: [colloquial, situational]
     verified_by: drafted
 
-  - id: q033
-    question_ar: مكافاه نهايه الخدمه كم تطلع
-    relevant_articles: ["84"]
+  - id: q025
+    question_ar: وظفوني على شغل معين وفجاه يبوني اسوي شي ثاني تماماً، الزم؟
+    relevant_articles: ["60"]
     answerable: true
-    category: end_of_service
+    category: employment
     difficulty: hard
-    tags: [colloquial, misspelled]
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
-  - id: q034
-    question_ar: كم ساعه اشتغل في اليوم حسب النظام
-    relevant_articles: ["98"]
-    answerable: true
-    category: working_hours
-    difficulty: hard
-    tags: [colloquial]
-    verified_by: drafted
-
-  - id: q035
-    question_ar: هل ينفع اخذ فلوس بدل الاجازه
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: hard
-    tags: [colloquial]
-    verified_by: drafted
-
-  # Multi-hop: answering needs two or more articles.
-  - id: q036
-    question_ar: ما مدة الإشعار المطلوبة، وماذا يترتب على من لم يراعها؟
-    relevant_articles: ["75", "76"]
-    answerable: true
-    category: notice_period
-    difficulty: multi_hop
-    verified_by: drafted
-
-  - id: q037
-    question_ar: إذا انتهى العقد باتفاق الطرفين، فما المكافأة المستحقة للعامل؟
-    relevant_articles: ["74", "84"]
+  # Multi-hop: the situation needs two articles to answer fully.
+  - id: q026
+    question_ar: طلعوني بدون ما يخبروني قبل، كم لي عن المده وكم لي عن السنين اللي خدمتها؟
+    relevant_articles: ["76", "84"]
     answerable: true
     category: termination
     difficulty: multi_hop
+    tags: [colloquial, situational]
     verified_by: drafted
 
-  - id: q038
-    question_ar: ما مدة الإجازة السنوية، وإلى متى يجوز تأجيلها؟
+  - id: q027
+    question_ar: ما اخذت اجازتي هالسنه وطلعت من الشغل، تروح علي ولا تتحسب لي فلوس؟
     relevant_articles: ["109", "110"]
     answerable: true
     category: annual_leave
     difficulty: multi_hop
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
-  - id: q039
-    question_ar: ما مدة إجازة الوضع، وهل تحمي العاملة من الفصل؟
+  - id: q028
+    question_ar: زوجتي ولدت وبعدها تعبت، كم تقعد وهل يقدرون يستغنون عنها بهالفتره؟
     relevant_articles: ["151", "155"]
     answerable: true
     category: maternity
     difficulty: multi_hop
+    tags: [colloquial, situational]
     verified_by: drafted
 
-  - id: q040
-    question_ar: كم ساعات العمل اليومية، وما هو يوم الراحة الأسبوعية؟
+  - id: q029
+    question_ar: كم ساعه بالدوام وكم يوم راحه لي بالاسبوع؟
     relevant_articles: ["98", "104"]
     answerable: true
     category: working_hours
     difficulty: multi_hop
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
-  - id: q041
-    question_ar: إذا فسخ صاحب العمل العقد لسبب مشروع، هل يستحق العامل تعويضاً أو مكافأة؟
+  - id: q030
+    question_ar: ضربت مسؤولي وطردوني، هل لي مستحقات عن سنين خدمتي ولا تروح؟
     relevant_articles: ["80", "84"]
     answerable: true
     category: termination
     difficulty: multi_hop
+    tags: [situational]
     verified_by: drafted
 
-  - id: q042
-    question_ar: ما شكل عقد غير السعودي، وهل يعد العقد قائماً إن لم يكتب؟
-    relevant_articles: ["37", "51"]
-    answerable: true
-    category: contracts
-    difficulty: multi_hop
-    verified_by: drafted
-
-  - id: q043
-    question_ar: ما التعويض عن الإنهاء غير المشروع، وما مكافأة نهاية الخدمة؟
-    relevant_articles: ["77", "84"]
-    answerable: true
-    category: termination
-    difficulty: multi_hop
-    verified_by: drafted
-
-  - id: q044
-    question_ar: ما حقوق العامل في الإجازة المرضية والإجازة السنوية؟
+  - id: q031
+    question_ar: مرضت شهر وبعدها ابي اسافر اجازه، الاثنين منفصلين؟
     relevant_articles: ["109", "117"]
     answerable: true
     category: leave
     difficulty: multi_hop
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
-  - id: q045
-    question_ar: في أي حالات ينتهي العقد، ومتى يجوز الفسخ دون إشعار؟
-    relevant_articles: ["74", "80"]
-    answerable: true
-    category: termination
-    difficulty: multi_hop
-    verified_by: drafted
-
-  - id: q045a
-    question_ar: ما مدة الإجازة المرضية بأجر كامل، وهل تحسب ضمن الإجازة السنوية؟
-    relevant_articles: ["109", "117"]
-    answerable: true
-    category: leave
-    difficulty: multi_hop
-    verified_by: drafted
-
-  - id: q045b
-    question_ar: إذا لم يكتب عقد غير السعودي، فما مدته وكيف يثبت العامل حقوقه؟
+  - id: q032
+    question_ar: انا وافد وما عندي ورق، ومديري يبي يطلعني، وش حقوقي؟
     relevant_articles: ["37", "51"]
     answerable: true
     category: contracts
     difficulty: multi_hop
+    tags: [colloquial, situational]
+    verified_by: drafted
+
+  # Against the Implementing Regulations, not the Law.
+  - id: q033
+    question_ar: الشركه لازم تسجل بيانات تدريب موظفيها السعوديين كل سنه؟
+    relevant_articles: ["15_bis"]
+    doc_id: labor_regulations
+    answerable: true
+    category: training
+    difficulty: hard
+    tags: [colloquial, misspelled, situational]
     verified_by: drafted
 
   # ---------------------------------------------------------------------
-  # Cross-lingual: English question, Arabic sources
+  # Cross-lingual: English situation, Arabic sources
   # ---------------------------------------------------------------------
-  - id: q046
-    question_en: What notice period is required before terminating an open-ended contract?
+  - id: q034
+    question_en: My boss told me to leave tomorrow and I'm paid monthly. Does he have to warn me first?
     relevant_articles: ["75"]
     answerable: true
     category: notice_period
-    difficulty: easy
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q047
-    question_en: How many days notice is required if the worker is paid monthly?
-    relevant_articles: ["75"]
+  - id: q035
+    question_en: They let me go with no warning at all. Do they owe me anything for that?
+    relevant_articles: ["76"]
     answerable: true
     category: notice_period
-    difficulty: medium
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q048
-    question_en: How is the end-of-service award calculated?
+  - id: q036
+    question_en: I worked there seven years and quit. How much money should I get on the way out?
     relevant_articles: ["84"]
     answerable: true
     category: end_of_service
-    difficulty: easy
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q049
-    question_en: What is the maximum number of working hours per day?
+  - id: q037
+    question_en: My manager keeps me at the desk from morning until sunset. Is that allowed?
     relevant_articles: ["98"]
     answerable: true
     category: working_hours
-    difficulty: easy
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q050
-    question_en: How are working hours reduced during Ramadan for Muslim workers?
+  - id: q038
+    question_en: During Ramadan they want the same hours as usual. Is that right?
     relevant_articles: ["98"]
     answerable: true
     category: working_hours
-    difficulty: medium
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q051
-    question_en: What is the weekly rest day for workers?
+  - id: q039
+    question_en: They want me in seven days a week with no day off. Can they do that?
     relevant_articles: ["104"]
     answerable: true
     category: rest_days
-    difficulty: easy
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q052
-    question_en: What is the minimum annual leave entitlement?
+  - id: q040
+    question_en: How many days a year can I travel home and still get paid?
     relevant_articles: ["109"]
     answerable: true
     category: annual_leave
-    difficulty: easy
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q053
-    question_en: When does annual leave increase to thirty days?
+  - id: q041
+    question_en: I've been at the company five years now. Does anything change for me?
     relevant_articles: ["109"]
     answerable: true
     category: annual_leave
-    difficulty: medium
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q054
-    question_en: What sick leave pay is a worker entitled to in the first thirty days?
+  - id: q042
+    question_en: Can I just take the cash instead of going away, while I'm still working there?
+    relevant_articles: ["109"]
+    answerable: true
+    category: annual_leave
+    difficulty: hard
+    tags: [cross_lingual, situational]
+    verified_by: drafted
+
+  - id: q043
+    question_en: I was in hospital for a month. Will they cut my pay?
     relevant_articles: ["117"]
     answerable: true
     category: sick_leave
-    difficulty: medium
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q055
-    question_en: How long is maternity leave?
+  - id: q044
+    question_en: My wife is having a baby soon and she works. How long can she stay home on pay?
     relevant_articles: ["151"]
     answerable: true
     category: maternity
-    difficulty: easy
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q056
-    question_en: Can an employer dismiss a female worker during pregnancy?
+  - id: q045
+    question_en: Her manager found out she's pregnant and says he'll replace her. Can he?
     relevant_articles: ["155"]
     answerable: true
     category: maternity
-    difficulty: medium
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q057
-    question_en: Must a non-Saudi worker's contract be in writing?
+  - id: q046
+    question_en: I'm not Saudi and I've been working here without signing anything. Where do I stand?
     relevant_articles: ["37"]
     answerable: true
     category: contracts
-    difficulty: medium
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q058
-    question_en: Is an employment contract valid if it was never written down?
+  - id: q047
+    question_en: I never signed a thing with the owner. Can I still prove what I'm owed?
     relevant_articles: ["51"]
     answerable: true
     category: contracts
-    difficulty: medium
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q059
-    question_en: In what circumstances does an employment contract end?
-    relevant_articles: ["74"]
-    answerable: true
-    category: termination
-    difficulty: medium
-    tags: [cross_lingual]
-    verified_by: drafted
-
-  - id: q060
-    question_en: When may an employer terminate without award, notice or compensation?
+  - id: q048
+    question_en: I hit a colleague at work and they threw me out the same day with nothing. Were they allowed?
     relevant_articles: ["80"]
     answerable: true
     category: termination
     difficulty: hard
-    tags: [cross_lingual]
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q061
-    question_en: What compensation is due for unlawful termination of an open-ended contract?
+  - id: q049
+    question_en: Before they get rid of me, do they have to hear my side?
+    relevant_articles: ["80"]
+    answerable: true
+    category: termination
+    difficulty: hard
+    tags: [cross_lingual, situational]
+    verified_by: drafted
+
+  - id: q050
+    question_en: They fired me and gave no real reason. What am I owed?
     relevant_articles: ["77"]
     answerable: true
     category: termination
-    difficulty: medium
-    tags: [cross_lingual]
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q062
-    question_en: Can a worker take cash instead of annual leave while still employed?
-    relevant_articles: ["109"]
+  - id: q051
+    question_en: Eid is coming. Do I have to show up, or do I stay home and still get paid?
+    relevant_articles: ["112"]
     answerable: true
-    category: annual_leave
-    difficulty: medium
-    tags: [cross_lingual]
+    category: leave
+    difficulty: hard
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q063
-    question_en: What notice is required, and what happens if it is not observed?
-    relevant_articles: ["75", "76"]
+  - id: q052
+    question_en: They pushed me out with no warning. What do I get for the warning, and what for my years there?
+    relevant_articles: ["76", "84"]
     answerable: true
-    category: notice_period
+    category: termination
     difficulty: multi_hop
-    tags: [cross_lingual]
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
-  - id: q064
-    question_en: How long is annual leave, and how long may it be deferred?
-    relevant_articles: ["109", "110"]
-    answerable: true
-    category: annual_leave
-    difficulty: multi_hop
-    tags: [cross_lingual]
-    verified_by: drafted
-
-  - id: q065
-    question_en: What are the daily working hours and the weekly rest entitlement?
+  - id: q053
+    question_en: How many hours is a normal day, and how much time off do I get each week?
     relevant_articles: ["98", "104"]
     answerable: true
     category: working_hours
     difficulty: multi_hop
-    tags: [cross_lingual]
+    tags: [cross_lingual, situational]
     verified_by: drafted
 
   # ---------------------------------------------------------------------
   # Unanswerable: measures refusal, not retrieval
   # ---------------------------------------------------------------------
-  - id: q066
-    question_en: Does the law cover remote work performed from outside the Kingdom?
+  - id: q054
+    question_ar: كم الحد الادنى للراتب بالريال اللي لازم ياخذه اي موظف؟
+    answerable: false
+    category: out_of_scope
+    difficulty: hard
+    notes: The Labor Law fixes no numeric minimum wage.
+    tags: [colloquial, misspelled]
+    verified_by: drafted
+
+  - id: q055
+    question_ar: كم يخصمون من راتبي ضريبه للدوله كل شهر؟
     answerable: false
     category: out_of_scope
     difficulty: medium
+    notes: Personal income taxation is not in the Labor Law.
+    tags: [colloquial, misspelled]
+    verified_by: drafted
+
+  - id: q056
+    question_en: I'm working remotely from Egypt for a Saudi company. Does this law cover me?
+    answerable: false
+    category: out_of_scope
+    difficulty: hard
+    verified_by: drafted
+
+  - id: q057
+    question_ar: ابي اجيب اقامة لزوجتي، وش الاجراءات؟
+    answerable: false
+    category: out_of_scope
+    difficulty: medium
+    tags: [colloquial, misspelled]
+    verified_by: drafted
+
+  - id: q058
+    question_en: How much do I pay into the pension scheme each month?
+    answerable: false
+    category: out_of_scope
+    difficulty: hard
+    notes: Social insurance is a separate instrument.
+    verified_by: drafted
+
+  - id: q059
+    question_ar: كيف افتح سجل تجاري لشركتي؟
+    answerable: false
+    category: out_of_scope
+    difficulty: easy
+    verified_by: drafted
+
+  - id: q060
+    question_en: Which court would hear a criminal complaint against my employer?
+    answerable: false
+    category: out_of_scope
+    difficulty: hard
+    verified_by: drafted
+
+  - id: q061
+    question_ar: كم مخالفة السرعه على الطريق السريع؟
+    answerable: false
+    category: out_of_scope
+    difficulty: easy
+    tags: [misspelled]
+    verified_by: drafted
+
+  - id: q062
+    question_ar: صاحب البيت رفع علي الايجار، وش حقوقي؟
+    answerable: false
+    category: out_of_scope
+    difficulty: medium
+    verified_by: drafted
+
+  - id: q063
+    question_en: What's the exchange rate I should expect when I send money home?
+    answerable: false
+    category: out_of_scope
+    difficulty: easy
+    verified_by: drafted
+
+  - id: q064
+    question_ar: وش افضل شركة توظيف بجده انصح فيها؟
+    answerable: false
+    category: out_of_scope
+    difficulty: medium
+    notes: Asks for an opinion no passage can support.
+    tags: [colloquial]
+    verified_by: drafted
+
+  - id: q065
+    question_en: How much does a work visa cost in dollars?
+    answerable: false
+    category: out_of_scope
+    difficulty: medium
+    verified_by: drafted
+
+  - id: q066
+    question_ar: كم اجازة الحج المستحقة حسب نظام المرور؟
+    answerable: false
+    category: out_of_scope
+    difficulty: hard
+    notes: Mixes a plausible labour topic with the wrong instrument.
     verified_by: drafted
 
   - id: q067
-    question_ar: ما هو الحد الأدنى للأجور بالريال السعودي في هذا النظام؟
+    question_en: What qualifications do I need to become a labour inspector?
     answerable: false
     category: out_of_scope
-    difficulty: medium
-    notes: The Labor Law does not fix a numeric minimum wage.
+    difficulty: hard
     verified_by: drafted
 
   - id: q068
-    question_ar: ما هي ضريبة الدخل المستحقة على راتب العامل؟
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    notes: Taxation is not governed by the Labor Law.
-    verified_by: drafted
-
-  - id: q069
-    question_en: What is the corporate tax rate for companies employing Saudis?
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q070
-    question_ar: ما هي شروط الحصول على الجنسية السعودية؟
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q071
-    question_en: How do I register a commercial company in Riyadh?
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q072
-    question_ar: ما هي أحكام الإيجار في النظام السعودي؟
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q073
-    question_en: What are the traffic penalties for speeding in Saudi Arabia?
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q074
-    question_ar: كم عدد أيام إجازة الحج المستحقة وفق نظام المرور؟
+    question_ar: متى يبدا الدوام الرسمي بالجهات الحكوميه؟
     answerable: false
     category: out_of_scope
     difficulty: hard
-    notes: Deliberately mixes a plausible labour topic with the wrong instrument.
-    verified_by: drafted
-
-  - id: q075
-    question_en: What is the pension contribution rate under GOSI?
-    answerable: false
-    category: out_of_scope
-    difficulty: medium
-    notes: Social insurance is a separate instrument from the Labor Law.
-    verified_by: drafted
-
-  - id: q076
-    question_ar: ما هو سعر صرف الريال مقابل الدولار؟
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q077
-    question_en: Which court hears criminal cases against employers?
-    answerable: false
-    category: out_of_scope
-    difficulty: hard
-    verified_by: drafted
-
-  - id: q078
-    question_ar: ما هي متطلبات رخصة البناء لمقر الشركة؟
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q079
-    question_en: How much does a work visa cost in US dollars?
-    answerable: false
-    category: out_of_scope
-    difficulty: medium
-    verified_by: drafted
-
-  - id: q080
-    question_ar: ما هي أفضل شركة توظيف في جدة؟
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    notes: Asks for an opinion, which no passage can support.
+    notes: Civil service hours are not set by the Labor Law.
+    tags: [colloquial, misspelled]
     verified_by: drafted

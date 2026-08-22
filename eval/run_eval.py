@@ -64,17 +64,22 @@ def evaluate(
 
         # Score on article numbers: an article can span several chunks, and
         # article numbers survive re-chunking.
+        # Compare `doc_id:article`, not a bare number: both documents in the
+        # index number an "article 15".
         retrieved_articles: list[str] = []
         for passage in result.passages:
-            if passage.article_no and passage.article_no not in retrieved_articles:
-                retrieved_articles.append(passage.article_no)
+            if not passage.article_no:
+                continue
+            key = f"{passage.doc_id}:{passage.article_no}"
+            if key not in retrieved_articles:
+                retrieved_articles.append(key)
 
-        per_question.append((retrieved_articles, question.relevant_articles, latency_ms))
+        per_question.append((retrieved_articles, question.qualified_articles(), latency_ms))
         details.append(
             {
                 "id": question.id,
                 "query": question.query,
-                "expected": question.relevant_articles,
+                "expected": question.qualified_articles(),
                 "retrieved": retrieved_articles[:10],
                 "tags": question.tags,
                 "category": question.category,

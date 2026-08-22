@@ -39,6 +39,15 @@ answer:
   max_cost_usd: 0.10
   refusal_threshold: 0.35
 
-corpus_path: "data/boe_labor_law.html"
-doc_id: "saudi_labor_law"
+# Both documents share one index. The Labor Law numbers its articles in
+# spelled-out ordinals; the Implementing Regulations use digits in brackets.
+# Both are parsed -- see DECISIONS.md.
+sources:
+  - path: "data/boe_labor_law.html"
+    doc_id: "saudi_labor_law"
+    title: "نظام العمل"
+  - path: "data/hrsd_regulations_ar.pdf"
+    doc_id: "labor_regulations"
+    title: "اللائحة التنفيذية لنظام العمل"
+
 chunks_path: "data/chunks.jsonl"

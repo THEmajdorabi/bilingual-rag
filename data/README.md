@@ -24,6 +24,24 @@ It is HTML rather than PDF, and that is precisely why it is clean. HTML carries
 real Unicode; a PDF carries glyph indices into an embedded font, and it is that
 indirection that corrupted both PDF candidates below.
 
+### Implementing Regulations (also indexed)
+
+| | |
+|---|---|
+| **Document** | اللائحة التنفيذية لنظام العمل وملحقاتها |
+| **Publisher** | Ministry of Human Resources and Social Development |
+| **URL** | `https://www.hrsd.gov.sa/sites/default/files/2025-04/اللائحة التنفيذية لنظام العمل وملحقاتها.pdf` |
+| **File** | `hrsd_regulations_ar.pdf` · 2,559,189 bytes · 109 pages · 170,231 Arabic characters |
+| **Downloaded** | 2026-08-22 |
+
+Added after the first eval showed retrieval saturating at 0.985: with only the
+Law indexed there was too little in the corpus for retrieval to be confused by.
+Passes all five quality checks, and being a clean PDF it restores the PyMuPDF
+extraction path that the HTML corpus does not exercise.
+
+It numbers articles with **digits in brackets** (`المادة )15( مكرر`) where the
+Law spells them as ordinals, so the heading parser handles both styles.
+
 ### English translation
 
 | | |
@@ -35,7 +53,7 @@ indirection that corrupted both PDF candidates below.
 
 Held for the cross-lingual evaluation questions and to exercise the PDF
 extraction path. Being English, it has none of the Arabic shaping problems.
-**Not indexed** in v1 — the spec forbids mixing sources.
+**Not indexed** — it is a translation of a document already in the index.
 
 ## Rejected sources, and why it matters
 
@@ -98,7 +116,7 @@ This is why `check_corpus_quality.py` exists and why it runs before ingestion.
 ## Reproducing
 
 ```bash
-python scripts/download_corpus.py          # fetches all three files
+python scripts/download_corpus.py          # the two indexed sources + references
 python scripts/check_corpus_quality.py data/*.pdf data/*.html
 ```
 

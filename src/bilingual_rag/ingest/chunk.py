@@ -225,7 +225,7 @@ def chunk_document(
                         text=piece,
                         text_norm=normalize_ar(piece),
                         heading_path=path,
-                        article_no=str(article_no),
+                        article_no=article_no,
                         page=page.number,
                         span=(absolute_start, absolute_start + len(piece)),
                         lang=detect_language(piece),

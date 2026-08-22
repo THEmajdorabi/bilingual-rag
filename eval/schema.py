@@ -42,6 +42,10 @@ class Question(BaseModel):
     relevant_chunks: list[str] = Field(default_factory=list)
     # Article numbers, which survive re-chunking when chunk ids do not.
     relevant_articles: list[str] = Field(default_factory=list)
+    # Which document those article numbers belong to. Required now that the
+    # index holds both the Labor Law and its Implementing Regulations: both
+    # number an "article 15", so a bare number is ambiguous.
+    doc_id: str = "saudi_labor_law"
 
     answerable: bool = True
     category: str = "general"
@@ -67,6 +71,14 @@ class Question(BaseModel):
     def is_cross_lingual(self) -> bool:
         """An English question against the Arabic corpus."""
         return bool(self.question_en) and not self.question_ar
+
+    def qualified_articles(self) -> list[str]:
+        """Labels as `doc_id:article`, which is what metrics compare.
+
+        A bare article number stopped being unique when the Implementing
+        Regulations joined the index.
+        """
+        return [f"{self.doc_id}:{a}" for a in self.relevant_articles]
 
     @property
     def query(self) -> str:

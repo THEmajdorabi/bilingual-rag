@@ -209,14 +209,21 @@ class ModelSpec(BaseModel):
     max_tokens: int = 2048
 
 
+class Source(BaseModel):
+    """One document in the corpus."""
+
+    path: str
+    doc_id: str
+    title: str = ""
+
+
 class Settings(BaseModel):
     models: dict[str, ModelSpec] = Field(default_factory=dict)
     pricing: dict[str, dict[str, float]] = Field(default_factory=dict)
     retrieval: RetrievalSettings = Field(default_factory=RetrievalSettings)
     qdrant: QdrantSettings = Field(default_factory=QdrantSettings)
     answer: AnswerSettings = Field(default_factory=AnswerSettings)
-    corpus_path: str = "data/boe_labor_law.html"
-    doc_id: str = "saudi_labor_law"
+    sources: list[Source] = Field(default_factory=list)
     chunks_path: str = "data/chunks.jsonl"
 
 

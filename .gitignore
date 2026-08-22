@@ -1,0 +1,19 @@
+.env
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+# Raw corpus: re-downloadable via scripts/download_corpus.py
+data/*.pdf
+data/*.html
+data/chunks.jsonl
+models/
+qdrant_storage/
+*.db
+*.sqlite
+.coverage

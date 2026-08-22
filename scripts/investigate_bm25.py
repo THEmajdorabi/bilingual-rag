@@ -83,8 +83,12 @@ def main() -> int:
     print("=" * 72)
     print("1. EACH RETRIEVER ALONE")
     print("=" * 72)
-    dense_only = [(articles_of(d, lookup, TOP_K), g) for d, g in zip(dense_rankings, gold, strict=True)]
-    bm25_only = [(articles_of(b, lookup, TOP_K), g) for b, g in zip(bm25_rankings, gold, strict=True)]
+    dense_only = [
+        (articles_of(d, lookup, TOP_K), g) for d, g in zip(dense_rankings, gold, strict=True)
+    ]
+    bm25_only = [
+        (articles_of(b, lookup, TOP_K), g) for b, g in zip(bm25_rankings, gold, strict=True)
+    ]
     d_recall, d_mrr = score(dense_only)
     b_recall, b_mrr = score(bm25_only)
     print(f"  dense only   recall@10={d_recall:.3f}  mrr@10={d_mrr:.3f}")
@@ -125,9 +129,26 @@ def main() -> int:
     print("  from the rewritten eval set. A stem that is not a real root, or")
     print("  that collides with an unrelated word, is a bug.\n")
     colloquial = [
-        "يبوني", "طلعوني", "ابغى", "اشتغلت", "مديري", "راتبي", "الشغل",
-        "بالاسبوع", "اجازتي", "يخليني", "بيخصمون", "تروح", "ينفع", "وش",
-        "كذا", "هالسنه", "فلوس", "ورقه", "حقوقي", "مستحقات",
+        "يبوني",
+        "طلعوني",
+        "ابغى",
+        "اشتغلت",
+        "مديري",
+        "راتبي",
+        "الشغل",
+        "بالاسبوع",
+        "اجازتي",
+        "يخليني",
+        "بيخصمون",
+        "تروح",
+        "ينفع",
+        "وش",
+        "كذا",
+        "هالسنه",
+        "فلوس",
+        "ورقه",
+        "حقوقي",
+        "مستحقات",
     ]
     for word in colloquial:
         normalized = normalize_ar(word)
@@ -150,8 +171,10 @@ def main() -> int:
                 missing += 1
                 if len(examples) < 15 and token not in examples:
                     examples.append(token)
-    print(f"  query tokens: {total}, absent from the index vocabulary: "
-          f"{missing} ({missing / max(1, total):.0%})")
+    print(
+        f"  query tokens: {total}, absent from the index vocabulary: "
+        f"{missing} ({missing / max(1, total):.0%})"
+    )
     print(f"  examples: {', '.join(examples)}")
 
     print("\n" + "=" * 72)

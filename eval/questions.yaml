@@ -1,635 +1,1026 @@
-# Evaluation set for bilingual-rag.
-#
-# REWRITTEN 2026-08-22 after the first version was diagnosed as non-discriminating.
-# The original questions restated the article's own wording: mean lexical
-# containment 0.517, 37% of questions sharing 75%+ of their content words with
-# the labelled passage, and BM25 alone putting the right article at rank 1 for
-# 52% of them. Retrieval scored 0.985 for every configuration, so the ablation
-# table could not tell components apart. See DECISIONS.md.
-#
-# The rule for this version: **describe the situation, never the legal concept.**
-#
-#   BAD  ما هي مدة الإشعار المطلوبة قبل إنهاء عقد العمل غير محدد المدة؟
-#        (reuses إشعار / إنهاء / عقد / غير محدد المدة -- every key term)
-#   GOOD مديري قال لي اطلع بكرة وراتبي شهري، لازم يعطيني وقت؟
-#        (my manager told me to leave tomorrow and I'm paid monthly, does he
-#         have to give me time? -- no shared legal vocabulary at all)
-#
-# Gulf colloquial and common misspellings are used deliberately, because that is
-# how the users of this system actually type. `ه`/`ة`, `ا`/`أ`, `ي`/`ى` confusion
-# and dropped hamzas are the norm, not the exception.
-#
-# PROVENANCE: every question is `verified_by: drafted` -- written by a model
-# against the real article text, but not yet checked by a person. Promote with
-# `python eval/review.py`.
-#
-# `doc_id` says which document the article numbers belong to. The index now
-# holds the Labor Law AND its Implementing Regulations, and both number an
-# "article 15".
-
 questions:
-  # ---------------------------------------------------------------------
-  # Answerable, Arabic, situation-framed
-  # ---------------------------------------------------------------------
-  - id: q001
-    question_ar: مديري قال لي اطلع بكرة وانا راتبي شهري، لازم يعطيني وقت قبل؟
-    relevant_articles: ["75"]
-    answerable: true
-    category: notice_period
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q002
-    question_ar: طلعوني من الشغل فجاه بدون ما يخبروني قبل بمده، لي شي عندهم؟
-    relevant_articles: ["76"]
-    answerable: true
-    category: notice_period
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q003
-    question_ar: صاحب الشغل طردني وما عطاني سبب مقنع، كم المفروض ياخذ مني تعويض؟
-    relevant_articles: ["77"]
-    answerable: true
-    category: termination
-    difficulty: hard
-    tags: [situational]
-    verified_by: drafted
-
-  - id: q004
-    question_ar: خدمت عندهم سبع سنين وقررت اطلع، كم فلوس المفروض تجيني؟
-    relevant_articles: ["84"]
-    answerable: true
-    category: end_of_service
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q005
-    question_ar: مديري يخليني اجلس بالمكتب من الصبح لين المغرب كل يوم، هذا مسموح؟
-    relevant_articles: ["98"]
-    answerable: true
-    category: working_hours
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q006
-    question_ar: في رمضان يبوني ادوام نفس الدوام العادي، صح كذا؟
-    relevant_articles: ["98"]
-    answerable: true
-    category: working_hours
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q007
-    question_ar: يبوني اشتغل سبعة ايام بالاسبوع بدون ما ارتاح ولا يوم، ينفع؟
-    relevant_articles: ["104"]
-    answerable: true
-    category: rest_days
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q008
-    question_ar: عرضوا علي فلوس زياده مقابل ما ارتاح يوم بالاسبوع، اقدر اوافق؟
-    relevant_articles: ["104"]
-    answerable: true
-    category: rest_days
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q009
-    question_ar: كم يوم اقدر اسافر فيها لاهلي بالسنه وراتبي يمشي؟
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q010
-    question_ar: صار لي خمس سنوات بالشركه، يزيد شي عن اول؟
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q011
-    question_ar: ابي فلوس بدل ما اروح، ياخذونها كاش وانا مستمر بالشغل؟
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q012
-    question_ar: ما لحقت اطلع هالسنه بسبب ضغط الشغل، تروح علي ولا تنقل؟
-    relevant_articles: ["110"]
-    answerable: true
-    category: annual_leave
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q013
-    question_ar: تعبت ورقدت المستشفى شهر كامل، بيخصمون من راتبي؟
-    relevant_articles: ["117"]
-    answerable: true
-    category: sick_leave
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q014
-    question_ar: مرضت وقعدت شهرين ونص بالبيت، الراتب يستمر كامل؟
-    relevant_articles: ["117"]
-    answerable: true
-    category: sick_leave
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q015
-    question_ar: زوجتي بتولد قريب وتشتغل، كم تقعد بالبيت وراتبها يمشي؟
-    relevant_articles: ["151"]
-    answerable: true
-    category: maternity
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q016
-    question_ar: مديرها عرف انها حامل وقال بيستغني عنها، يقدر يسوي كذا؟
-    relevant_articles: ["155"]
-    answerable: true
-    category: maternity
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q017
-    question_ar: انا مو سعودي وشغال هنا بدون ورق موقع، وش وضعي؟
-    relevant_articles: ["37"]
-    answerable: true
-    category: contracts
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q018
-    question_ar: اشتغلت سنه ولا احد جدد لي شي، بقيت شغال عادي، ايش صار للاتفاق؟
-    relevant_articles: ["37"]
-    answerable: true
-    category: contracts
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q019
-    question_ar: ما وقعت اي ورقه مع صاحب العمل، اقدر اثبت حقوقي؟
-    relevant_articles: ["51"]
-    answerable: true
-    category: contracts
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q020
-    question_ar: ضربت زميلي بالمكتب وطلعوني على طول بدون اي مستحقات، من حقهم؟
-    relevant_articles: ["80"]
-    answerable: true
-    category: termination
-    difficulty: hard
-    tags: [situational]
-    verified_by: drafted
-
-  - id: q021
-    question_ar: قبل ما يستغنون عني، لازم يسمعون كلامي وردي؟
-    relevant_articles: ["80"]
-    answerable: true
-    category: termination
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q022
-    question_ar: اتفقت مع صاحب العمل ودياً اني اطلع، لازم يكون بورقه مكتوبه؟
-    relevant_articles: ["74"]
-    answerable: true
-    category: termination
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q023
-    question_ar: العيد جاي، اداوم ولا اقعد وراتبي يمشي؟
-    relevant_articles: ["112"]
-    answerable: true
-    category: leave
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q024
-    question_ar: اشتغل عند واحد ويبي يخليني اروح اشتغل عند غيره، ينفع؟
-    relevant_articles: ["39"]
-    answerable: true
-    category: employment
-    difficulty: hard
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q025
-    question_ar: وظفوني على شغل معين وفجاه يبوني اسوي شي ثاني تماماً، الزم؟
-    relevant_articles: ["60"]
-    answerable: true
-    category: employment
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  # Multi-hop: the situation needs two articles to answer fully.
-  - id: q026
-    question_ar: طلعوني بدون ما يخبروني قبل، كم لي عن المده وكم لي عن السنين اللي خدمتها؟
-    relevant_articles: ["76", "84"]
-    answerable: true
-    category: termination
-    difficulty: multi_hop
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q027
-    question_ar: ما اخذت اجازتي هالسنه وطلعت من الشغل، تروح علي ولا تتحسب لي فلوس؟
-    relevant_articles: ["109", "110"]
-    answerable: true
-    category: annual_leave
-    difficulty: multi_hop
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q028
-    question_ar: زوجتي ولدت وبعدها تعبت، كم تقعد وهل يقدرون يستغنون عنها بهالفتره؟
-    relevant_articles: ["151", "155"]
-    answerable: true
-    category: maternity
-    difficulty: multi_hop
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  - id: q029
-    question_ar: كم ساعه بالدوام وكم يوم راحه لي بالاسبوع؟
-    relevant_articles: ["98", "104"]
-    answerable: true
-    category: working_hours
-    difficulty: multi_hop
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q030
-    question_ar: ضربت مسؤولي وطردوني، هل لي مستحقات عن سنين خدمتي ولا تروح؟
-    relevant_articles: ["80", "84"]
-    answerable: true
-    category: termination
-    difficulty: multi_hop
-    tags: [situational]
-    verified_by: drafted
-
-  - id: q031
-    question_ar: مرضت شهر وبعدها ابي اسافر اجازه، الاثنين منفصلين؟
-    relevant_articles: ["109", "117"]
-    answerable: true
-    category: leave
-    difficulty: multi_hop
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  - id: q032
-    question_ar: انا وافد وما عندي ورق، ومديري يبي يطلعني، وش حقوقي؟
-    relevant_articles: ["37", "51"]
-    answerable: true
-    category: contracts
-    difficulty: multi_hop
-    tags: [colloquial, situational]
-    verified_by: drafted
-
-  # Against the Implementing Regulations, not the Law.
-  - id: q033
-    question_ar: الشركه لازم تسجل بيانات تدريب موظفيها السعوديين كل سنه؟
-    relevant_articles: ["15_bis"]
-    doc_id: labor_regulations
-    answerable: true
-    category: training
-    difficulty: hard
-    tags: [colloquial, misspelled, situational]
-    verified_by: drafted
-
-  # ---------------------------------------------------------------------
-  # Cross-lingual: English situation, Arabic sources
-  # ---------------------------------------------------------------------
-  - id: q034
-    question_en: My boss told me to leave tomorrow and I'm paid monthly. Does he have to warn me first?
-    relevant_articles: ["75"]
-    answerable: true
-    category: notice_period
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q035
-    question_en: They let me go with no warning at all. Do they owe me anything for that?
-    relevant_articles: ["76"]
-    answerable: true
-    category: notice_period
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q036
-    question_en: I worked there seven years and quit. How much money should I get on the way out?
-    relevant_articles: ["84"]
-    answerable: true
-    category: end_of_service
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q037
-    question_en: My manager keeps me at the desk from morning until sunset. Is that allowed?
-    relevant_articles: ["98"]
-    answerable: true
-    category: working_hours
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q038
-    question_en: During Ramadan they want the same hours as usual. Is that right?
-    relevant_articles: ["98"]
-    answerable: true
-    category: working_hours
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q039
-    question_en: They want me in seven days a week with no day off. Can they do that?
-    relevant_articles: ["104"]
-    answerable: true
-    category: rest_days
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q040
-    question_en: How many days a year can I travel home and still get paid?
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q041
-    question_en: I've been at the company five years now. Does anything change for me?
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q042
-    question_en: Can I just take the cash instead of going away, while I'm still working there?
-    relevant_articles: ["109"]
-    answerable: true
-    category: annual_leave
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q043
-    question_en: I was in hospital for a month. Will they cut my pay?
-    relevant_articles: ["117"]
-    answerable: true
-    category: sick_leave
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q044
-    question_en: My wife is having a baby soon and she works. How long can she stay home on pay?
-    relevant_articles: ["151"]
-    answerable: true
-    category: maternity
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q045
-    question_en: Her manager found out she's pregnant and says he'll replace her. Can he?
-    relevant_articles: ["155"]
-    answerable: true
-    category: maternity
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q046
-    question_en: I'm not Saudi and I've been working here without signing anything. Where do I stand?
-    relevant_articles: ["37"]
-    answerable: true
-    category: contracts
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q047
-    question_en: I never signed a thing with the owner. Can I still prove what I'm owed?
-    relevant_articles: ["51"]
-    answerable: true
-    category: contracts
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q048
-    question_en: I hit a colleague at work and they threw me out the same day with nothing. Were they allowed?
-    relevant_articles: ["80"]
-    answerable: true
-    category: termination
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q049
-    question_en: Before they get rid of me, do they have to hear my side?
-    relevant_articles: ["80"]
-    answerable: true
-    category: termination
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q050
-    question_en: They fired me and gave no real reason. What am I owed?
-    relevant_articles: ["77"]
-    answerable: true
-    category: termination
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q051
-    question_en: Eid is coming. Do I have to show up, or do I stay home and still get paid?
-    relevant_articles: ["112"]
-    answerable: true
-    category: leave
-    difficulty: hard
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q052
-    question_en: They pushed me out with no warning. What do I get for the warning, and what for my years there?
-    relevant_articles: ["76", "84"]
-    answerable: true
-    category: termination
-    difficulty: multi_hop
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  - id: q053
-    question_en: How many hours is a normal day, and how much time off do I get each week?
-    relevant_articles: ["98", "104"]
-    answerable: true
-    category: working_hours
-    difficulty: multi_hop
-    tags: [cross_lingual, situational]
-    verified_by: drafted
-
-  # ---------------------------------------------------------------------
-  # Unanswerable: measures refusal, not retrieval
-  # ---------------------------------------------------------------------
-  - id: q054
-    question_ar: كم الحد الادنى للراتب بالريال اللي لازم ياخذه اي موظف؟
-    answerable: false
-    category: out_of_scope
-    difficulty: hard
-    notes: The Labor Law fixes no numeric minimum wage.
-    tags: [colloquial, misspelled]
-    verified_by: drafted
-
-  - id: q055
-    question_ar: كم يخصمون من راتبي ضريبه للدوله كل شهر؟
-    answerable: false
-    category: out_of_scope
-    difficulty: medium
-    notes: Personal income taxation is not in the Labor Law.
-    tags: [colloquial, misspelled]
-    verified_by: drafted
-
-  - id: q056
-    question_en: I'm working remotely from Egypt for a Saudi company. Does this law cover me?
-    answerable: false
-    category: out_of_scope
-    difficulty: hard
-    verified_by: drafted
-
-  - id: q057
-    question_ar: ابي اجيب اقامة لزوجتي، وش الاجراءات؟
-    answerable: false
-    category: out_of_scope
-    difficulty: medium
-    tags: [colloquial, misspelled]
-    verified_by: drafted
-
-  - id: q058
-    question_en: How much do I pay into the pension scheme each month?
-    answerable: false
-    category: out_of_scope
-    difficulty: hard
-    notes: Social insurance is a separate instrument.
-    verified_by: drafted
-
-  - id: q059
-    question_ar: كيف افتح سجل تجاري لشركتي؟
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q060
-    question_en: Which court would hear a criminal complaint against my employer?
-    answerable: false
-    category: out_of_scope
-    difficulty: hard
-    verified_by: drafted
-
-  - id: q061
-    question_ar: كم مخالفة السرعه على الطريق السريع؟
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    tags: [misspelled]
-    verified_by: drafted
-
-  - id: q062
-    question_ar: صاحب البيت رفع علي الايجار، وش حقوقي؟
-    answerable: false
-    category: out_of_scope
-    difficulty: medium
-    verified_by: drafted
-
-  - id: q063
-    question_en: What's the exchange rate I should expect when I send money home?
-    answerable: false
-    category: out_of_scope
-    difficulty: easy
-    verified_by: drafted
-
-  - id: q064
-    question_ar: وش افضل شركة توظيف بجده انصح فيها؟
-    answerable: false
-    category: out_of_scope
-    difficulty: medium
-    notes: Asks for an opinion no passage can support.
-    tags: [colloquial]
-    verified_by: drafted
-
-  - id: q065
-    question_en: How much does a work visa cost in dollars?
-    answerable: false
-    category: out_of_scope
-    difficulty: medium
-    verified_by: drafted
-
-  - id: q066
-    question_ar: كم اجازة الحج المستحقة حسب نظام المرور؟
-    answerable: false
-    category: out_of_scope
-    difficulty: hard
-    notes: Mixes a plausible labour topic with the wrong instrument.
-    verified_by: drafted
-
-  - id: q067
-    question_en: What qualifications do I need to become a labour inspector?
-    answerable: false
-    category: out_of_scope
-    difficulty: hard
-    verified_by: drafted
-
-  - id: q068
-    question_ar: متى يبدا الدوام الرسمي بالجهات الحكوميه؟
-    answerable: false
-    category: out_of_scope
-    difficulty: hard
-    notes: Civil service hours are not set by the Labor Law.
-    tags: [colloquial, misspelled]
-    verified_by: drafted
+- id: q001
+  question_ar: مديري قال لي اطلع بكرة وانا راتبي شهري، لازم يعطيني وقت قبل؟
+  relevant_chunks: []
+  relevant_articles:
+  - '75'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: notice_period
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q002
+  question_ar: طلعوني من الشغل فجاه بدون ما يخبروني قبل بمده، لي شي عندهم؟
+  relevant_chunks: []
+  relevant_articles:
+  - '76'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: notice_period
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q003
+  question_ar: صاحب الشغل طردني وما عطاني سبب مقنع، كم المفروض ياخذ مني تعويض؟
+  relevant_chunks: []
+  relevant_articles:
+  - '77'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: hard
+  tags:
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q004
+  question_ar: خدمت عندهم سبع سنين وقررت اطلع، كم فلوس المفروض تجيني؟
+  relevant_chunks: []
+  relevant_articles:
+  - '84'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: end_of_service
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q005
+  question_ar: مديري يخليني اجلس بالمكتب من الصبح لين المغرب كل يوم، هذا مسموح؟
+  relevant_chunks: []
+  relevant_articles:
+  - '98'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: working_hours
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q006
+  question_ar: في رمضان يبوني ادوام نفس الدوام العادي، صح كذا؟
+  relevant_chunks: []
+  relevant_articles:
+  - '98'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: working_hours
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q007
+  question_ar: يبوني اشتغل سبعة ايام بالاسبوع بدون ما ارتاح ولا يوم، ينفع؟
+  relevant_chunks: []
+  relevant_articles:
+  - '104'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: rest_days
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q008
+  question_ar: عرضوا علي فلوس زياده مقابل ما ارتاح يوم بالاسبوع، اقدر اوافق؟
+  relevant_chunks: []
+  relevant_articles:
+  - '104'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: rest_days
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q009
+  question_ar: كم يوم اقدر اسافر فيها لاهلي بالسنه وراتبي يمشي؟
+  relevant_chunks: []
+  relevant_articles:
+  - '109'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: annual_leave
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q010
+  question_ar: صار لي خمس سنوات بالشركه، يزيد شي عن اول؟
+  relevant_chunks: []
+  relevant_articles:
+  - '109'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: annual_leave
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q011
+  question_ar: ابي فلوس بدل ما اروح، ياخذونها كاش وانا مستمر بالشغل؟
+  relevant_chunks: []
+  relevant_articles:
+  - '109'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: annual_leave
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q012
+  question_ar: ما لحقت اطلع هالسنه بسبب ضغط الشغل، تروح علي ولا تنقل؟
+  relevant_chunks: []
+  relevant_articles:
+  - '110'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: annual_leave
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q013
+  question_ar: تعبت ورقدت المستشفى شهر كامل، بيخصمون من راتبي؟
+  relevant_chunks: []
+  relevant_articles:
+  - '117'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: sick_leave
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q014
+  question_ar: مرضت وقعدت شهرين ونص بالبيت، الراتب يستمر كامل؟
+  relevant_chunks: []
+  relevant_articles:
+  - '117'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: sick_leave
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q015
+  question_ar: زوجتي بتولد قريب وتشتغل، كم تقعد بالبيت وراتبها يمشي؟
+  relevant_chunks: []
+  relevant_articles:
+  - '151'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: maternity
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q016
+  question_ar: مديرها عرف انها حامل وقال بيستغني عنها، يقدر يسوي كذا؟
+  relevant_chunks: []
+  relevant_articles:
+  - '155'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: maternity
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q017
+  question_ar: انا مو سعودي وشغال هنا بدون ورق موقع، وش وضعي؟
+  relevant_chunks: []
+  relevant_articles:
+  - '37'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: contracts
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q018
+  question_ar: اشتغلت سنه ولا احد جدد لي شي، بقيت شغال عادي، ايش صار للاتفاق؟
+  relevant_chunks: []
+  relevant_articles:
+  - '37'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: contracts
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q019
+  question_ar: ما وقعت اي ورقه مع صاحب العمل، اقدر اثبت حقوقي؟
+  relevant_chunks: []
+  relevant_articles:
+  - '51'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: contracts
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q020
+  question_ar: ضربت زميلي بالمكتب وطلعوني على طول بدون اي مستحقات، من حقهم؟
+  relevant_chunks: []
+  relevant_articles:
+  - '80'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: hard
+  tags:
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q021
+  question_ar: قبل ما يستغنون عني، لازم يسمعون كلامي وردي؟
+  relevant_chunks: []
+  relevant_articles:
+  - '80'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q022
+  question_ar: اتفقت مع صاحب العمل ودياً اني اطلع، لازم يكون بورقه مكتوبه؟
+  relevant_chunks: []
+  relevant_articles:
+  - '74'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q023
+  question_ar: العيد جاي، اداوم ولا اقعد وراتبي يمشي؟
+  relevant_chunks: []
+  relevant_articles:
+  - '112'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: leave
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q024
+  question_ar: اشتغل عند واحد ويبي يخليني اروح اشتغل عند غيره، ينفع؟
+  relevant_chunks: []
+  relevant_articles:
+  - '39'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: employment
+  difficulty: hard
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: low
+  confidence_reason: Article 39 was not read in full while drafting; the label is inferred from a snippet.
+- id: q025
+  question_ar: وظفوني على شغل معين وفجاه يبوني اسوي شي ثاني تماماً، الزم؟
+  relevant_chunks: []
+  relevant_articles:
+  - '60'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: employment
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: low
+  confidence_reason: Article 60 was not read in full while drafting; the label is inferred from a snippet.
+- id: q026
+  question_ar: طلعوني بدون ما يخبروني قبل، كم لي عن المده وكم لي عن السنين اللي خدمتها؟
+  relevant_chunks: []
+  relevant_articles:
+  - '76'
+  - '84'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: multi_hop
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q027
+  question_ar: ما اخذت اجازتي هالسنه وطلعت من الشغل، تروح علي ولا تتحسب لي فلوس؟
+  relevant_chunks: []
+  relevant_articles:
+  - '109'
+  - '110'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: annual_leave
+  difficulty: multi_hop
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q028
+  question_ar: زوجتي ولدت وبعدها تعبت، كم تقعد وهل يقدرون يستغنون عنها بهالفتره؟
+  relevant_chunks: []
+  relevant_articles:
+  - '151'
+  - '155'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: maternity
+  difficulty: multi_hop
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q029
+  question_ar: كم ساعه بالدوام وكم يوم راحه لي بالاسبوع؟
+  relevant_chunks: []
+  relevant_articles:
+  - '98'
+  - '104'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: working_hours
+  difficulty: multi_hop
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q030
+  question_ar: ضربت مسؤولي وطردوني، هل لي مستحقات عن سنين خدمتي ولا تروح؟
+  relevant_chunks: []
+  relevant_articles:
+  - '80'
+  - '84'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: multi_hop
+  tags:
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q031
+  question_ar: مرضت شهر وبعدها ابي اسافر اجازه، الاثنين منفصلين؟
+  relevant_chunks: []
+  relevant_articles:
+  - '109'
+  - '117'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: leave
+  difficulty: multi_hop
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q032
+  question_ar: انا وافد وما عندي ورق، ومديري يبي يطلعني، وش حقوقي؟
+  relevant_chunks: []
+  relevant_articles:
+  - '37'
+  - '51'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: contracts
+  difficulty: multi_hop
+  tags:
+  - colloquial
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q033
+  question_ar: الشركه لازم تسجل بيانات تدريب موظفيها السعوديين كل سنه؟
+  relevant_chunks: []
+  relevant_articles:
+  - 15_bis
+  doc_id: labor_regulations
+  answerable: true
+  category: training
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  - situational
+  verified_by: drafted
+  confidence: low
+  confidence_reason: Article 15_bis was not read in full while drafting; the label is inferred from a
+    snippet.
+- id: q034
+  question_en: My boss told me to leave tomorrow and I'm paid monthly. Does he have to warn me first?
+  relevant_chunks: []
+  relevant_articles:
+  - '75'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: notice_period
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q035
+  question_en: They let me go with no warning at all. Do they owe me anything for that?
+  relevant_chunks: []
+  relevant_articles:
+  - '76'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: notice_period
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q036
+  question_en: I worked there seven years and quit. How much money should I get on the way out?
+  relevant_chunks: []
+  relevant_articles:
+  - '84'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: end_of_service
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q037
+  question_en: My manager keeps me at the desk from morning until sunset. Is that allowed?
+  relevant_chunks: []
+  relevant_articles:
+  - '98'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: working_hours
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q038
+  question_en: During Ramadan they want the same hours as usual. Is that right?
+  relevant_chunks: []
+  relevant_articles:
+  - '98'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: working_hours
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q039
+  question_en: They want me in seven days a week with no day off. Can they do that?
+  relevant_chunks: []
+  relevant_articles:
+  - '104'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: rest_days
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q040
+  question_en: How many days a year can I travel home and still get paid?
+  relevant_chunks: []
+  relevant_articles:
+  - '109'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: annual_leave
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q041
+  question_en: I've been at the company five years now. Does anything change for me?
+  relevant_chunks: []
+  relevant_articles:
+  - '109'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: annual_leave
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q042
+  question_en: Can I just take the cash instead of going away, while I'm still working there?
+  relevant_chunks: []
+  relevant_articles:
+  - '109'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: annual_leave
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q043
+  question_en: I was in hospital for a month. Will they cut my pay?
+  relevant_chunks: []
+  relevant_articles:
+  - '117'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: sick_leave
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q044
+  question_en: My wife is having a baby soon and she works. How long can she stay home on pay?
+  relevant_chunks: []
+  relevant_articles:
+  - '151'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: maternity
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q045
+  question_en: Her manager found out she's pregnant and says he'll replace her. Can he?
+  relevant_chunks: []
+  relevant_articles:
+  - '155'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: maternity
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q046
+  question_en: I'm not Saudi and I've been working here without signing anything. Where do I stand?
+  relevant_chunks: []
+  relevant_articles:
+  - '37'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: contracts
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q047
+  question_en: I never signed a thing with the owner. Can I still prove what I'm owed?
+  relevant_chunks: []
+  relevant_articles:
+  - '51'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: contracts
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q048
+  question_en: I hit a colleague at work and they threw me out the same day with nothing. Were they allowed?
+  relevant_chunks: []
+  relevant_articles:
+  - '80'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q049
+  question_en: Before they get rid of me, do they have to hear my side?
+  relevant_chunks: []
+  relevant_articles:
+  - '80'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q050
+  question_en: They fired me and gave no real reason. What am I owed?
+  relevant_chunks: []
+  relevant_articles:
+  - '77'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q051
+  question_en: Eid is coming. Do I have to show up, or do I stay home and still get paid?
+  relevant_chunks: []
+  relevant_articles:
+  - '112'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: leave
+  difficulty: hard
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Single article, full text read while drafting.
+- id: q052
+  question_en: They pushed me out with no warning. What do I get for the warning, and what for my years
+    there?
+  relevant_chunks: []
+  relevant_articles:
+  - '76'
+  - '84'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: termination
+  difficulty: multi_hop
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q053
+  question_en: How many hours is a normal day, and how much time off do I get each week?
+  relevant_chunks: []
+  relevant_articles:
+  - '98'
+  - '104'
+  doc_id: saudi_labor_law
+  answerable: true
+  category: working_hours
+  difficulty: multi_hop
+  tags:
+  - cross_lingual
+  - situational
+  verified_by: drafted
+  confidence: medium
+  confidence_reason: Multi-hop. Both articles were read, but whether BOTH are genuinely required to answer
+    is a judgement call.
+- id: q054
+  question_ar: كم الحد الادنى للراتب بالريال اللي لازم ياخذه اي موظف؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  verified_by: drafted
+  notes: The Labor Law fixes no numeric minimum wage.
+  confidence: low
+  confidence_reason: Judged out of scope against the Labor Law alone, BEFORE the Implementing Regulations
+    were indexed. The Regulations may well cover this, which would make the label wrong.
+- id: q055
+  question_ar: كم يخصمون من راتبي ضريبه للدوله كل شهر؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: medium
+  tags:
+  - colloquial
+  - misspelled
+  verified_by: drafted
+  notes: Personal income taxation is not in the Labor Law.
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q056
+  question_en: I'm working remotely from Egypt for a Saudi company. Does this law cover me?
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: hard
+  tags: []
+  verified_by: drafted
+  confidence: low
+  confidence_reason: Judged out of scope against the Labor Law alone, BEFORE the Implementing Regulations
+    were indexed. The Regulations may well cover this, which would make the label wrong.
+- id: q057
+  question_ar: ابي اجيب اقامة لزوجتي، وش الاجراءات؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: medium
+  tags:
+  - colloquial
+  - misspelled
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q058
+  question_en: How much do I pay into the pension scheme each month?
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: hard
+  tags: []
+  verified_by: drafted
+  notes: Social insurance is a separate instrument.
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q059
+  question_ar: كيف افتح سجل تجاري لشركتي؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: easy
+  tags: []
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q060
+  question_en: Which court would hear a criminal complaint against my employer?
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: hard
+  tags: []
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q061
+  question_ar: كم مخالفة السرعه على الطريق السريع؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: easy
+  tags:
+  - misspelled
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q062
+  question_ar: صاحب البيت رفع علي الايجار، وش حقوقي؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: medium
+  tags: []
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q063
+  question_en: What's the exchange rate I should expect when I send money home?
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: easy
+  tags: []
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q064
+  question_ar: وش افضل شركة توظيف بجده انصح فيها؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: medium
+  tags:
+  - colloquial
+  verified_by: drafted
+  notes: Asks for an opinion no passage can support.
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q065
+  question_en: How much does a work visa cost in dollars?
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: medium
+  tags: []
+  verified_by: drafted
+  confidence: high
+  confidence_reason: Clearly a different instrument (tax, traffic, tenancy, FX).
+- id: q066
+  question_ar: كم اجازة الحج المستحقة حسب نظام المرور؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: hard
+  tags: []
+  verified_by: drafted
+  notes: Mixes a plausible labour topic with the wrong instrument.
+  confidence: low
+  confidence_reason: Judged out of scope against the Labor Law alone, BEFORE the Implementing Regulations
+    were indexed. The Regulations may well cover this, which would make the label wrong.
+- id: q067
+  question_en: What qualifications do I need to become a labour inspector?
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: hard
+  tags: []
+  verified_by: drafted
+  confidence: low
+  confidence_reason: Judged out of scope against the Labor Law alone, BEFORE the Implementing Regulations
+    were indexed. The Regulations may well cover this, which would make the label wrong.
+- id: q068
+  question_ar: متى يبدا الدوام الرسمي بالجهات الحكوميه؟
+  relevant_chunks: []
+  relevant_articles: []
+  doc_id: saudi_labor_law
+  answerable: false
+  category: out_of_scope
+  difficulty: hard
+  tags:
+  - colloquial
+  - misspelled
+  verified_by: drafted
+  notes: Civil service hours are not set by the Labor Law.
+  confidence: low
+  confidence_reason: Judged out of scope against the Labor Law alone, BEFORE the Implementing Regulations
+    were indexed. The Regulations may well cover this, which would make the label wrong.

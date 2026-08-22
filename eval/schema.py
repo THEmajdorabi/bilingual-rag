@@ -29,6 +29,7 @@ from pydantic import BaseModel, Field, model_validator
 
 Difficulty = Literal["easy", "medium", "hard", "multi_hop"]
 VerifiedBy = Literal["human", "drafted"]
+Confidence = Literal["low", "medium", "high"]
 
 
 class Question(BaseModel):
@@ -54,6 +55,12 @@ class Question(BaseModel):
 
     verified_by: VerifiedBy = "drafted"
     notes: str | None = None
+
+    # How confident the drafter was in this label, so review can start with the
+    # shakiest. This is the drafter's own self-assessment, not a measurement --
+    # its only job is to order the reviewer's attention.
+    confidence: Confidence = "medium"
+    confidence_reason: str | None = None
 
     @model_validator(mode="after")
     def check_shape(self) -> Question:
@@ -129,6 +136,14 @@ class EvalSet(BaseModel):
         cross-lingual bucket against the spec's target of 20.
         """
         return [q for q in self.questions if q.is_cross_lingual and q.answerable]
+
+    def by_confidence(self, level: str) -> list[Question]:
+        return [q for q in self.questions if q.confidence == level]
+
+    def review_order(self) -> list[Question]:
+        """Drafted questions, least confident first."""
+        rank = {"low": 0, "medium": 1, "high": 2}
+        return sorted(self.drafted(), key=lambda q: (rank[q.confidence], q.id))
 
     def multi_hop(self) -> list[Question]:
         return [q for q in self.questions if q.is_multi_hop and q.answerable]

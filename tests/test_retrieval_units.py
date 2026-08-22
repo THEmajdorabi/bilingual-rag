@@ -105,6 +105,32 @@ def test_light_stem_strips_at_most_one_prefix_and_one_suffix() -> None:
     assert len(stemmed) >= 3
 
 
+def test_root_letters_are_not_mistaken_for_prefixes() -> None:
+    """A one-letter prefix is only a prefix sometimes.
+
+    `فلوس` (money) begins with the same letter as the conjunction "then", and
+    `ورقة` (paper) with the conjunction "and". Stripping those leading letters
+    yields `لوس` and `رقه`, which are not words and match nothing in the index.
+    Both were found by running the stemmer over the colloquial eval queries.
+
+    The assertion is that the *leading* letter survives. `ورقه` still loses its
+    taa marbuta to the suffix rule, which is correct light stemming -- the bug
+    was only ever at the front of the word.
+    """
+    assert light_stem(normalize_ar("فلوس")) == normalize_ar("فلوس")
+
+    stemmed = light_stem(normalize_ar("ورقه"))
+    assert stemmed.startswith("و"), f"root letter stripped as a prefix: {stemmed}"
+    assert stemmed == "ورق"  # suffix rule still applies
+
+
+def test_genuine_prefixes_are_still_stripped() -> None:
+    """The guard must not stop the stemmer doing its job."""
+    assert light_stem(normalize_ar("الشغل")) == normalize_ar("شغل")
+    assert light_stem(normalize_ar("بالاسبوع")) == normalize_ar("اسبوع")
+    assert light_stem(normalize_ar("والعمل")) == normalize_ar("عمل")
+
+
 def test_stemming_makes_inflected_forms_match() -> None:
     """The reason BM25 needs a stemmer at all."""
     a = light_stem(normalize_ar("العمل"))

@@ -63,6 +63,17 @@ SUFFIXES = (
 # three letters, so anything below three has lost the word.
 MIN_STEM_LENGTH = 3
 
+# Single-letter prefixes are far riskier than `ال`. A leading `ف` is usually
+# the conjunction "then", but in `فلوس` (money) it is part of the root, and
+# stripping it yields `لوس`, which is not a word and matches nothing. Same for
+# the `و` in `ورقة` (paper) -> `رقه`.
+#
+# Both were found by running the stemmer over the colloquial eval queries and
+# reading the output. The guard: a one-letter prefix may only be stripped when
+# what remains is still long enough to be a real word, which is one character
+# more than the bare root minimum.
+MIN_STEM_AFTER_SHORT_PREFIX = 4
+
 
 def light_stem(word: str) -> str:
     """Strip at most one prefix and one suffix, if the remainder survives.
@@ -77,9 +88,14 @@ def light_stem(word: str) -> str:
 
     stem = word
     for prefix in PREFIXES:
-        if stem.startswith(prefix) and len(stem) - len(prefix) >= MIN_STEM_LENGTH:
+        if not stem.startswith(prefix):
+            continue
+        # One-letter prefixes need a longer remainder to be safe: see
+        # MIN_STEM_AFTER_SHORT_PREFIX.
+        floor = MIN_STEM_AFTER_SHORT_PREFIX if len(prefix) == 1 else MIN_STEM_LENGTH
+        if len(stem) - len(prefix) >= floor:
             stem = stem[len(prefix) :]
-            break
+        break
 
     for suffix in SUFFIXES:
         if stem.endswith(suffix) and len(stem) - len(suffix) >= MIN_STEM_LENGTH:

@@ -363,3 +363,101 @@ python scripts/ingest.py --recreate --build-raw
 python scripts/diagnose_eval_difficulty.py
 python eval/ablate.py --repeats 3
 ```
+
+---
+
+## 2026-08-22 — The BM25 -0.170 investigated: mostly real, partly fusion config
+
+**The challenge:** a -0.170 recall drop from *adding* a retriever is more
+likely a bug than a finding. Three candidate bugs were tested before the
+number was published. `scripts/investigate_bm25.py` reproduces all of it.
+
+### Finding 1: BM25 alone has almost no signal on these queries
+
+| Retriever | recall@10 | MRR@10 |
+|---|---|---|
+| dense only | 0.585 | 0.293 |
+| **BM25 only** | **0.123** | 0.078 |
+
+**73% of query tokens do not appear in the index vocabulary at all** -- 475 of
+653. Examples: `يعطين`, `طلعون`, `عطان`, `مقنع`, `بكر`. These are colloquial
+words that simply do not occur in formal legal text. BM25 matches strings, and
+there are no strings to match.
+
+This is a direct consequence of fixing the eval set. The *old* questions reused
+the article's own vocabulary, which is exactly what BM25 needs; that is why
+BM25 alone solved 52% of them at rank 1. Making the questions realistic removed
+BM25's advantage, because **real users do not write like legislation.**
+
+### Finding 2: equal weighting is the largest single contributor
+
+| dense : BM25 | recall@10 | MRR@10 |
+|---|---|---|
+| 1:1 (current default) | 0.453 | 0.163 |
+| 2:1 | 0.509 | 0.247 |
+| 3:1 | 0.547 | 0.269 |
+| 5:1 | 0.566 | 0.275 |
+| 10:1 | 0.585 | 0.273 |
+| 1:0 (BM25 off) | **0.585** | **0.293** |
+
+Standard RRF weights every ranking equally, which is what makes it
+parameter-free. When one retriever is 5x weaker, that equality is the problem:
+a 0.132 swing between 1:1 and 10:1.
+
+**But down-weighting only reaches parity, never past it.** At 10:1 recall
+matches BM25-off exactly (0.585) and MRR is still worse (0.273 vs 0.293).
+**There is no weighting at which BM25 helps.** So this is a partial explanation
+of the magnitude, not a rescue of the component.
+
+### Finding 3: candidate depth is not the lever
+
+| BM25 depth | recall@10 |
+|---|---|
+| top-5 | 0.500 |
+| top-10 | 0.491 |
+| top-20 | 0.481 |
+| top-30 | 0.481 |
+| top-50 (default) | 0.453 |
+
+Shallower is better, monotonically, which is consistent with "BM25 contributes
+noise" -- but even top-5 is well below dense alone. Capping the depth cannot
+fix a retriever that has no signal.
+
+### Finding 4: two genuine stemmer bugs, found and fixed
+
+Reading the stemmer's output on colloquial terms found it stripping **root
+letters as though they were prefixes**:
+
+| Word | Meaning | Was stemmed to | Problem |
+|---|---|---|---|
+| `فلوس` | money | `لوس` | leading `ف` is root, not the conjunction |
+| `ورقه` | paper | `رقه` | leading `و` is root, not the conjunction |
+
+Neither `لوس` nor `رقه` is a word, so those tokens matched nothing. Fixed by
+requiring a longer remainder before stripping a **one-letter** prefix
+(`MIN_STEM_AFTER_SHORT_PREFIX = 4`); multi-letter prefixes like `ال` are
+unaffected. Regression tests in `test_retrieval_units.py`.
+
+**Honest outcome: the fix did not help BM25.** Recall went 0.142 -> 0.123,
+because stricter stemming means fewer matches, and on this query set the
+matches it was making were mostly wrong anyway. The bug was real and worth
+fixing on its own terms; it was not the cause of the regression.
+
+### Verdict
+
+The -0.170 decomposes as: **equal-weight fusion (~0.13) on top of a retriever
+that genuinely has nothing to contribute (~0.04)**. It is not a fusion bug in
+the sense of incorrect code -- RRF is behaving exactly as specified -- but the
+headline number does overstate BM25's harm, because it was measured at the
+worst available weighting.
+
+**No default is being changed yet.** Re-weighting to 10:1 would be tuning
+against 68 model-drafted, unverified labels, and recall is capped by label
+quality. The eval set is being reviewed by hand first; these sweeps get re-run
+against verified labels afterwards, and the decision to keep, re-weight or drop
+BM25 is made then.
+
+**What this changes in the published table:** the ablation row keeps its
+measured value, with a footnote pointing here, because a reader who sees
+"-0.170" deserves to know that most of it is a weighting artifact and that the
+component is useless rather than actively catastrophic.

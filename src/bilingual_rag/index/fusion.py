@@ -20,23 +20,36 @@ from collections.abc import Sequence
 DEFAULT_K = 60
 
 
-def rrf(rankings: Sequence[Sequence[str]], k: int = DEFAULT_K) -> list[tuple[str, float]]:
+def rrf(
+    rankings: Sequence[Sequence[str]],
+    k: int = DEFAULT_K,
+    weights: Sequence[float] | None = None,
+) -> list[tuple[str, float]]:
     """Fuse ranked id lists into one ranking.
 
     Args:
         rankings: each inner sequence is ids in rank order, best first.
         k: the RRF constant. Larger flattens the contribution of top ranks.
+        weights: per-ranking multipliers. Default is equal weight, which is
+            standard RRF and is what makes it parameter-free. Unequal weights
+            are supported so the ablation can *measure* whether a weaker
+            retriever should count for less, rather than assuming it.
 
     Returns:
         (chunk_id, score) sorted by score descending. Ties break on the id, so
         the output is deterministic -- an ablation table that shuffles between
         runs is not measuring anything.
     """
+    if weights is None:
+        weights = [1.0] * len(rankings)
+    if len(weights) != len(rankings):
+        raise ValueError(f"{len(rankings)} rankings but {len(weights)} weights")
+
     scores: dict[str, float] = {}
 
-    for ranking in rankings:
+    for ranking, weight in zip(rankings, weights, strict=True):
         for rank, chunk_id in enumerate(ranking, start=1):
-            scores[chunk_id] = scores.get(chunk_id, 0.0) + 1.0 / (k + rank)
+            scores[chunk_id] = scores.get(chunk_id, 0.0) + weight / (k + rank)
 
     return sorted(scores.items(), key=lambda item: (-item[1], item[0]))
 

@@ -523,3 +523,50 @@ Manufacturing provenance is worse than having none: an unverified label is
 merely unknown, whereas a falsely verified one is a number nobody will think
 to re-check. `--status` still works non-interactively, since inspecting
 records no judgement.
+
+---
+
+## 2026-08-22 — Label review moved from the terminal to a local browser page
+
+**Chose:** a local FastAPI page at `127.0.0.1`, one question per screen.
+
+**Rejected:** the terminal CLI it replaces.
+
+**Why:** the CLI was unusable for its only user. Windows `cmd` renders Arabic
+as question marks, and even where a font is present it performs no bidi
+reordering and no letter joining, so an Arabic legal passage arrives as
+disconnected glyphs in the wrong order. A reviewer cannot judge whether an
+article answers a question when they cannot read the article. A browser does
+all three correctly given `dir="rtl"` and a font that ships with Windows.
+
+No web fonts: this runs offline, and a CDN font that failed to load would fall
+back to something that cannot join letters -- reintroducing the exact bug,
+silently. The stack is Segoe UI / Tahoma, both present on Windows.
+
+**The safety property is carried over, not dropped.** The CLI refused to run
+when stdin was not a terminal, because piped input had once marked three labels
+`verified_by: human` that no human read. The browser equivalent:
+
+- every mutation is a **POST carrying a per-run token**, regenerated at
+  startup, so a crawler, a link prefetcher, a stale bookmark or a stray `curl`
+  cannot record a verification;
+- **GET never writes** -- viewing and searching are side-effect free;
+- the server binds **127.0.0.1 only** and has no `--host` flag, because it
+  writes to the eval set and has no authentication.
+
+`tests/test_review_server.py` asserts all of it: every mutating route is
+enumerated and checked to reject a bad token, and viewing and searching are
+checked not to change the verified count. Tests run against a temp copy of the
+eval set, so the suite cannot pollute the real labels.
+
+**A bug worth recording, because it is the second time this exact thing bit.**
+Every GET returned 422. Under `from __future__ import annotations` an
+annotation is a *string* that FastAPI resolves against **module** globals; the
+`Request` import lived inside `build_app`, so FastAPI could not see it and
+treated `request: Request` as an unknown query parameter. This is the same
+failure mode as function-local types in `agent-core`'s tool registry, and the
+same fix: the name has to be importable at module level.
+
+**What did not change:** the file format, the sampling design, the actions, or
+the meaning of `verified_by`. This is a different front end onto the same
+23-question `--sample` review.

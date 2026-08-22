@@ -7,11 +7,13 @@ why. A failed approach that was removed still gets an entry.
 
 ## 2026-08-22 — Corpus: rejected the WIPO PDF as silently corrupt
 
-**Chose:** `نظام العمل ولائحته التنفيذية`, second edition 1443H, a 308-page PDF
-carrying the Labor Law together with its Implementing Regulations.
+**Rejected:** `sa055ar.pdf` from WIPO Lex, the first and most official-looking
+candidate.
 
-**Rejected:** `sa055ar.pdf` from WIPO Lex, which was the first and most
-official-looking candidate.
+**Chose, at the time:** the l-sat.com PDF — which was itself rejected a few
+hours later for a different defect. See the next entry; this one is kept
+because the failure mode it documents is distinct and the checker still tests
+for it.
 
 **Why:** the WIPO PDF is **silently corrupt**. Extraction succeeds, the output
 looks like Arabic, and every check short of reading it passes. But its font
@@ -104,10 +106,19 @@ project is built to demonstrate.
 This is a spec detail that was wrong once inside the problem, changed rather
 than worked around, exactly as Part 0 §6 instructs.
 
-**Second complication:** PDF extraction inserts spurious spaces inside words —
-`الخامس ة عشرة` for `الخامسة عشرة`, `الثان ية` for `الثانية`, `الأربع ون` for
-`الأربعون`. The parser must tolerate intra-word whitespace, so it normalizes
-spaces out of the ordinal phrase before matching.
+**Second complication:** extraction inserts spurious spaces inside words —
+`الخامس ة عشرة` for `الخامسة عشرة`, `الأربع ون` for `الأربعون`. Rather than
+enumerate every place a break might land, the parser matches against the
+*space-stripped* form, which repairs all of them at once.
+
+**Third complication:** amendment text quotes cross-references inside headings,
+producing `المادة المادة الثالثة`. Leading copies of the noun are stripped.
+
+**Measured on the official corpus:** 684 heading candidates, **649 parsed
+(94.9%)**, yielding **all 245 distinct article numbers, 1–245, none missing**.
+The ~35 unparsed candidates are false positives from amendment prose
+(`وتكون بالنص الآتي:`), not articles that were lost — which is why
+`find_article_headings` surfaces `None` instead of dropping them silently.
 
 ---
 

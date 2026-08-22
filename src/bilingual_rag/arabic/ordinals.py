@@ -70,7 +70,9 @@ TEEN_MARKER = "عشرة"
 HUNDREDS: dict[str, int] = {
     "المائة": 100,
     "المئة": 100,
+    "المائتان": 200,
     "المائتين": 200,
+    "المئتان": 200,
     "المئتين": 200,
     "الثلاثمائة": 300,
     "الثلاثمئة": 300,
@@ -100,6 +102,7 @@ _TENS = {_key(k): v for k, v in TENS.items()}
 _HUNDREDS = {_key(k): v for k, v in HUNDREDS.items()}
 _TEEN = _key(TEEN_MARKER)
 _AFTER = _key(AFTER)
+_ARTICLE_WORD = normalize_ar("المادة")
 
 
 def parse_ordinal(phrase: str) -> int | None:
@@ -122,6 +125,13 @@ def parse_ordinal(phrase: str) -> int | None:
     if not normalized:
         return None
 
+    # Amendment text repeats the noun -- `المادة المادة الثالثة` -- because a
+    # cross-reference is quoted inside a heading. Drop any leading copies.
+    while normalized.startswith(_ARTICLE_WORD):
+        normalized = normalized[len(_ARTICLE_WORD) :].strip()
+        if not normalized:
+            return None
+
     # Split the hundreds suffix off first, so the remainder is a plain 1-99.
     hundreds = 0
     if _AFTER in normalized.replace(" ", ""):
@@ -136,8 +146,14 @@ def parse_ordinal(phrase: str) -> int | None:
 
     tokens = [t for t in normalized.split() if t]
     if not tokens:
-        # "بعد المائة" alone means article 100 exactly.
+        # "بعد المائة" with nothing before it means article 100 exactly.
         return hundreds or None
+
+    # A bare hundred: `المادة المائة` is article 100, `المادة المائتان` is 200.
+    # These carry no `بعد`, so they never reach the split above.
+    bare_hundred = _HUNDREDS.get(_key(" ".join(tokens)))
+    if bare_hundred is not None and not hundreds:
+        return bare_hundred
 
     value = _parse_below_hundred(tokens)
     if value is None:
@@ -146,37 +162,41 @@ def parse_ordinal(phrase: str) -> int | None:
 
 
 def _parse_below_hundred(tokens: list[str]) -> int | None:
-    """Parse the 1-99 part: a unit, a tens, a teen, or unit + و + tens."""
-    # Rejoin then re-split on the conjunction, because the PDF sometimes
-    # separates `و` from the word it attaches to.
-    joined = " ".join(tokens)
+    """Parse the 1-99 part: a unit, a tens, a teen, or unit + و + tens.
 
-    # Teen: <unit> عشرة
-    keys = [_key(t) for t in tokens]
-    if _TEEN in keys:
-        index = keys.index(_TEEN)
-        if index == 0:
-            return None  # "عشرة" alone is not an ordinal article number
-        unit = _UNITS.get(keys[index - 1])
-        if unit is None:
-            return None
-        # العاشرة is 10 on its own; a teen is 10 + unit.
-        return 10 + unit
+    Everything is matched against the *space-stripped* form. Extraction breaks
+    words at arbitrary points -- `الخامس ة عشرة` for `الخامسة عشرة`, `الأربع ون`
+    for `الأربعون` -- and removing spaces before matching repairs all of those
+    at once, instead of enumerating every place a break might land.
+    """
+    compact = _key(" ".join(tokens))
+    if not compact:
+        return None
 
-    # Compound: <unit> و<tens>
-    match = re.match(r"^(.*?)\s*و\s*(\S+)$", joined)
-    if match:
-        unit_key, tens_key = _key(match.group(1)), _key(match.group(2))
-        unit, tens = _UNITS.get(unit_key), _TENS.get(tens_key)
-        if unit is not None and tens is not None:
-            return unit + tens
+    # Teen: <unit> + عشرة, e.g. الحادية عشرة = 11.
+    # `العاشرة` (10) does not end in عشرة, so it cannot be misread as a teen.
+    if compact.endswith(_TEEN):
+        prefix = compact[: -len(_TEEN)]
+        unit = _UNITS.get(prefix)
+        if unit is not None:
+            return 10 + unit
+        return None
 
-    # Bare tens, or a bare unit.
-    single = _key(joined)
-    if single in _TENS:
-        return _TENS[single]
-    if single in _UNITS:
-        return _UNITS[single]
+    # Bare tens or bare unit.
+    if compact in _TENS:
+        return _TENS[compact]
+    if compact in _UNITS:
+        return _UNITS[compact]
+
+    # Compound: <unit> + و + <tens>, e.g. التاسعة والثلاثون = 39.
+    # Tested suffix-first because `و` also occurs inside ordinary words, so
+    # splitting on the letter itself would be wrong.
+    for tens_key, tens_value in _TENS.items():
+        suffix = "و" + tens_key
+        if compact.endswith(suffix):
+            unit = _UNITS.get(compact[: -len(suffix)])
+            if unit is not None:
+                return unit + tens_value
 
     return None
 

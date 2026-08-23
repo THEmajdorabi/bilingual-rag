@@ -313,6 +313,23 @@ $("q").addEventListener("keydown", (e) => {
 });
 
 applyLanguage();
+
+// Deep link: /?q=...&lang=ar asks the question on load. Useful for sharing a
+// specific answer, and it is what makes the screenshots in the README a
+// command anybody can re-run rather than something somebody once did.
+(() => {
+  const params = new URLSearchParams(location.search);
+  const requested = params.get("lang");
+  if (requested === "ar" || requested === "en") {
+    lang = requested;
+    applyLanguage();
+  }
+  const q = params.get("q");
+  if (q) {
+    $("q").value = q;
+    ask();
+  }
+})();
 </script>
 </body>
 </html>

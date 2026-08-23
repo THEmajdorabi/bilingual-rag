@@ -5,11 +5,19 @@ colloquial and common misspellings — and get an answer grounded in the officia
 text, with the article it came from. When the corpus does not answer the
 question, it says so instead of guessing.
 
-```
-سؤال:  طلعوني من الشغل فجاه بدون ما يخبروني قبل بمده، لي شي عندهم؟
-جواب:  إذا كان العقد غير محدد المدة وأنهاه صاحب العمل دون إشعار، فللعامل
-       الحق في تعويض يعادل أجره عن مدة الإشعار. [المادة 75] [المادة 80]
-```
+| Arabic, RTL | English, LTR |
+|---|---|
+| ![the RTL UI answering in Arabic](docs/ui_ar.png) | ![the same UI answering in English](docs/ui_en.png) |
+
+Both are real screenshots of the running service, reproducible from a URL —
+the UI takes `?q=` and `?lang=`, so the exact commands are in *Reproducing
+every number* below.
+
+**Look at the left-hand one.** The answer cites two articles, and the service
+has flagged **its own second sentence as unsupported by the passage it cites**
+— faithfulness 50%, with the offending claim printed in red underneath. That
+red box is the feature. A system that cannot tell you which of its sentences it
+cannot back up is a system you have to check by hand, every time.
 
 ---
 
@@ -407,6 +415,34 @@ That is also the honest limitation: **routing is not currently useful to this
 repo**, because the classifier was trained on the dialects an open dataset
 provided rather than the one this corpus needs. The integration is real, the
 degradation path is tested, and no retrieval improvement is claimed.
+
+## Reproducing every number
+
+Nothing here is quoted from memory. Each row names the command and the file the
+number is read out of.
+
+| Number | Command | Raw data |
+|---|---|---|
+| Corpus size, articles, chunks | `make ingest` | `data/ingest_report.json` |
+| Ablation table | `make ablate` | `eval/results/ablation.json` |
+| Retrieval quality, per-category | `make eval` | `eval/results/retrieval.json` |
+| Answer quality, both providers | `make answers` and `make answers BILINGUAL_RAG_MODEL_SET=openai` | `eval/results/answers.json`, `answers_openai.json` |
+| Cost breakdown per call | same run as above | the `*_cost_usd` and `*_tokens` fields |
+| False-refusal split by cause | `make refusals` | `eval/results/*_refusal_split.json` |
+| Test counts | `make test`, `make test-integration` | stdout |
+| Container deployment | `make deploy`, then `curl localhost:8080/healthz` | stdout |
+| The two screenshots | `make serve`, then the two URLs below | `docs/ui_ar.png`, `docs/ui_en.png` |
+
+```
+http://127.0.0.1:8080/?lang=ar&q=طلعوني من الشغل فجاه بدون ما يخبروني قبل بمده، لي شي عندهم؟
+http://127.0.0.1:8080/?lang=en&q=How much annual leave am I entitled to after six years with the same employer?
+```
+
+**What costs money:** `make answers` only, about $1.62 on the Anthropic model
+set and $0.45 on the OpenAI one. Retrieval, the ablation, the refusal split and
+every test are free and need no API key — the refusal split in particular is
+free precisely because retrieval is deterministic, which is the whole reason
+that analysis was possible at all.
 
 ## Design notes
 

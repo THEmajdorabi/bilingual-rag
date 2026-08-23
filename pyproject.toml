@@ -3,6 +3,8 @@ name = "bilingual-rag"
 version = "0.1.0"
 description = "Ask in Arabic or English. Get an answer grounded in an Arabic legal corpus, cited to the article."
 requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = [
     # agent-core is the decision layer. Installed from a local path in dev;
     # see DECISIONS.md for why this is not a git dependency yet.

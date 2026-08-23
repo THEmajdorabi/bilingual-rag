@@ -18,7 +18,7 @@ from bilingual_rag.arabic.normalize import (
 )
 
 # ---------------------------------------------------------------------------
-# Character-class coverage -- the review that reading the source cannot give
+# Character-class coverage: the review that reading the source cannot give
 # ---------------------------------------------------------------------------
 
 
@@ -112,7 +112,7 @@ def test_aggressive_folds_hamza_carriers_and_is_off_by_default() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Presentation forms -- the corpus-specific trap
+# Presentation forms: the corpus-specific trap
 # ---------------------------------------------------------------------------
 
 

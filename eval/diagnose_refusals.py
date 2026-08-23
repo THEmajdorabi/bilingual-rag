@@ -1,6 +1,6 @@
 """Split the false-refusal rate into retrieval misses and over-cautious answering.
 
-A false refusal — declining a question the corpus does answer — has two very
+A false refusal, declining a question the corpus does answer, has two very
 different causes, and the headline rate does not distinguish them:
 
   * **retrieval miss.** The governing article was not in the passages the model
@@ -144,7 +144,7 @@ def main() -> int:
         f"   ({counts.get('answered_without_article', 0)}/{len(answerable)})"
     )
     print()
-    print("Control — the questions it DID answer:")
+    print("Control group, the questions it DID answer:")
     print(f"  answered with the article retrieved   : {counts.get('answered_with_article', 0)}")
     print(
         f"  answered WITHOUT the article retrieved: {counts.get('answered_without_article', 0)}"

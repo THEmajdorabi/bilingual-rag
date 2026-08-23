@@ -21,7 +21,7 @@ from bilingual_rag.config import (
 def test_every_profile_uses_the_same_multilingual_reranker() -> None:
     """`bge-reranker-base` is English and Chinese only.
 
-    On Arabic it reranks close to randomly, which would not error -- it would
+    On Arabic it reranks close to randomly, which would not error, it would
     quietly poison the ablation table. Weaker hardware shrinks the candidate
     set instead, which is a latency choice, not a quality one.
     """

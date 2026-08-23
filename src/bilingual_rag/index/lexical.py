@@ -7,8 +7,8 @@ constant, one place to reason about.
 `bm25s` rather than `rank_bm25`: the latter is pure Python and in-memory, and
 becomes the bottleneck as a corpus grows. `bm25s` is memory-mapped and fast.
 
-The text indexed here is `text_norm` -- normalized by the *same* function that
-normalizes queries -- then light-stemmed. Indexing raw text while querying
+The text indexed here is `text_norm`, normalized by the *same* function that
+normalizes queries, then light-stemmed. Indexing raw text while querying
 normalized text is the silent failure this whole module is arranged to avoid.
 """
 
@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
+from typing import Any
 
 import structlog
 
@@ -46,7 +47,10 @@ class BM25Index:
 
     def __init__(self, stem: bool = True) -> None:
         self.stem = stem
-        self._retriever = None
+        # `bm25s.BM25`, imported lazily so that importing this module does not
+        # pull the library in. Annotated `Any` because the type is not
+        # available at annotation time for the same reason.
+        self._retriever: Any = None
         self._ids: list[str] = []
 
     def build(self, chunk_ids: list[str], texts: list[str]) -> None:

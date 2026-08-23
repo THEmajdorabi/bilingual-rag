@@ -157,7 +157,7 @@ def main() -> int:
     for question, overlap, rank in sorted(rows, key=lambda r: -r[1])[:10]:
         print(f"  {overlap:.2f}  bm25_rank={rank:<4} {question.id}  {question.query[:60]}")
 
-    print("\nHARDEST  (lowest reuse -- these are the questions worth having)")
+    print("\nHARDEST  (lowest reuse, these are the questions worth having)")
     for question, overlap, rank in sorted(rows, key=lambda r: r[1])[:8]:
         print(f"  {overlap:.2f}  bm25_rank={rank:<4} {question.id}  {question.query[:60]}")
 

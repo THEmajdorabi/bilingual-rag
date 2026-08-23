@@ -147,7 +147,7 @@ def test_digit_headings_from_the_regulations_are_found() -> None:
     """The Law spells its article numbers; the Regulations use digits.
 
     Both documents share one index, so both styles must parse. The Regulations
-    write `المادة (23):` -- and PDF extraction of right-to-left text mirrors
+    write `المادة (23):`, and PDF extraction of right-to-left text mirrors
     the brackets, so `)23(` is what actually arrives.
     """
     upright = "\n".join(["المادة (23):", "نص"])
@@ -161,7 +161,7 @@ def test_bis_articles_get_their_own_number() -> None:
     """`مكرر` marks an article inserted between two existing ones.
 
     Article 15 مكرر sits between 15 and 16 and is a distinct article, so it
-    cannot collapse onto 15 -- a citation to one is not a citation to the other.
+    cannot collapse onto 15: a citation to one is not a citation to the other.
     """
     bis = "\n".join(["المادة )15( مكرر", "نص"])
     plain = "\n".join(["المادة )15(", "نص"])

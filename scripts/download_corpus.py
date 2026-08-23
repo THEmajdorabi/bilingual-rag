@@ -1,7 +1,7 @@
 """Fetch the corpus, then refuse to declare success until it passes quality checks.
 
 Downloading is the easy half. The half that matters is not accepting a file
-that extracts cleanly but is silently wrong -- see `check_corpus_quality.py`
+that extracts cleanly but is silently wrong: see `check_corpus_quality.py`
 and the "Rejected source" section of `data/README.md`.
 
 Run: python scripts/download_corpus.py [--force]

@@ -16,7 +16,7 @@ class AskRequest(BaseModel):
     use_agent: bool = False
     check_faithfulness: bool = True
     # Ask repo 04 which dialect this is. Off unless DIALECT_SERVICE_URL is set,
-    # and a router outage never affects the answer -- see qa/router.py.
+    # and a router outage never affects the answer: see qa/router.py.
     classify_dialect: bool = True
 
 

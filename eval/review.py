@@ -2,7 +2,7 @@
 
 Every number this project reports is capped by the quality of these labels. A
 question drafted by a model and never checked measures the pipeline, not its
-quality -- and when the drafter is related to the system being scored, it
+quality, and when the drafter is related to the system being scored, it
 flatters itself.
 
 This shows one question at a time beside the **full text of the article it
@@ -112,7 +112,7 @@ def show(question: Question, articles: dict[str, str], position: int, total: int
 
     if not question.answerable:
         print(f"\n{THIN}")
-        print("  LABELLED UNANSWERABLE -- the system is expected to REFUSE.")
+        print("  LABELLED UNANSWERABLE. The system is expected to REFUSE.")
         if question.notes:
             for line in wrap(f"note: {question.notes}"):
                 print(line)
@@ -169,8 +169,8 @@ def ask_articles(current: list[str]) -> list[str] | None:
 def require_interactive() -> None:
     """Refuse to run when stdin is not a terminal.
 
-    This tool exists to record *human* judgement. Piping input into it -- a
-    test harness, a shell heredoc, a stray `echo` -- would mark labels
+    This tool exists to record *human* judgement. Piping input into it, a
+    test harness, a shell heredoc, a stray `echo`, would mark labels
     `verified_by: human` when no human saw them, which is worse than leaving
     them unverified: it manufactures provenance.
 
@@ -287,7 +287,7 @@ def main() -> int:
 
     print(f"\nReviewing {len(pool)} question(s), least confident first.")
     if low_count:
-        print(f"The first {low_count} are flagged LOW CONFIDENCE -- check those hardest.")
+        print(f"The first {low_count} are flagged LOW CONFIDENCE. Check those hardest.")
     print("Progress saves on every accept and on quit.\n")
 
     for position, question in enumerate(pool, start=1):
@@ -331,7 +331,7 @@ def main() -> int:
                 print(f"  {question.id} -> {question.qualified_articles()}")
 
             elif choice == "a":
-                # An "unanswerable" that turns out to be covered -- the exact
+                # An "unanswerable" that turns out to be covered, the exact
                 # risk created by indexing the Regulations after these were
                 # judged against the Law alone.
                 corrected = ask_articles(question.relevant_articles)

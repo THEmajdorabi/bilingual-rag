@@ -8,8 +8,8 @@ before anything is built on it.
 
 | | |
 |---|---|
-| **Document** | نظام العمل — Saudi Labor Law, with amendments in force |
-| **Publisher** | هيئة الخبراء بمجلس الوزراء — Board of Experts at the Council of Ministers |
+| **Document** | نظام العمل. Saudi Labor Law, with amendments in force |
+| **Publisher** | هيئة الخبراء بمجلس الوزراء. Board of Experts at the Council of Ministers |
 | **URL** | `https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/08381293-6388-48e2-8ad2-a9a700f2aa94/1` |
 | **File** | `boe_labor_law.html` |
 | **Downloaded** | 2026-08-22 |
@@ -53,14 +53,14 @@ Law spells them as ordinals, so the heading parser handles both styles.
 
 Held for the cross-lingual evaluation questions and to exercise the PDF
 extraction path. Being English, it has none of the Arabic shaping problems.
-**Not indexed** — it is a translation of a document already in the index.
+**Not indexed**, it is a translation of a document already in the index.
 
 ## Rejected sources, and why it matters
 
 **Two of three candidate sources were silently corrupt, in different ways.**
 Both are PDFs. Both extract without error. Both look like Arabic.
 
-### 1. WIPO Lex `sa055ar.pdf` — kaf mis-encoded
+### 1. WIPO Lex `sa055ar.pdf`, kaf mis-encoded
 
 Its font encoding maps **kaf (ك, U+0643) onto alef-madda (آ, U+0622)**
 throughout:
@@ -77,7 +77,7 @@ in the index, normalization would then fold the bad alef-madda to a bare alef,
 and retrieval quality would collapse for reasons no error message would ever
 explain.
 
-### 2. l-sat.com PDF — adjacent letters transposed
+### 2. l-sat.com PDF, adjacent letters transposed
 
 The second candidate looked ideal: 308 pages, the Labor Law *and* its
 Implementing Regulations, a clean text layer, zero presentation forms, and it

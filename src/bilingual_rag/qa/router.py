@@ -7,7 +7,7 @@ is useful.
 Three properties, in order of importance:
 
 **This service being down must not take this one down.** The client has a short
-timeout, catches everything, and returns "unknown" -- so an unreachable, slow
+timeout, catches everything, and returns "unknown", so an unreachable, slow
 or broken classifier degrades the answer path to exactly what it was before
 routing existed. It is off unless `DIALECT_SERVICE_URL` is set.
 

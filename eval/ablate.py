@@ -7,7 +7,7 @@ post" and "I measured each component and can tell you what it bought."
 
 Each configuration is run `--repeats` times and the **mean** is reported. Where
 two rows are within noise of each other, the table says so rather than claiming
-an improvement -- an unqualified +0.004 is not a result.
+an improvement: an unqualified +0.004 is not a result.
 
 Retrieval metrics need no API key, so the whole table below is measurable for
 free. The answer-quality rows (faithfulness, refusal) live in
@@ -82,8 +82,8 @@ def summarise(runs: list[dict]) -> dict:
 
 
 def render_table(rows: list[tuple[str, dict]], repeats: int) -> str:
-    # Retrieval here is deterministic -- embeddings are cached, BM25 is
-    # deterministic, and reranker scores are cached per (query, chunk) -- so
+    # Retrieval here is deterministic, embeddings are cached, BM25 is
+    # deterministic, and reranker scores are cached per (query, chunk), so
     # repeats re-measure the same quality figure and only latency varies.
     # Saying so matters: "mean of 3 runs" otherwise implies a variance estimate
     # on quality that this pipeline cannot produce.
@@ -117,7 +117,7 @@ def render_table(rows: list[tuple[str, dict]], repeats: int) -> str:
 
         if abs(delta) < NOISE_THRESHOLD:
             verdict = (
-                f"recall@10 {delta:+.3f} -- within noise (< {NOISE_THRESHOLD}); "
+                f"recall@10 {delta:+.3f} is within noise (< {NOISE_THRESHOLD}); "
                 f"not a demonstrated improvement"
             )
         else:

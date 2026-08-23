@@ -82,8 +82,8 @@ class Answer(BaseModel):
     answer_output_tokens: int = 0
     faithfulness_input_tokens: int = 0
     faithfulness_output_tokens: int = 0
-    # Wall time of retrieval alone. No API cost -- the embedder and the
-    # cross-encoder run locally -- but it is the machine-time half of the bill.
+    # Wall time of retrieval alone. No API cost: the embedder and the
+    # cross-encoder run locally, but it is the machine-time half of the bill.
     retrieval_ms: int = 0
     # Faithfulness, measured per claim.
     claims_checked: int = 0
@@ -162,21 +162,23 @@ def extract_citations(text: str, passages: list[Passage]) -> tuple[list[Citation
 
     for match in CITATION.finditer(text):
         raw = match.group(1).strip().replace(" ", "").replace("مكرر", "_bis")
-        passage = by_article.get(raw)
-        if passage is None:
+        # Named `cited`, not `passage`: the loop above already binds `passage`,
+        # and rebinding it here to an Optional is what mypy objected to.
+        cited = by_article.get(raw)
+        if cited is None:
             if raw not in invented:
                 invented.append(raw)
             continue
-        if any(c.passage_id == passage.chunk_id for c in seen):
+        if any(c.passage_id == cited.chunk_id for c in seen):
             continue
         seen.append(
             Citation(
-                passage_id=passage.chunk_id,
-                doc_id=passage.doc_id,
-                article_no=passage.article_no,
-                page=passage.page,
-                quoted=passage.text[:400],
-                heading_path=passage.heading_path,
+                passage_id=cited.chunk_id,
+                doc_id=cited.doc_id,
+                article_no=cited.article_no,
+                page=cited.page,
+                quoted=cited.text[:400],
+                heading_path=cited.heading_path,
             )
         )
 

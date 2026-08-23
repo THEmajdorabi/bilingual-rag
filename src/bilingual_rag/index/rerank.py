@@ -2,14 +2,14 @@
 
 A bi-encoder embeds the query and the document independently, so it never sees
 them together. A cross-encoder scores the pair jointly and is markedly more
-accurate -- and markedly slower, which is why it runs over a small candidate
+accurate, and markedly slower, which is why it runs over a small candidate
 set rather than the corpus.
 
 **The model is `BAAI/bge-reranker-v2-m3` on every hardware profile.** This is
 the one thing that must not vary. `bge-reranker-base` is English and Chinese
 only; on Arabic it reranks close to randomly, and because reranking never
 errors, that would silently poison every row of the ablation table beneath it.
-Weaker hardware shrinks the candidate set instead -- a latency choice, not a
+Weaker hardware shrinks the candidate set instead: a latency choice, not a
 quality one.
 
 Reranking is usually the largest single latency cost in the pipeline. Its cost

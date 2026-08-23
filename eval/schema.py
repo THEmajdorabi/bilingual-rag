@@ -7,11 +7,11 @@ much as its content.
 **Provenance is a required field, not a nicety.** Each question records
 `verified_by`, which is one of:
 
-  * `human`   -- a person read the cited article and confirmed the question is
+  * `human`: a person read the cited article and confirmed the question is
                  answerable from it, and that the labelled chunks are the right
                  ones. Only these questions produce a number that means
                  anything about system quality.
-  * `drafted` -- generated from real corpus text by a model, awaiting review.
+  * `drafted`, generated from real corpus text by a model, awaiting review.
                  Useful for exercising the pipeline; **not** evidence.
 
 The distinction exists because an eval set written by the model under test
@@ -146,11 +146,11 @@ class EvalSet(BaseModel):
         Reviewing all 68 labels by hand is expensive, and the risk is not
         spread evenly across them. This selects three **disjoint** groups:
 
-          1. every low-confidence label -- the drafter's own flagged doubts;
+          1. every low-confidence label: the drafter's own flagged doubts;
           2. a sample of the *high-confidence* unanswerable labels, so refusal
              labels get coverage beyond the ones already flagged risky;
           3. a sample of high-confidence answerable labels, which is the
-             control -- if these turn out wrong, the confidence self-assessment
+             control, if these turn out wrong, the confidence self-assessment
              is not trustworthy and the whole set needs reviewing.
 
         Group 2 deliberately excludes the low-confidence unanswerables, which

@@ -12,9 +12,9 @@ be measured rather than assumed:
   * **ISRI root stemmer** (`nltk.stem.isri`): aggressive root extraction.
 
 `scripts/ablate_retrieval.py` measures both on the eval set. The expectation is
-that ISRI over-stems legal terminology -- it reduces distinct legal terms to a
+that ISRI over-stems legal terminology, it reduces distinct legal terms to a
 shared three-letter root, which destroys the precision that makes a citation
-correct rather than merely topical -- but the number decides, not the
+correct rather than merely topical, but the number decides, not the
 expectation.
 """
 
@@ -79,7 +79,7 @@ def light_stem(word: str) -> str:
     """Strip at most one prefix and one suffix, if the remainder survives.
 
     Conservative on purpose. Stripping repeatedly, or stripping down to a root,
-    collapses distinct legal terms onto each other -- and in a citation system
+    collapses distinct legal terms onto each other, and in a citation system
     a false match is worse than a miss, because it produces an answer attached
     to the wrong article.
     """
@@ -112,7 +112,7 @@ def stem_tokens(tokens: list[str]) -> list[str]:
 def isri_stem(word: str) -> str:
     """ISRI root stemmer, for the comparison in the ablation.
 
-    Imported lazily because nltk is not a runtime dependency -- it is only
+    Imported lazily because nltk is not a runtime dependency, it is only
     needed to produce the measurement that justifies not using it.
     """
     from nltk.stem.isri import ISRIStemmer

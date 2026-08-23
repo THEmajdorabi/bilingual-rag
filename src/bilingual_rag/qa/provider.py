@@ -2,7 +2,7 @@
 
 `agent-core`'s Provider protocol is built around a tool-calling loop: it takes
 a message list and tool schemas and returns tool calls. The answer layer needs
-neither -- it sends one prompt and reads one string back.
+neither, it sends one prompt and reads one string back.
 
 Rather than bend one interface to cover both, this wraps agent-core's provider
 in the two-argument shape the answer layer actually wants. The dependency

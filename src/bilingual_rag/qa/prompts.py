@@ -40,7 +40,7 @@ RULES, in order of importance:
    the passages are in Arabic, answer in English and state that the source is
    in Arabic.
 
-5. Quote the passage's own wording for anything numeric -- periods, amounts,
+5. Quote the passage's own wording for anything numeric: periods, amounts,
    percentages, day counts. Do not round, convert, or restate a number in your
    own words.
 

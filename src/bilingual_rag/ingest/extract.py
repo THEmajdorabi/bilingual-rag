@@ -2,9 +2,9 @@
 
 Two backends behind one interface:
 
-  * **HTML** -- the indexed Arabic corpus. Parsed with the standard library's
+  * **HTML**: the indexed Arabic corpus. Parsed with the standard library's
     `html.parser`, so there is no extra dependency for a job this small.
-  * **PDF** -- PyMuPDF, per page, used for the English translation and
+  * **PDF**: PyMuPDF, per page, used for the English translation and
     available for any future PDF corpus.
 
 The PDF path also carries the scanned-page detection and the OCR hook, because

@@ -49,8 +49,8 @@ QUESTIONS = ROOT / "eval" / "questions.yaml"
 CHUNKS = ROOT / "data" / "chunks.jsonl"
 
 DOC_TITLES = {
-    "saudi_labor_law": "نظام العمل — Labor Law",
-    "labor_regulations": "اللائحة التنفيذية — Implementing Regulations",
+    "saudi_labor_law": "نظام العمل (Labor Law)",
+    "labor_regulations": "اللائحة التنفيذية (Implementing Regulations)",
 }
 
 # Per-run token. Regenerated on every start, so a bookmarked POST from a
@@ -250,7 +250,7 @@ def render_question(state: ReviewState, index: int) -> str:
     if question.answerable:
         parts.append(
             f"<div class='meta' dir='auto'>Labelled: "
-            f"<b>{esc(', '.join(question.qualified_articles())) or '(none)'}</b> — "
+            f"<b>{esc(', '.join(question.qualified_articles())) or '(none)'}</b>, in "
             f"{esc(DOC_TITLES.get(question.doc_id, question.doc_id))}</div>"
         )
         for key in question.qualified_articles():
@@ -258,7 +258,7 @@ def render_question(state: ReviewState, index: int) -> str:
             if text is None:
                 parts.append(
                     f"<div class='article missing'><h4>{esc(key)}</h4>"
-                    "NOT FOUND in the index — this label is almost certainly wrong. "
+                    "NOT FOUND in the index. This label is almost certainly wrong. "
                     "Use “fix articles” below, or search.</div>"
                 )
             else:
@@ -271,7 +271,7 @@ def render_question(state: ReviewState, index: int) -> str:
         )
     else:
         parts.append(
-            "<div class='card'><b dir='auto'>Labelled UNANSWERABLE — the system must refuse.</b>"
+            "<div class='card'><b dir='auto'>Labelled UNANSWERABLE. The system must refuse.</b>"
             + (
                 f"<div class='note' dir='auto'>{esc(question.notes)}</div>"
                 if question.notes
@@ -317,13 +317,13 @@ def render_question(state: ReviewState, index: int) -> str:
         "placeholder='search the corpus…  /'>"
         "<button type='submit'>Search</button></form>"
     )
-    return page("".join(parts), f"{question.id} — label review")
+    return page("".join(parts), f"label review: {question.id}")
 
 
 def render_search(state: ReviewState, index: int, needle: str) -> str:
     hits = [(key, text) for key, text in state.articles.items() if needle in text]
     parts = [
-        f"<div class='bar'><span>Search results for “{esc(needle)}” — {len(hits)} article(s)"
+        f"<div class='bar'><span>Search results for “{esc(needle)}”: {len(hits)} article(s)"
         f"</span><span><a class='btn' href='/q/{index}'>back to question</a></span></div>"
     ]
     if not hits:
@@ -486,7 +486,7 @@ def main() -> int:
         print("nothing to review")
         return 0
     if not state.articles:
-        print(f"warning: {CHUNKS} not found — article text will be missing.")
+        print(f"warning: {CHUNKS} not found, article text will be missing.")
         print("Run `python scripts/ingest.py` first.\n")
 
     import uvicorn

@@ -114,7 +114,11 @@ class Embedder:
     def save_cache(self) -> None:
         if not self._cache:
             return
-        np.savez_compressed(self._cache_path, **self._cache)
+        # numpy's stub types the second positional as `compress: bool`, so a
+        # **kwargs of arrays is a type error and a correct call. The runtime
+        # signature is (file, *args, **kwds) and this is the documented way to
+        # save a dict of named arrays.
+        np.savez_compressed(self._cache_path, **self._cache)  # type: ignore[arg-type]
         log.info("embedder.cache_saved", entries=len(self._cache), path=str(self._cache_path))
 
     # ---- embedding ------------------------------------------------------

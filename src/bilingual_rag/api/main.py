@@ -258,7 +258,7 @@ def search(
     retriever: Retriever = Depends(get_retriever),
 ) -> SearchResponse:
     """Retrieval only. No model call, so no cost and no possibility of a
-    hallucinated answer -- useful for inspecting what the retriever actually
+    hallucinated answer, useful for inspecting what the retriever actually
     returns."""
     result = retriever.retrieve(body.query, top_k=body.top_k)
     return SearchResponse(

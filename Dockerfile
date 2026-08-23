@@ -37,7 +37,7 @@ COPY bilingual-rag/eval/ ./eval/
 
 # The container has no GPU, so it runs the cpu profile: multilingual-e5-base at
 # 768 dims. That is a DIFFERENT collection from a cuda ingest, which is why
-# collection names encode the model -- a mismatch fails loudly at startup
+# collection names encode the model: a mismatch fails loudly at startup
 # instead of returning nonsense.
 ENV BILINGUAL_RAG_PROFILE=cpu \
     PYTHONUNBUFFERED=1 \

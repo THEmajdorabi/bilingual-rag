@@ -93,7 +93,7 @@ def build_raw_indexes(
     """Build the un-normalized sibling indexes used by the ablation baseline.
 
     Without these, the ablation's "no normalization" row silently queries the
-    normalized index and reports that normalization is worth nothing -- which
+    normalized index and reports that normalization is worth nothing, which
     is a wrong number, not a missing one.
 
     Not built by default: it doubles ingestion cost and is only needed to

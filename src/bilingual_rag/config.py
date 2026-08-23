@@ -245,7 +245,7 @@ def load_settings() -> Settings:
     # Deployment-varying values come from the environment, because they are
     # properties of WHERE this runs rather than of what it does. `localhost` is
     # correct on a laptop and wrong inside a container, where Qdrant is a
-    # sibling service on a compose network -- and the failure is a connection
+    # sibling service on a compose network, and the failure is a connection
     # refused at startup with nothing pointing at the cause.
     qdrant_url = os.environ.get("QDRANT_URL")
     if qdrant_url:

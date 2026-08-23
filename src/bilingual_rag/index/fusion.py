@@ -2,7 +2,7 @@
 
 Combines the dense and BM25 rankings into one. RRF uses only the *rank* a
 document achieved in each list, never its score, which is what makes it work
-across retrievers whose scores are not comparable -- a cosine similarity of
+across retrievers whose scores are not comparable: a cosine similarity of
 0.82 and a BM25 score of 14.3 have no common scale.
 
     score(d) = sum over rankings of  1 / (k + rank(d))
@@ -37,7 +37,7 @@ def rrf(
 
     Returns:
         (chunk_id, score) sorted by score descending. Ties break on the id, so
-        the output is deterministic -- an ablation table that shuffles between
+        the output is deterministic: an ablation table that shuffles between
         runs is not measuring anything.
     """
     if weights is None:

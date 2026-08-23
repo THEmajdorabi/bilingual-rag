@@ -1,14 +1,14 @@
 """Arabic ordinal words to integers.
 
 The spec assumed article headings look like `المادة 74`. The real corpus
-contains no digit-numbered articles at all -- all 239 are spelled out, and the
+contains no digit-numbered articles at all, all 239 are spelled out, and the
 larger ones are compounds:
 
     المادة التاسعة والثلاثون              -> 39   (ninth and-thirty)
     المادة التاسعة والثلاثون بعد المائة   -> 139  (... after the hundred)
 
 Without this parser every chunk would carry `article_no = None`, and citations
--- the feature the project exists to demonstrate -- would have nothing to cite.
+-- the feature the project exists to demonstrate, would have nothing to cite.
 
 Arabic ordinals compose in a fixed pattern:
 
@@ -28,7 +28,7 @@ import re
 from bilingual_rag.arabic.normalize import normalize_ar
 
 # Feminine ordinals, which is the form used with المادة (a feminine noun).
-# Keys are stored already normalized -- see `_key` -- so lookups are robust to
+# Keys are stored already normalized: see `_key`, so lookups are robust to
 # hamza spelling, taa marbuta and alef maksura.
 UNITS: dict[str, int] = {
     "الأولى": 1,
@@ -125,7 +125,7 @@ def parse_ordinal(phrase: str) -> int | None:
     if not normalized:
         return None
 
-    # Amendment text repeats the noun -- `المادة المادة الثالثة` -- because a
+    # Amendment text repeats the noun, `المادة المادة الثالثة`, because a
     # cross-reference is quoted inside a heading. Drop any leading copies.
     while normalized.startswith(_ARTICLE_WORD):
         normalized = normalized[len(_ARTICLE_WORD) :].strip()
@@ -165,8 +165,8 @@ def _parse_below_hundred(tokens: list[str]) -> int | None:
     """Parse the 1-99 part: a unit, a tens, a teen, or unit + و + tens.
 
     Everything is matched against the *space-stripped* form. Extraction breaks
-    words at arbitrary points -- `الخامس ة عشرة` for `الخامسة عشرة`, `الأربع ون`
-    for `الأربعون` -- and removing spaces before matching repairs all of those
+    words at arbitrary points, `الخامس ة عشرة` for `الخامسة عشرة`, `الأربع ون`
+    for `الأربعون`, and removing spaces before matching repairs all of those
     at once, instead of enumerating every place a break might land.
     """
     compact = _key(" ".join(tokens))
@@ -223,7 +223,7 @@ ARTICLE_HEADING = re.compile(r"^[ \t]*المادة\s+([^:.\n]{2,60}?)\s*(?::|$)"
 # where `(` was rendered, because the bracket is mirrored for display and the
 # extractor reports the display character. Both orders must be accepted.
 #
-# `مكرر` ("bis") marks a article inserted after an existing one -- 15 مكرر sits
+# `مكرر` ("bis") marks a article inserted after an existing one, 15 مكرر sits
 # between 15 and 16 and is a distinct article, so it gets its own suffix.
 ARTICLE_HEADING_DIGITS = re.compile(
     r"^[ \t]*المادة\s*[)(]\s*([\d٠-٩]{1,3})\s*[)(]\s*(مكرر)?",
@@ -239,7 +239,7 @@ def find_article_headings(text: str) -> list[tuple[int, int, str, str | None]]:
     digits in brackets. Both appear in the same index, so both are found here.
 
     Returns (start, end, phrase, article_number) in document order, with the
-    number as a **string** -- `مكرر` articles are "15_bis", which is a real
+    number as a **string**, `مكرر` articles are "15_bis", which is a real
     article between 15 and 16 and cannot be an int.
 
     `article_number` is None when the phrase could not be parsed, so a caller
@@ -259,7 +259,7 @@ def find_article_headings(text: str) -> list[tuple[int, int, str, str | None]]:
         number = f"{int(digits)}_bis" if match.group(2) else str(int(digits))
         results.append((match.start(), match.end(), match.group(0).strip(), number))
 
-    # Both patterns match a digit heading -- the ordinal one sees `المادة` and
+    # Both patterns match a digit heading: the ordinal one sees `المادة` and
     # a short phrase and yields an unparseable candidate at the same offset.
     # Keeping both would give the chunker two boundaries at one position and
     # would put an unparsed entry first, so collapse by start offset and keep

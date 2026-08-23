@@ -1,4 +1,4 @@
-"""Arabic normalization -- the module that decides whether this project works.
+"""Arabic normalization: the module that decides whether this project works.
 
 Arabic writes the same word many ways. Without normalization, dense retrieval
 is mediocre and BM25 is close to useless, because `الأجر` and `الاجر` and
@@ -15,7 +15,7 @@ Two rules govern everything here:
 
 Measured on the real corpus (see DECISIONS.md): NFKC alone converts 2,107
 Arabic Presentation Form characters per page into standard Arabic. That step is
-not optional for this PDF -- without it, `ﺍﻟﻤﺎﺩﺓ` and `المادة` never match.
+not optional for this PDF, without it, `ﺍﻟﻤﺎﺩﺓ` and `المادة` never match.
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ import unicodedata
 #   U+0656-U+065F  extended Quranic marks
 #   U+0670         superscript alef          (outside the contiguous block)
 # The class below is a literal character range, and these characters are
-# invisible in an editor -- so the codepoints are spelled out above, and
+# invisible in an editor, so the codepoints are spelled out above, and
 # `test_diacritic_range_covers_every_codepoint` asserts the range matches all
 # of U+064B-U+065F plus U+0670. Review the test, not the glyphs.
 TASHKEEL = re.compile("[ً-ٰٟ]")
@@ -74,7 +74,7 @@ def normalize_ar(
 ) -> str:
     """Normalize Arabic text for indexing and querying.
 
-    Steps run in a fixed order, because several depend on earlier ones -- NFKC
+    Steps run in a fixed order, because several depend on earlier ones, NFKC
     must come first so that presentation forms become ordinary letters before
     anything tries to match them.
 
@@ -87,7 +87,7 @@ def normalize_ar(
         fold_taa_marbuta: fold ة -> ه. Same reasoning.
 
     Returns:
-        Normalized text. Never shown to a user -- see the module docstring.
+        Normalized text. Never shown to a user: see the module docstring.
     """
     if not text:
         return ""

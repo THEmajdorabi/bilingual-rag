@@ -1,18 +1,18 @@
 """Measure answer quality: faithfulness, refusal accuracy, citation correctness.
 
-Separate from `run_eval.py` because this one costs money -- every question is a
+Separate from `run_eval.py` because this one costs money, every question is a
 model call, plus one cheap call per claim for the faithfulness check.
 
 Four metrics, and the two that matter most are about *not* answering:
 
-  * **faithfulness** -- of the claims that cite a passage, how many does that
+  * **faithfulness**: of the claims that cite a passage, how many does that
     passage actually support;
-  * **refusal accuracy** -- on questions labelled unanswerable, how often does
+  * **refusal accuracy**: on questions labelled unanswerable, how often does
     the system correctly decline;
-  * **false refusal rate** -- on answerable questions, how often does it
+  * **false refusal rate**: on answerable questions, how often does it
     decline anyway. A system that refuses everything scores 100% on refusal
     accuracy, so the two must be read together;
-  * **citation validity** -- how often it cites an article it was never given.
+  * **citation validity**: how often it cites an article it was never given.
     Any non-zero value here is a serious defect.
 
 PROVENANCE: the eval set is model-drafted and UNVERIFIED. Every number below

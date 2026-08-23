@@ -161,7 +161,7 @@ class Retriever:
         if config.use_dense:
             started = time.perf_counter()
             # The embedder normalizes the query with the same function used on
-            # the indexed text -- that is the property the whole design turns on.
+            # the indexed text, that is the property the whole design turns on.
             vector = self.embedder.embed_query(query, normalize=normalized)
             dense_ids = store.search_ids(vector, top_k=self.settings.dense_top_k)
             rankings.append(dense_ids)

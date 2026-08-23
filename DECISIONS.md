@@ -3,14 +3,12 @@
 Every entry is a real choice between alternatives, the option rejected, and
 why. A failed approach that was removed still gets an entry.
 
----
-
-## 2026-08-22 — Corpus: rejected the WIPO PDF as silently corrupt
+## 2026-08-22. Corpus: rejected the WIPO PDF as silently corrupt
 
 **Rejected:** `sa055ar.pdf` from WIPO Lex, the first and most official-looking
 candidate.
 
-**Chose, at the time:** the l-sat.com PDF — which was itself rejected a few
+**Chose, at the time:** the l-sat.com PDF, which was itself rejected a few
 hours later for a different defect. See the next entry; this one is kept
 because the failure mode it documents is distinct and the checker still tests
 for it.
@@ -27,7 +25,7 @@ encoding maps **kaf (ك, U+0643) onto alef-madda (آ, U+0622)** throughout:
 | `كل` | 24 | `آل` | **107** |
 
 Two things make this the worst class of bug rather than merely a bad one.
-Nothing raises — there is no error to notice. And normalization makes it
+Nothing raises, there is no error to notice. And normalization makes it
 *worse*: `normalize_ar` folds alef-madda to bare alef, so `كذلك` would be
 indexed as `اذلك` while a user typing `كذلك` searches for `كذلك`. The index and
 the query would be wrong in *different* ways, and recall would collapse for a
@@ -39,9 +37,7 @@ Found on day one, by reading extracted text rather than trusting a page count.
 ingestion. It checks extractability, script order, letter-frequency sanity, and
 known-word probes, and exits non-zero on failure so it can gate CI.
 
----
-
-## 2026-08-22 — Corpus: the official HTML, after both PDF candidates failed
+## 2026-08-22. Corpus: the official HTML, after both PDF candidates failed
 
 **Chose:** the Board of Experts HTML (`laws.boe.gov.sa`) as the indexed corpus.
 
@@ -62,8 +58,8 @@ Reading the extracted body text showed adjacent letters transposed:
 | `اللائحة` | 0 | `الالئحة` | **208** |
 | `الأول` | 0 | `األول` | **114** |
 
-`المادة` is `ا ل م ا د ة`. The extracted `املادة` is `ا م ل ا د ة` -- lam and
-meem swapped -- and every `لا` pair comes out as `ال`. None of the right-hand
+`المادة` is `ا ل م ا د ة`. The extracted `املادة` is `ا م ل ا د ة`, lam and
+meem swapped, and every `لا` pair comes out as `ال`. None of the right-hand
 forms is a word in Arabic.
 
 **The important part: the existing check passed this file.** The
@@ -77,7 +73,7 @@ five distinct failure modes.
 same root cause. A PDF stores glyph indices into an embedded font; extraction
 must invert that mapping, and when the encoding table is wrong or the glyphs
 were laid out visually, the text comes back wrong with no error. HTML has no
-indirection -- the bytes are the characters.
+indirection: the bytes are the characters.
 
 **What it costs:** the PDF extraction path is no longer exercised by the
 indexed corpus. That is a real loss and is mitigated, not hidden: the official
@@ -89,9 +85,7 @@ publication and is *current*, carrying amendments from Royal Decree M/44 of
 1446H that every PDF edition predates. The provenance caveat written into the
 previous version of `data/README.md` is simply gone.
 
----
-
-## 2026-08-22 — Article numbers are Arabic ordinal *words*, not digits
+## 2026-08-22. Article numbers are Arabic ordinal *words*, not digits
 
 **Found:** the spec's chunking design assumes headings like `المادة 74`. The
 real corpus contains **zero** digit-numbered articles. All 239 are spelled out:
@@ -100,13 +94,13 @@ real corpus contains **zero** digit-numbered articles. All 239 are spelled out:
 
 **Consequence:** structure-aware chunking needs an Arabic ordinal-word parser
 to recover an `article_no` at all. A regex over digits would produce a corpus
-with no article numbers, which would break citations — the feature the whole
+with no article numbers, which would break citations: the feature the whole
 project is built to demonstrate.
 
 This is a spec detail that was wrong once inside the problem, changed rather
 than worked around, exactly as Part 0 §6 instructs.
 
-**Second complication:** extraction inserts spurious spaces inside words —
+**Second complication:** extraction inserts spurious spaces inside words,
 `الخامس ة عشرة` for `الخامسة عشرة`, `الأربع ون` for `الأربعون`. Rather than
 enumerate every place a break might land, the parser matches against the
 *space-stripped* form, which repairs all of them at once.
@@ -115,14 +109,12 @@ enumerate every place a break might land, the parser matches against the
 producing `المادة المادة الثالثة`. Leading copies of the noun are stripped.
 
 **Measured on the official corpus:** 684 heading candidates, **649 parsed
-(94.9%)**, yielding **all 245 distinct article numbers, 1–245, none missing**.
+(94.9%)**, yielding **all 245 distinct article numbers, 1 to 245, none missing**.
 The ~35 unparsed candidates are false positives from amendment prose
-(`وتكون بالنص الآتي:`), not articles that were lost — which is why
+(`وتكون بالنص الآتي:`), not articles that were lost, which is why
 `find_article_headings` surfaces `None` instead of dropping them silently.
 
----
-
-## 2026-08-22 — Invisible character classes are reviewed by test, not by reading
+## 2026-08-22. Invisible character classes are reviewed by test, not by reading
 
 **Chose:** keep literal character ranges in `normalize.py`, and assert their
 exact codepoint coverage in `tests/test_normalize.py`.
@@ -131,21 +123,19 @@ exact codepoint coverage in `tests/test_normalize.py`.
 
 **Why:** escapes are the obvious answer, and the first attempt did exactly that.
 But the class covers diacritics and bidirectional marks, which are *invisible*
-either way — an escape sequence is no more reviewable than a glyph when you are
+either way: an escape sequence is no more reviewable than a glyph when you are
 checking whether U+0653 is included. A test that walks every codepoint in the
 claimed range and asserts it matches is the only form of review that actually
 catches an off-by-one.
 
-`test_diacritic_range_covers_every_codepoint` walks U+064B–U+065F plus U+0670,
+`test_diacritic_range_covers_every_codepoint` walks U+064B to U+065F plus U+0670,
 and asserts the class does *not* swallow ordinary letters.
 
 **Related:** the range is deliberately wider than pyarabic's `TASHKEEL`
 constant, which stops at U+0652 and so misses maddah and the hamza-above/below
-marks at U+0653–U+0655. Those do occur in vocalised legal text.
+marks at U+0653 to U+0655. Those do occur in vocalised legal text.
 
----
-
-## 2026-08-22 — [VOID, SUPERSEDED] Arabic normalization is worth far less than the spec predicts
+## 2026-08-22, [VOID, SUPERSEDED] Arabic normalization is worth far less than the spec predicts
 
 > **This entry's conclusion is WRONG and is retained only as a record of the
 > mistake.** It was measured against an eval set that could not discriminate:
@@ -156,7 +146,7 @@ marks at U+0653–U+0655. Those do occur in vocalised legal text.
 > right and this entry was wrong.** See "Re-measured on a discriminating eval
 > set" below.
 
-**The spec's claim.** BUILD.md, Part 3, on `arabic/normalize.py`: *"Without
+**The spec's claim.** The build spec, Part 3, on `arabic/normalize.py`: *"Without
 normalization, dense retrieval is mediocre and BM25 is close to useless. This
 is the step tutorials omit, and it is where most of your recall gain will come
 from."*
@@ -188,8 +178,8 @@ the spec's reasoning was bad in general:
 2. **The corpus is unusually clean.** It is official HTML: typed, unvocalised,
    no diacritics, no presentation forms, no tatweel padding. The variation
    normalization exists to collapse is *largely absent from the input*. On a
-   scanned or PDF-extracted corpus -- the two candidates rejected earlier in
-   this file -- it would have far more to do.
+   scanned or PDF-extracted corpus: the two candidates rejected earlier in
+   this file, it would have far more to do.
 
 **What changed, and what deliberately did not.**
 
@@ -229,16 +219,14 @@ draw from the measurement.
    retrieval here is deterministic: embeddings are cached, BM25 is
    deterministic, and reranker scores are cached per (query, chunk). The
    repeats vary latency only. "Mean of 3 runs" must not be read as a variance
-   estimate on quality -- there is no run-to-run variance to estimate.
+   estimate on quality, there is no run-to-run variance to estimate.
 
----
-
-## 2026-08-22 — [VOID, SUPERSEDED] The BM25 hybrid hurts on this corpus, and is kept anyway (for now)
+## 2026-08-22, [VOID, SUPERSEDED] The BM25 hybrid hurts on this corpus, and is kept anyway (for now)
 
 > **This entry's numbers are void**, measured against the same
 > non-discriminating eval set. The direction was right but the magnitude was
 > badly understated: BM25 alone costs **-0.170**, not -0.037. The conclusion
-> that the hybrid is "a wash" is also wrong -- with reranking the full pipeline
+> that the hybrid is "a wash" is also wrong, with reranking the full pipeline
 > now beats dense+normalization by +0.038. See below.
 
 **Measured:** adding BM25 with RRF fusion **lowers** recall@10 from 0.9925 to
@@ -252,8 +240,8 @@ on recall, buys +0.041 MRR, and costs an order of magnitude in latency
 
 **Why BM25 hurts here.** With 305 chunks and dense retrieval already at 0.99,
 a second retriever has no signal left to add. What it does add is
-lexically-similar-but-wrong articles -- legal text reuses the same vocabulary
-across chapters -- and RRF promotes anything both lists rank at all, so those
+lexically-similar-but-wrong articles, legal text reuses the same vocabulary
+across chapters, and RRF promotes anything both lists rank at all, so those
 near-misses displace correct articles from the top 10.
 
 **Decision: no change to the default pipeline yet.** Dropping BM25 and the
@@ -265,7 +253,7 @@ that is worse on the questions you did not test.
 
 **Gate on the decision, so it does not drift into a default by neglect:**
 re-run the ablation once the eval set is human-verified *and* extended with
-harder questions -- ones where the answer is spread across chapters or phrased
+harder questions, ones where the answer is spread across chapters or phrased
 without the article's own vocabulary. If the hybrid still fails to earn its
 330 ms there, cut it and record the removal here.
 
@@ -273,9 +261,7 @@ without the article's own vocabulary. If the hybrid still fails to earn its
 the biggest single latency cost". Measured: +330 ms of a 360 ms p95, against
 ~33 ms for dense and under 1 ms for BM25. That is exactly right.
 
----
-
-## 2026-08-22 — Re-measured on a discriminating eval set; two earlier conclusions void
+## 2026-08-22. Re-measured on a discriminating eval set; two earlier conclusions void
 
 **What was wrong.** The first ablation reported a dense-only baseline of
 **0.985 recall@10**. At that ceiling no component can demonstrate value, and
@@ -303,8 +289,8 @@ benchmark, not a retrieval benchmark.
    (`hrsd_regulations_ar.pdf`, 109 pages, official HRSD publication, passes all
    five quality checks). 305 -> 561 chunks. Retrieval now has real competition,
    and the PDF path lost when the corpus moved to HTML is exercised again.
-   The regulations number articles with **digits in brackets** -- `المادة )15(
-   مكرر` -- where the Law spells them as ordinals, so the heading parser now
+   The regulations number articles with **digits in brackets**, `المادة )15(
+   مكرر`, where the Law spells them as ordinals, so the heading parser now
    handles both, and `مكرر` articles get a `15_bis` id.
 2. **Every question rewritten to describe the situation, not the legal
    concept**, in Gulf colloquial with the misspellings users actually type:
@@ -328,7 +314,7 @@ Article labels are now `doc_id:article`, because both documents number an
 - **Normalization: the spec was right, I was wrong.** +0.028 recall@10, above
   the 0.02 noise threshold, for 0 ms. The earlier "+0.007, within noise, the
   spec is wrong" was an artifact of a saturated benchmark. The lesson is not
-  about Arabic -- it is that **a component measured at ceiling always looks
+  about Arabic, it is that **a component measured at ceiling always looks
   worthless**, and the honest response to a suspiciously flat ablation is to
   attack the benchmark before drawing conclusions from it.
 - **BM25 alone still hurts, and by far more than reported:** -0.170, not
@@ -364,9 +350,7 @@ python scripts/diagnose_eval_difficulty.py
 python eval/ablate.py --repeats 3
 ```
 
----
-
-## 2026-08-22 — The BM25 -0.170 investigated: mostly real, partly fusion config
+## 2026-08-22: The BM25 -0.170 investigated: mostly real, partly fusion config
 
 **The challenge:** a -0.170 recall drop from *adding* a retriever is more
 likely a bug than a finding. Three candidate bugs were tested before the
@@ -379,7 +363,7 @@ number was published. `scripts/investigate_bm25.py` reproduces all of it.
 | dense only | 0.585 | 0.293 |
 | **BM25 only** | **0.123** | 0.078 |
 
-**73% of query tokens do not appear in the index vocabulary at all** -- 475 of
+**73% of query tokens do not appear in the index vocabulary at all**, 475 of
 653. Examples: `يعطين`, `طلعون`, `عطان`, `مقنع`, `بكر`. These are colloquial
 words that simply do not occur in formal legal text. BM25 matches strings, and
 there are no strings to match.
@@ -420,7 +404,7 @@ of the magnitude, not a rescue of the component.
 | top-50 (default) | 0.453 |
 
 Shallower is better, monotonically, which is consistent with "BM25 contributes
-noise" -- but even top-5 is well below dense alone. Capping the depth cannot
+noise", but even top-5 is well below dense alone. Capping the depth cannot
 fix a retriever that has no signal.
 
 ### Finding 4: two genuine stemmer bugs, found and fixed
@@ -447,7 +431,7 @@ fixing on its own terms; it was not the cause of the regression.
 
 The -0.170 decomposes as: **equal-weight fusion (~0.13) on top of a retriever
 that genuinely has nothing to contribute (~0.04)**. It is not a fusion bug in
-the sense of incorrect code -- RRF is behaving exactly as specified -- but the
+the sense of incorrect code. RRF is behaving exactly as specified, but the
 headline number does overstate BM25's harm, because it was measured at the
 worst available weighting.
 
@@ -462,9 +446,7 @@ measured value, with a footnote pointing here, because a reader who sees
 "-0.170" deserves to know that most of it is a weighting artifact and that the
 component is useless rather than actively catastrophic.
 
----
-
-## 2026-08-22 — Label verification is partial, by risk-weighted sampling
+## 2026-08-22. Label verification is partial, by risk-weighted sampling
 
 **Chose:** verify **23 of 68** labels by hand, selected by risk, rather than
 all 68.
@@ -494,7 +476,7 @@ review look larger than it is.
 **The third group is the point.** If the high-confidence sample comes back
 clean, the drafter's confidence self-assessment is calibrated and leaving the
 other 45 unreviewed is defensible. **If any of those 10 are wrong, the
-self-assessment is not trustworthy and all 68 need reviewing** -- the sample is
+self-assessment is not trustworthy and all 68 need reviewing**: the sample is
 designed to detect that, not to assume it away.
 
 **What this means for the README, stated so the claim stays accurate:**
@@ -524,9 +506,7 @@ merely unknown, whereas a falsely verified one is a number nobody will think
 to re-check. `--status` still works non-interactively, since inspecting
 records no judgement.
 
----
-
-## 2026-08-22 — Label review moved from the terminal to a local browser page
+## 2026-08-22. Label review moved from the terminal to a local browser page
 
 **Chose:** a local FastAPI page at `127.0.0.1`, one question per screen.
 
@@ -540,7 +520,7 @@ article answers a question when they cannot read the article. A browser does
 all three correctly given `dir="rtl"` and a font that ships with Windows.
 
 No web fonts: this runs offline, and a CDN font that failed to load would fall
-back to something that cannot join letters -- reintroducing the exact bug,
+back to something that cannot join letters, reintroducing the exact bug,
 silently. The stack is Segoe UI / Tahoma, both present on Windows.
 
 **The safety property is carried over, not dropped.** The CLI refused to run
@@ -550,7 +530,7 @@ when stdin was not a terminal, because piped input had once marked three labels
 - every mutation is a **POST carrying a per-run token**, regenerated at
   startup, so a crawler, a link prefetcher, a stale bookmark or a stray `curl`
   cannot record a verification;
-- **GET never writes** -- viewing and searching are side-effect free;
+- **GET never writes**: viewing and searching are side-effect free;
 - the server binds **127.0.0.1 only** and has no `--host` flag, because it
   writes to the eval set and has no authentication.
 
@@ -571,7 +551,7 @@ same fix: the name has to be importable at module level.
 the meaning of `verified_by`. This is a different front end onto the same
 23-question `--sample` review.
 
-## 2026-08-22 — Label review was called off; the eval set ships UNVERIFIED
+## 2026-08-22. Label review was called off; the eval set ships UNVERIFIED
 
 **Chosen:** stop the label review at 2 of 68 questions and publish every number
 as provisional.
@@ -590,7 +570,7 @@ the labels were checked.
 correct retrieval scores as a miss and an incorrect one can score as a hit.
 So:
 
-- **recall, MRR and nDCG are bounded above by label quality**, and the bound is
+- **recall, MRR and nDCG are bounded above by label quality**: and the bound is
   unknown because the labels are unchecked;
 - **the ablation table's *differences* are more trustworthy than its levels.**
   Every configuration is scored against the same labels, so a shared label
@@ -600,7 +580,7 @@ So:
   claim is supported by the passage the answer cited, which is checked against
   the retrieved text, not against `relevant_articles`. It is the one answer
   metric here that is independent of the eval set's provenance;
-- **refusal accuracy depends entirely on the labels**, since `answerable` is a
+- **refusal accuracy depends entirely on the labels**: since `answerable` is a
   label like any other, and there are only five unanswerable questions.
 
 **How it is enforced rather than merely intended.** A caveat in a README is a
@@ -619,7 +599,7 @@ tool before review was called off. Two is not a sample; it is not enough to
 estimate a label error rate, and this document does not pretend otherwise. The
 honest summary is: *66 of 68 labels have been read by no one*.
 
-## 2026-08-22 — Refusal is a sentinel from the model, not a phrase match
+## 2026-08-22. Refusal is a sentinel from the model, not a phrase match
 
 **Chosen:** the answer prompt instructs the model to reply with the exact token
 `NO_ANSWER` and nothing else when the passages do not contain the answer;
@@ -630,7 +610,7 @@ information", "the documents do not state"), which is what this repo did first.
 
 **Why:** phrase matching is wrong in both directions, and both directions were
 observed. It missed refusals phrased in a way the list did not anticipate, and
-worse, it counted *hedged answers* as refusals -- "I cannot be certain, but the
+worse, it counted *hedged answers* as refusals, "I cannot be certain, but the
 period is sixty days" contains the refusal phrase and is not a refusal. That
 error inflates refusal accuracy and deflates the false refusal rate at the same
 time, which makes a system look cautious precisely when it is being reckless.
@@ -643,7 +623,7 @@ rather than drifting quietly.
 the instruction breaks this. That is a reason to check the sentinel rate when
 changing models, not a reason to go back to guessing from prose.
 
-## 2026-08-22 — Faithfulness is checked per claim, and the score is claim-weighted
+## 2026-08-22. Faithfulness is checked per claim, and the score is claim-weighted
 
 **Chosen:** split the answer into claims, ask a cheap model whether the cited
 passage supports each one, and report supported claims over total claims across
@@ -666,12 +646,12 @@ the weighting is not a rounding detail.
 **What it does not measure:** whether the claim is true. It measures whether
 the cited passage says it. An answer that faithfully restates an article that
 does not govern the question scores 1.0 on faithfulness and 0.0 on citation
-correctness -- which is why both are reported and neither is called "accuracy".
+correctness, which is why both are reported and neither is called "accuracy".
 
-## 2026-08-22 — A reviewer rejected q054; the set is 67 questions, not 68
+## 2026-08-22: A reviewer rejected q054; the set is 67 questions, not 68
 
 **What happened:** during review, q054 (*"كم الحد الادنى للراتب بالريال اللي
-لازم ياخذه اي موظف؟"* — what is the minimum wage) was **rejected** and removed.
+لازم ياخذه اي موظف؟"*, what is the minimum wage) was **rejected** and removed.
 Its own `confidence_reason` had flagged the risk: the label was drafted as
 `answerable: false` against the Labor Law alone, *before* the Implementing
 Regulations were indexed, and the Regulations may well cover it. A question
@@ -690,14 +670,14 @@ the retriever against a coin flip.
 
 **A test had to change, and the change is the interesting part.**
 `test_the_sample_is_the_23_question_set` asserted `len(state.order) == 23` and
-failed the moment the data legitimately changed. The sample size is *derived* —
-every low-confidence label, plus 5 unanswerable and 10 answerable — so pinning
+failed the moment the data legitimately changed. The sample size is *derived*,
+every low-confidence label, plus 5 unanswerable and 10 answerable, so pinning
 the literal total tested the data, not the recipe. It now asserts the
 composition: the three groups are disjoint, every low-confidence label is
 included, and the two samples are exactly 5 and 10. That test would have caught
 a broken sampler; the old one caught a reviewer doing their job.
 
-## 2026-08-22 — Answer cost is recorded split, not just totalled
+## 2026-08-22. Answer cost is recorded split, not just totalled
 
 **Chosen:** `Answer` carries `answer_cost_usd` and `faithfulness_cost_usd`
 separately, with token counts for each, and the eval reports both plus a
@@ -707,7 +687,7 @@ per-claim faithfulness cost.
 
 **Why:** the two calls scale differently. Answer generation is **one call per
 question**; the faithfulness check is **one call per claim**, and a run
-produced 116 claims across 43 answered questions — 2.7 claims each. A cost
+produced 116 claims across 43 answered questions, 2.7 claims each. A cost
 projection built on the total is therefore insensitive to the one lever that
 actually moves it at volume. Splitting them makes the arithmetic in the
 README's cost section derivable from measurements rather than asserted.
@@ -719,7 +699,7 @@ measured. Any dollar figure for it depends on an instance rate that is an
 assumption about deployment, so where the README projects one, the rate is
 stated inline and the arithmetic is left visible.
 
-## 2026-08-22 — Repo 04 is an optional dependency, over HTTP, that can be absent
+## 2026-08-22. Repo 04 is an optional dependency, over HTTP, that can be absent
 
 **Chosen:** `qa/router.py` calls repo 04's `/route` when `DIALECT_SERVICE_URL`
 is set, with a 1.5-second timeout, catching everything, and returning
@@ -744,7 +724,7 @@ measured**, and asserting a benefit from an integration that has not been
 A/B tested is the kind of claim this repo exists to avoid making. The hook is
 real; the feature is not yet a feature.
 
-## 2026-08-23 — The container build was broken, and the README claimed it worked
+## 2026-08-23: The container build was broken, and the README claimed it worked
 
 **What happened:** `docker build .` failed at
 `ERROR: No matching distribution found for agent-core`. The README documented
@@ -774,7 +754,7 @@ satisfies the requirement before this repo is installed.
   deployment, unavailable here, and it would make the container depend on a
   release cadence rather than on the code in the tree.
 - **Vendoring a copy of `agent-core` into this repo.** Duplicated source that
-  nothing checks -- the exact failure mode repo 03 goes out of its way to guard
+  nothing checks: the exact failure mode repo 03 goes out of its way to guard
   against for one small function, let alone a whole package.
 - **Making `agent-core` optional.** `qa/provider.py` imports it
   unconditionally, and the answer layer does not exist without it.
@@ -784,7 +764,7 @@ the container builds, and a build that works in a uv-managed venv says nothing
 about whether it works under pip. The only thing that establishes it is running
 the build, which is what found this.
 
-## 2026-08-23 — `localhost` in config.yaml, and the second thing the container build found
+## 2026-08-23, `localhost` in config.yaml, and the second thing the container build found
 
 **What happened:** with the image finally building, the API container started
 and died with `qdrant_client.http.exceptions.ResponseHandlingException:
@@ -794,7 +774,7 @@ and died with `qdrant_client.http.exceptions.ResponseHandlingException:
 correct on a laptop and wrong inside a container, where Qdrant is a *sibling
 service* on the compose network and `localhost` is the API container itself.
 `docker-compose.yml` had been setting `QDRANT_URL: http://qdrant:6333` since it
-was written -- and **nothing read it**.
+was written, and **nothing read it**.
 
 **The fix:** `load_settings()` applies the environment on top of the file, for
 the values that are properties of *where* the service runs rather than of what
@@ -809,7 +789,7 @@ if qdrant_url:
 **Why the environment and not another config file:** a second config file
 means two places to look and two things to keep in step. A URL that changes per
 deployment is exactly what an environment variable is for, and the compose file
-already documented the intent -- the code just never honoured it.
+already documented the intent: the code just never honoured it.
 
 **The pattern across both container bugs.** Neither was findable by reading.
 `make test` passed throughout, the compose file *said* the right thing, and the
@@ -817,17 +797,17 @@ Dockerfile *looked* right. What found them was running `docker compose up` and
 watching it fail twice. A deployment path that has never been executed is not a
 deployment path; it is a description of one.
 
-## 2026-08-23 — The false-refusal rate was two failures added together
+## 2026-08-23: The false-refusal rate was two failures added together
 
 **What the headline said:** 18.9% of answerable questions were declined
 (`claude-sonnet-5`), 34.0% (`gpt-5.6-terra`).
 
 **What it hid:** a refusal has two causes with opposite fixes.
 
-- **Retrieval miss** — the governing article was never in the passages the
+- **Retrieval miss**: the governing article was never in the passages the
   model saw. Refusing is then *correct*, and counting it as an answer-layer
   failure blames the wrong half of the system.
-- **Over-cautious answering** — the article was in front of the model and it
+- **Over-cautious answering**: the article was in front of the model and it
   declined anyway. That is the answer-layer defect.
 
 **The split is free to measure**, because retrieval is deterministic: the same
@@ -846,14 +826,14 @@ Both split exactly evenly, on two different models, which is a coincidence of
 small numbers and is reported as one.
 
 **The finding that matters is the one nobody was looking for.** The same
-classification shows that **17 of the 53 answerable questions — 32% — never had
+classification shows that **17 of the 53 answerable questions, 32%, never had
 the governing article retrieved**, and that Sonnet **answered 12 of those 17
 anyway**: 22.6% of all answerable questions were answered from passages that do
 not contain the article the question was about.
 
 **And faithfulness did not catch a single one.** It stayed at 0.922, because
 faithfulness asks whether each claim is supported by the passage the answer
-*cited* — and those answers cited real passages, just not the right ones. A
+*cited*, and those answers cited real passages, just not the right ones. A
 system can be perfectly faithful to the wrong document.
 
 This is the strongest argument in this repo for the design decision to report
@@ -863,6 +843,6 @@ only one of the two that is about being right.
 
 **What it changes:** the answer prompt is not the first thing to fix. A third
 of answerable questions are a retrieval problem, and the answer layer's own
-defect is 13.9%, not 18.9%. Both numbers still rest on unverified labels — a
-wrong label makes a correct retrieval look like a miss — so this is a sharper
+defect is 13.9%, not 18.9%. Both numbers still rest on unverified labels, a
+wrong label makes a correct retrieval look like a miss, so this is a sharper
 hypothesis, not a settled conclusion.

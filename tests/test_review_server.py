@@ -2,7 +2,7 @@
 
 The eval set is the ground truth every reported number rests on, so the tests
 that matter here are the ones about *not* writing. Reading a question, loading
-the page, searching the corpus -- none of it may mark a label verified. A
+the page, searching the corpus, none of it may mark a label verified. A
 falsely verified label is worse than an unverified one, because nobody thinks
 to re-check it.
 
@@ -219,8 +219,8 @@ def test_the_article_text_reaches_the_page(client, state) -> None:
 def test_the_sample_is_composed_as_documented(state) -> None:
     """Assert the sample's *composition*, not its size.
 
-    The size is derived -- every low-confidence label, plus 5 unanswerable and
-    10 answerable -- so it legitimately changes when the eval set does. It did:
+    The size is derived, every low-confidence label, plus 5 unanswerable and
+    10 answerable, so it legitimately changes when the eval set does. It did:
     a reviewer rejected q054, and a test pinned to the literal 23 failed for a
     correct change to the data. What must not drift is the recipe.
     """

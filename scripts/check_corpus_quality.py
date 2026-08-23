@@ -3,20 +3,20 @@
 Written on day one, after the first candidate PDF turned out to be silently
 corrupt: it rendered every kaf as an alef-madda, so `كما` came out as `آما`.
 Nothing raises on that. Extraction succeeds, the text looks like Arabic, and
-retrieval quality is quietly destroyed -- normalization then folds the bad
+retrieval quality is quietly destroyed, normalization then folds the bad
 alef-madda to a bare alef, so the word is wrong in the index *and* in the
 query, in different ways.
 
 Five checks, each catching a different silent failure:
 
-  1. **Extractability** -- is there a text layer, or is it a scan needing OCR?
-  2. **Script order** -- logical or visual? PyMuPDF does no bidi reordering,
+  1. **Extractability**, is there a text layer, or is it a scan needing OCR?
+  2. **Script order**, logical or visual? PyMuPDF does no bidi reordering,
      and many Arabic PDFs store glyphs in visual order.
-  3. **Letter-frequency sanity** -- a letter appearing far outside its natural
+  3. **Letter-frequency sanity**: a letter appearing far outside its natural
      rate is the signature of a broken font encoding.
-  4. **Kaf probes** -- common words that must appear in any legal text. If
+  4. **Kaf probes**, common words that must appear in any legal text. If
      `كذلك` appears zero times and `آذلك` appears eight, the encoding is broken.
-  5. **Transposition probes** -- pairs where the wrong spelling is not a word
+  5. **Transposition probes**, pairs where the wrong spelling is not a word
      at all. `املادة` is not Arabic; seeing it 814 times means glyphs are
      stored in visual order and adjacent letters come out swapped.
 
@@ -40,7 +40,7 @@ from pathlib import Path
 # specific extraction defect. Each pair is a probe that a human can verify by
 # reading, which is what makes this checkable rather than magical.
 #
-# Defect 1 -- kaf mis-encoded as alef-madda. Seen in WIPO's sa055ar.pdf.
+# Defect 1, kaf mis-encoded as alef-madda. Seen in WIPO's sa055ar.pdf.
 KAF_PROBES = [
     ("كما", "آما"),
     ("كذلك", "آذلك"),
@@ -49,7 +49,7 @@ KAF_PROBES = [
     ("كامل", "آامل"),
 ]
 
-# Defect 2 -- adjacent letters transposed, because the PDF stores glyphs in
+# Defect 2, adjacent letters transposed, because the PDF stores glyphs in
 # visual order and the lam-alef ligature is emitted reversed. Seen in the
 # l-sat.com PDF: `المادة` came out as `املادة` (lam and meem swapped) and every
 # `لا` pair as `ال`. Each left-hand form is ordinary Arabic; each right-hand

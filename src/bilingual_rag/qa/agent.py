@@ -3,13 +3,13 @@
 A search box retrieves once and stops. This registers three tools on an
 agent-core agent and lets the model decide for itself:
 
-    search_corpus(query, top_k, lang)  -- retrieve; may be called repeatedly
+    search_corpus(query, top_k, lang), retrieve; may be called repeatedly
                                           with different sub-queries
-    get_article(article_no)            -- look up a specific article by number
-    list_chapters()                    -- see the corpus structure before
+    get_article(article_no), look up a specific article by number
+    list_chapters(): see the corpus structure before
                                           deciding what to search for
 
-That decision -- search once, decompose into sub-queries and search several
+That decision, search once, decompose into sub-queries and search several
 times, look up an article the user named, or declare the question out of scope
 -- is the thing that separates this from a search box, and the reason repo 01
 was built first.
@@ -58,7 +58,7 @@ corpus would use before searching: "my boss told me to leave tomorrow" is
 about notice periods and contract termination.
 
 When you have enough passages, stop and summarise which articles are relevant
-and why. Do not write the final user-facing answer -- another step does that.
+and why. Do not write the final user-facing answer; another step does that.
 """
 
 

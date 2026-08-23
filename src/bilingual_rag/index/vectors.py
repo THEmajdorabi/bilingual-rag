@@ -113,7 +113,7 @@ class VectorStore:
         """Fail at startup, not at query time, when the store and profile differ.
 
         Without this, switching profiles gives either a dimension error deep in
-        a search call or -- worse, if the widths happen to match -- silently
+        a search call or, worse, if the widths happen to match, silently
         wrong results from vectors produced by a different model.
         """
         info = self.client.get_collection(self.collection)
@@ -179,9 +179,9 @@ class VectorStore:
         doc_id: str | None = None,
     ) -> list[tuple[str, float, dict[str, Any]]]:
         """Dense search. Returns (chunk_id, score, payload), best first."""
-        from qdrant_client.models import FieldCondition, Filter, MatchValue
+        from qdrant_client.models import Condition, FieldCondition, Filter, MatchValue
 
-        conditions = []
+        conditions: list[Condition] = []
         if lang:
             conditions.append(FieldCondition(key="lang", match=MatchValue(value=lang)))
         if doc_id:
@@ -205,9 +205,11 @@ class VectorStore:
 
     def get_by_article(self, article_no: str, doc_id: str | None = None) -> list[dict[str, Any]]:
         """Fetch every chunk of one article, for the `get_article` tool."""
-        from qdrant_client.models import FieldCondition, Filter, MatchValue
+        from qdrant_client.models import Condition, FieldCondition, Filter, MatchValue
 
-        conditions = [FieldCondition(key="article_no", match=MatchValue(value=str(article_no)))]
+        conditions: list[Condition] = [
+            FieldCondition(key="article_no", match=MatchValue(value=str(article_no)))
+        ]
         if doc_id:
             conditions.append(FieldCondition(key="doc_id", match=MatchValue(value=doc_id)))
 

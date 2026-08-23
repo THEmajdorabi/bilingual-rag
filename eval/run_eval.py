@@ -119,11 +119,11 @@ def provenance_banner(evalset: EvalSet, evaluated: list[Question]) -> str:
     Three regimes, and the difference between them matters more than the
     figures underneath:
 
-      * nothing verified   -- measures the pipeline, not its quality;
-      * partly verified    -- verification was by *sampling*, so the verified
+      * nothing verified, measures the pipeline, not its quality;
+      * partly verified, verification was by *sampling*, so the verified
                               subset is evidence about the labels in general
                               only to the extent the sample was representative;
-      * fully verified     -- the labels are checked.
+      * fully verified: the labels are checked.
     """
     verified = sum(1 for q in evaluated if q.verified_by == "human")
     total = len(evaluated)

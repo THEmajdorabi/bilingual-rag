@@ -114,7 +114,7 @@ def test_root_letters_are_not_mistaken_for_prefixes() -> None:
     Both were found by running the stemmer over the colloquial eval queries.
 
     The assertion is that the *leading* letter survives. `ورقه` still loses its
-    taa marbuta to the suffix rule, which is correct light stemming -- the bug
+    taa marbuta to the suffix rule, which is correct light stemming, the bug
     was only ever at the front of the word.
     """
     assert light_stem(normalize_ar("فلوس")) == normalize_ar("فلوس")

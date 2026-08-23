@@ -816,3 +816,53 @@ already documented the intent -- the code just never honoured it.
 Dockerfile *looked* right. What found them was running `docker compose up` and
 watching it fail twice. A deployment path that has never been executed is not a
 deployment path; it is a description of one.
+
+## 2026-08-23 — The false-refusal rate was two failures added together
+
+**What the headline said:** 18.9% of answerable questions were declined
+(`claude-sonnet-5`), 34.0% (`gpt-5.6-terra`).
+
+**What it hid:** a refusal has two causes with opposite fixes.
+
+- **Retrieval miss** — the governing article was never in the passages the
+  model saw. Refusing is then *correct*, and counting it as an answer-layer
+  failure blames the wrong half of the system.
+- **Over-cautious answering** — the article was in front of the model and it
+  declined anyway. That is the answer-layer defect.
+
+**The split is free to measure**, because retrieval is deterministic: the same
+query against the same index returns the same passages, so the passages every
+refused question was shown can be recovered exactly without re-running a model.
+`eval/diagnose_refusals.py` does it, and it costs nothing.
+
+| | claude-sonnet-5 | gpt-5.6-terra |
+|---|---|---|
+| Refusals | 10 of 53 | 18 of 53 |
+| of which retrieval misses | 5 | 9 |
+| of which over-cautious | 5 | 9 |
+| **Corrected rate** (over-cautious / retrieval succeeded) | **0.139** (5/36) | **0.250** (9/36) |
+
+Both split exactly evenly, on two different models, which is a coincidence of
+small numbers and is reported as one.
+
+**The finding that matters is the one nobody was looking for.** The same
+classification shows that **17 of the 53 answerable questions — 32% — never had
+the governing article retrieved**, and that Sonnet **answered 12 of those 17
+anyway**: 22.6% of all answerable questions were answered from passages that do
+not contain the article the question was about.
+
+**And faithfulness did not catch a single one.** It stayed at 0.922, because
+faithfulness asks whether each claim is supported by the passage the answer
+*cited* — and those answers cited real passages, just not the right ones. A
+system can be perfectly faithful to the wrong document.
+
+This is the strongest argument in this repo for the design decision to report
+**citation correctness (0.660) beside faithfulness (0.922)** rather than either
+alone. Faithfulness measures internal consistency; citation correctness is the
+only one of the two that is about being right.
+
+**What it changes:** the answer prompt is not the first thing to fix. A third
+of answerable questions are a retrieval problem, and the answer layer's own
+defect is 13.9%, not 18.9%. Both numbers still rest on unverified labels — a
+wrong label makes a correct retrieval look like a miss — so this is a sharper
+hypothesis, not a settled conclusion.

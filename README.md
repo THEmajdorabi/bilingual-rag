@@ -132,22 +132,49 @@ checking claims.
 | p50 / p95 latency | 10.2 s / 30.9 s | End to end, including retrieval, reranking, answering and the faithfulness check. |
 | Cost | $1.62 | For all 68 questions, $0.024 each. |
 
-**On the 18.9% false refusal rate.** Refusal accuracy and false refusal rate
-must be read together: a system that refuses everything scores 1.000 on the
-first. This one refuses about one answerable question in five, which is the
-real cost of the conservative prompt. Two contributing causes are visible in
-the per-question output and neither has been separated out yet:
+### The false-refusal rate, split by cause
 
-1. retrieval put the governing article outside the top 10 (recall@10 is 0.623
-   after reranking, so this happens), and refusing is then the *correct*
-   behaviour given what the model was shown;
-2. the answer prompt declines when the passage is topically right but does not
-   state the rule in so many words.
+The headline 18.9% is two different failures added together, and
+`eval/diagnose_refusals.py` separates them. Retrieval is deterministic, so the
+passages each refused question was shown can be recovered exactly — no model
+call, no cost.
 
-Only (2) is a defect. Distinguishing them needs the labels checked first, which
-is why it is listed as open work rather than fixed.
+| Of the 10 refusals | n | What it means |
+|---|---|---|
+| **retrieval miss** — the article was never shown to the model | 5 | Refusing was **correct**. The defect is retrieval. |
+| **over-cautious** — the article was in front of it | 5 | The real answer-layer defect. |
 
-### The same set, on the other provider
+| | claude-sonnet-5 | gpt-5.6-terra |
+|---|---|---|
+| Reported false refusal rate | 0.189 (10/53) | 0.340 (18/53) |
+| **Corrected** — over-cautious ÷ retrieval succeeded | **0.139** (5/36) | **0.250** (9/36) |
+
+**And the number the headline was hiding is the worse one.** The same split
+shows that **17 of the 53 answerable questions — 32% — never had the governing
+article retrieved at all**, and that Sonnet **answered 12 of those 17 anyway**:
+
+| | claude-sonnet-5 | gpt-5.6-terra |
+|---|---|---|
+| Answered without the labelled article | **12/53 = 0.226** | 8/53 = 0.151 |
+| Refused when the article was missing | 5/17 | 9/17 |
+
+So the more useful-looking model is the one more willing to answer from
+passages that do not contain the governing article. **Faithfulness does not
+catch this**: it stayed at 0.922, because faithfulness asks whether each claim
+is supported by the passage the answer *cited*, and those answers cited
+something real — just not the article the question was about.
+
+That is the strongest argument in this repo for reporting citation correctness
+(0.660) next to faithfulness (0.922) rather than either alone. A system can be
+faithful to the wrong document all day.
+
+**What this changes about what to fix.** Not the answer prompt first: 32% of
+answerable questions are a retrieval problem, and the answer layer's own defect
+is 13.9%, not 18.9%. Both numbers still rest on unverified labels — a wrong
+label makes a correct retrieval look like a miss — so the ordering is a
+hypothesis this repo can now state precisely rather than a conclusion.
+
+### The same set, on the other provider### The same set, on the other provider
 
 The answering and claim-checking models are a **model set** in `config.yaml`,
 selected with `BILINGUAL_RAG_MODEL_SET` or `--model-set`, so this is one flag
@@ -401,8 +428,6 @@ the evidence that decided it, including the ones that went badly:
 
 - **The labels.** 64 of 67 unread. Everything above is provisional until that
   changes.
-- **Splitting the false-refusal causes** into retrieval misses and
-  over-conservative answering.
 - **The BM25 regression.** Weighted RRF and a smaller BM25 candidate pool were
   tried; neither recovered it. 73% of query terms are out of vocabulary for the
   BM25 index, which is the leading explanation and is not yet proven.

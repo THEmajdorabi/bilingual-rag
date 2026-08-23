@@ -1,4 +1,4 @@
-.PHONY: setup test test-integration lint format typecheck ingest serve eval ablate answers review deploy clean
+.PHONY: setup test test-integration lint format typecheck ingest serve eval ablate answers refusals review deploy clean
 
 PY := .venv/Scripts/python.exe
 
@@ -45,6 +45,10 @@ answers:  ## answer quality; COSTS MONEY
 
 diagnose:  ## is the eval set discriminating?
 	$(PY) scripts/diagnose_eval_difficulty.py
+
+refusals:  ## split the false-refusal rate by cause. No API calls, no cost
+	$(PY) eval/diagnose_refusals.py
+	$(PY) eval/diagnose_refusals.py --answers eval/results/answers_openai.json
 
 deploy:  ## Qdrant + API in containers
 	docker compose up -d --build

@@ -8,7 +8,11 @@ services:
     restart: unless-stopped
 
   api:
-    build: .
+    build:
+      # The parent directory, so `agent-core` is inside the build context.
+      # See the note at the top of the Dockerfile.
+      context: ..
+      dockerfile: bilingual-rag/Dockerfile
     depends_on:
       - qdrant
     ports:

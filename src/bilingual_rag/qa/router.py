@@ -42,9 +42,7 @@ class RouteDecision:
 
     @classmethod
     def unavailable(cls, reason: str) -> RouteDecision:
-        return cls(
-            dialect=None, confidence=0.0, route="default", reason=reason, available=False
-        )
+        return cls(dialect=None, confidence=0.0, route="default", reason=reason, available=False)
 
 
 class DialectRouter:

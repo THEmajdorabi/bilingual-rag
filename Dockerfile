@@ -1,4 +1,14 @@
 # The API and UI. Qdrant runs as a separate service; see docker-compose.yml.
+#
+# IMPORTANT: the build context is the PARENT directory, not this one:
+#
+#     docker build -f bilingual-rag/Dockerfile ..
+#
+# `docker compose up` does this for you. The reason is `agent-core`: this repo
+# depends on it as a local path, `[tool.uv.sources]` is a uv mechanism that pip
+# inside the image does not read, and a sibling directory is not reachable from
+# a build context rooted here. Building from the parent puts both repos in
+# scope, which is the smallest honest fix. See DECISIONS.md.
 FROM python:3.12-slim
 
 # OCR system packages: tesseract with the Arabic language pack, and poppler for
@@ -12,12 +22,18 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY pyproject.toml README.md config.yaml ./
-COPY src/ ./src/
+# Repo 01, installed first: repo 02 imports it, and pip cannot resolve the
+# path source that uv uses.
+COPY agent-core/pyproject.toml agent-core/README.md /opt/agent-core/
+COPY agent-core/src/ /opt/agent-core/src/
+RUN pip install --no-cache-dir -e /opt/agent-core
+
+COPY bilingual-rag/pyproject.toml bilingual-rag/README.md bilingual-rag/config.yaml ./
+COPY bilingual-rag/src/ ./src/
 RUN pip install --no-cache-dir -e . --extra-index-url https://download.pytorch.org/whl/cpu
 
-COPY scripts/ ./scripts/
-COPY eval/ ./eval/
+COPY bilingual-rag/scripts/ ./scripts/
+COPY bilingual-rag/eval/ ./eval/
 
 # The container has no GPU, so it runs the cpu profile: multilingual-e5-base at
 # 768 dims. That is a DIFFERENT collection from a cuda ingest, which is why

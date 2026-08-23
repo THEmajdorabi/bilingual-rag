@@ -743,3 +743,76 @@ done with it. Whether routing on dialect improves retrieval has **not been
 measured**, and asserting a benefit from an integration that has not been
 A/B tested is the kind of claim this repo exists to avoid making. The hook is
 real; the feature is not yet a feature.
+
+## 2026-08-23 — The container build was broken, and the README claimed it worked
+
+**What happened:** `docker build .` failed at
+`ERROR: No matching distribution found for agent-core`. The README documented
+`make deploy` as a working command. It was not.
+
+**The cause is a real packaging seam, not a typo.** This repo depends on
+`agent-core` as a **local path**, declared under `[tool.uv.sources]`. That is a
+**uv** mechanism. `pip` inside the image does not read it, sees a bare
+`agent-core` requirement in `dependencies`, and looks for it on PyPI, where it
+does not exist. And even if pip did understand it, the sibling directory is
+outside a build context rooted at this repo, so the files are not there to
+install.
+
+**The fix:** build from the **parent** directory, so both repos are in scope.
+
+```
+docker build -f bilingual-rag/Dockerfile ..
+```
+
+`docker compose` does this via `context: ..`, so `make deploy` is unchanged for
+the user. `agent-core` is pip-installed into `/opt/agent-core` first, which
+satisfies the requirement before this repo is installed.
+
+**Rejected alternatives:**
+
+- **Publishing `agent-core` to a package index.** Correct for a real
+  deployment, unavailable here, and it would make the container depend on a
+  release cadence rather than on the code in the tree.
+- **Vendoring a copy of `agent-core` into this repo.** Duplicated source that
+  nothing checks -- the exact failure mode repo 03 goes out of its way to guard
+  against for one small function, let alone a whole package.
+- **Making `agent-core` optional.** `qa/provider.py` imports it
+  unconditionally, and the answer layer does not exist without it.
+
+**The lesson worth keeping:** `make test` passing says nothing about whether
+the container builds, and a build that works in a uv-managed venv says nothing
+about whether it works under pip. The only thing that establishes it is running
+the build, which is what found this.
+
+## 2026-08-23 — `localhost` in config.yaml, and the second thing the container build found
+
+**What happened:** with the image finally building, the API container started
+and died with `qdrant_client.http.exceptions.ResponseHandlingException:
+[Errno 111] Connection refused`.
+
+**The cause:** `config.yaml` sets `qdrant.url: http://localhost:6333`, which is
+correct on a laptop and wrong inside a container, where Qdrant is a *sibling
+service* on the compose network and `localhost` is the API container itself.
+`docker-compose.yml` had been setting `QDRANT_URL: http://qdrant:6333` since it
+was written -- and **nothing read it**.
+
+**The fix:** `load_settings()` applies the environment on top of the file, for
+the values that are properties of *where* the service runs rather than of what
+it does. Right now that is one value.
+
+```python
+qdrant_url = os.environ.get("QDRANT_URL")
+if qdrant_url:
+    settings.qdrant.url = qdrant_url
+```
+
+**Why the environment and not another config file:** a second config file
+means two places to look and two things to keep in step. A URL that changes per
+deployment is exactly what an environment variable is for, and the compose file
+already documented the intent -- the code just never honoured it.
+
+**The pattern across both container bugs.** Neither was findable by reading.
+`make test` passed throughout, the compose file *said* the right thing, and the
+Dockerfile *looked* right. What found them was running `docker compose up` and
+watching it fail twice. A deployment path that has never been executed is not a
+deployment path; it is a description of one.

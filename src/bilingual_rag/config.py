@@ -240,7 +240,17 @@ def load_settings() -> Settings:
     if not path.exists():
         return Settings()
     with path.open("r", encoding="utf-8") as handle:
-        return Settings.model_validate(yaml.safe_load(handle) or {})
+        settings = Settings.model_validate(yaml.safe_load(handle) or {})
+
+    # Deployment-varying values come from the environment, because they are
+    # properties of WHERE this runs rather than of what it does. `localhost` is
+    # correct on a laptop and wrong inside a container, where Qdrant is a
+    # sibling service on a compose network -- and the failure is a connection
+    # refused at startup with nothing pointing at the cause.
+    qdrant_url = os.environ.get("QDRANT_URL")
+    if qdrant_url:
+        settings.qdrant.url = qdrant_url
+    return settings
 
 
 def require_env(name: str) -> str:

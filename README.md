@@ -315,6 +315,14 @@ make answers           # answer quality. COSTS MONEY (~$1.60)
 make deploy            # Qdrant + API in containers
 ```
 
+**A note on the container build.** It builds from the **parent** directory,
+because this repo depends on `agent-core` as a local path and `pip` inside the
+image cannot resolve a `[tool.uv.sources]` entry. `docker compose` handles that
+via `context: ..`, so `make deploy` works as written; a bare `docker build .`
+from inside this directory does not, and the Dockerfile says so at the top.
+This was found by running the build, not by reading it — see DECISIONS.md,
+*"The container build was broken, and the README claimed it worked"*.
+
 ## API
 
 | Route | |

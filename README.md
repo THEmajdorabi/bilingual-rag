@@ -323,6 +323,14 @@ from inside this directory does not, and the Dockerfile says so at the top.
 This was found by running the build, not by reading it — see DECISIONS.md,
 *"The container build was broken, and the README claimed it worked"*.
 
+**Verified end to end on 2026-08-23**: image builds (521 MB), both containers
+start, the corpus ingests inside the container, and `GET /healthz` returns
+`chunks_indexed: 561` on the `cpu` profile. A `/search` for *مدة الإشعار*
+returns the same articles as the GPU host — 78, 76, 34, 75, 109 — from a
+`multilingual-e5-base` index rather than a `bge-m3` one, which is the
+collection-per-model design working: all three collections coexist in the same
+Qdrant and neither run can read the other's vectors by accident.
+
 ## API
 
 | Route | |

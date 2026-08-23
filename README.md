@@ -357,6 +357,30 @@ is actually present:
 
 Measured on this machine: `cuda_small`, RTX 3060 Ti, 8.6 GB.
 
+## Dialect routing (optional, repo 04)
+
+Set `DIALECT_SERVICE_URL` and `/ask` attaches the question's dialect, from
+[arabic-nlp-platform](../arabic-nlp-platform). Verified live on 2026-08-23:
+
+| Question | Route | Dialect | Confidence |
+|---|---|---|---|
+| `شو بدي اعمل اذا صاحب العمل ما دفعلي معاشي؟` | `dialect` | LB | 0.998 |
+| `طلعوني من الشغل فجاه بدون ما يخبروني قبل بمده` | `default` | — | 0.562 |
+| `نعم` | `default` | — | 0.334 |
+| *(service unreachable)* | `default` | — | — |
+
+**The second row is the interesting one, and it is the classifier being
+correct.** Repo 04's classes are Egyptian, Libyan, Lebanese, Sudanese and
+Moroccan. There is no Gulf class — and Gulf colloquial is exactly what most of
+this corpus's questions are written in. So on repo 02's real traffic the router
+abstains more often than it fires, which is the confidence floor doing its job
+rather than forcing a question into the nearest wrong bucket.
+
+That is also the honest limitation: **routing is not currently useful to this
+repo**, because the classifier was trained on the dialects an open dataset
+provided rather than the one this corpus needs. The integration is real, the
+degradation path is tested, and no retrieval improvement is claimed.
+
 ## Design notes
 
 Every real choice between alternatives is in [DECISIONS.md](DECISIONS.md) with
